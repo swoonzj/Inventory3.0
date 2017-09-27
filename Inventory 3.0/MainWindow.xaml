@@ -26,8 +26,8 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=name}"/>
-                    <GridViewColumn Header="System" DisplayMemberBinding="{Binding Path=system}"/>
-                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Path=price}"/>
+                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
+                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price}"/>
                 </GridView>
             </ListView.View>
         </ListView>

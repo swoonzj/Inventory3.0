@@ -1,6 +1,7 @@
 ﻿using Inventory;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,10 +25,13 @@ namespace Inventory_3._0
         decimal cashTotal = 0;
         decimal creditTotal = 0;
 
+        ObservableCollection<Item> cart = new ObservableCollection<Item>();
+        
+
         public MainWindow()
         {
             InitializeComponent();
-
+            lvCart.ItemsSource = cart;
             List<Item> items = new List<Item>();
             items.Add(new Item("Game", "System!", 2.99m,1,.5m,1m,"1"));
             items.Add(new Item("Game 2", "System!", 3.99m,1,.5m,1m,"2"));
@@ -39,25 +43,25 @@ namespace Inventory_3._0
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            List<Item> addedItems = new List<Item>();
-            addedItems = lvCart.Items.Cast<Item>().ToList();
             foreach (Item item in lvList.SelectedItems)
             {
-                addedItems.Add(item);
+                cart.Add(item);
             }
-            lvCart.ItemsSource = addedItems;
             UpdateTotals();
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-            List<Item> newList = new List<Item>();
-            newList = lvCart.Items.Cast<Item>().ToList();
+            ObservableCollection<Item> itemsToRemove = new ObservableCollection<Item>();
             foreach (Item item in lvCart.SelectedItems)
             {
-                newList.Remove(item);
+                itemsToRemove.Add(item);
             }
-            lvCart.ItemsSource = newList;
+            foreach (Item item in itemsToRemove)
+            {
+                cart.Remove(item);
+            }
+            
             UpdateTotals();
         }
 
@@ -74,6 +78,10 @@ namespace Inventory_3._0
             txtTotalCredit.Text = "\nCredit:\t\t$" + creditTotal.ToString("0.00");
         }
 
-        
+        private void ColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(((ListView)sender).ItemsSource);
+
+        }
     }
 }

@@ -44,10 +44,10 @@ namespace Inventory
 //            DBaccess.DeleteTableItem(tablename, this);
 //        }
 
-//        public Item Clone()
-//        {
-//            return new Item(name, system, price, quantity, tradeCash, tradeCredit, UPC);
-//        }
+        public Item Clone()
+        {
+            return new Item(name, system, price, quantity, tradeCash, tradeCredit, UPC);
+        }
 
 //        // ==================================|
 //        // Methods dealing with transactions |

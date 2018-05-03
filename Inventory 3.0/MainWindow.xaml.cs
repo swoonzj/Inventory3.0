@@ -30,22 +30,28 @@ namespace Inventory_3._0
 
         public MainWindow()
         {
-            InitializeComponent();
-            lvCart.ItemsSource = cart;
-            List<Item> items = new List<Item>();
-            items.Add(new Item("Game", "System!", 2.99m,1,.5m,1m,"1"));
-            items.Add(new Item("Game 2", "System!", 3.99m,1,.5m,1m,"2"));
-            items.Add(new Item("Game 47", "System!", 9.99m,3,2m,3m,"000023"));
-            lvList.ItemsSource = items;
-            UpdateTotals();
-            
+            try
+            {
+                InitializeComponent();
+                lvCart.ItemsSource = cart;
+                List<Item> items = new List<Item>();
+                items.Add(new Item("Game", "System!", 2.99m, 1, .5m, 1m, "1"));
+                items.Add(new Item("Game 2", "System!", 3.99m, 1, .5m, 1m, "2"));
+                items.Add(new Item("Game 47", "System!", 9.99m, 3, 2m, 3m, "000023"));
+                lvList.ItemsSource = items;
+                UpdateTotals();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.InnerException.ToString());
+            }
         }
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             foreach (Item item in lvList.SelectedItems)
             {
-                cart.Add(item);
+                cart.Insert(0, item);
             }
             UpdateTotals();
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
-namespace Inventory
+namespace Inventory_3._0
 {
     public static class Constants
     {

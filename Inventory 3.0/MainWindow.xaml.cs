@@ -1,5 +1,4 @@
-﻿using Inventory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -26,7 +25,7 @@ namespace Inventory_3._0
         decimal creditTotal = 0;
 
         ObservableCollection<Item> cart = new ObservableCollection<Item>();
-        
+        string keyboardInput;
 
         public MainWindow()
         {
@@ -35,9 +34,10 @@ namespace Inventory_3._0
                 InitializeComponent();
                 lvCart.ItemsSource = cart;
                 List<Item> items = new List<Item>();
-                items.Add(new Item("Game", "System!", 2.99m, 1, .5m, 1m, "1"));
-                items.Add(new Item("Game 2", "System!", 3.99m, 1, .5m, 1m, "2"));
-                items.Add(new Item("Game 47", "System!", 9.99m, 3, 2m, 3m, "000023"));
+                //items.Add(new Item("Game", "System!", 2.99m, 1, .5m, 1m, "1"));
+                //items.Add(new Item("Game 2", "System!", 3.99m, 1, .5m, 1m, "2"));
+                //items.Add(new Item("Game 47", "System!", 9.99m, 3, 2m, 3m, "000023"));
+                items = DBAccess.SQLTableToList(TableNames.INVENTORY);
                 lvList.ItemsSource = items;
                 UpdateTotals();
             }
@@ -88,6 +88,25 @@ namespace Inventory_3._0
         {
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(((ListView)sender).ItemsSource);
 
+        }
+
+        // Handle input from Price Scanner
+        private void lvCart_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            //MessageBox.Show(e.Key.ToString());
+            // Keep accepting input until "RETURN" is hit
+            if (e.Key != Key.Return)
+            {
+                keyboardInput += e.Key.ToString();
+            }
+            // When "RETURN" is hit, look up UPC & add item to currently focused cart
+            else
+            {
+                MessageBox.Show(keyboardInput);
+                //((Cart)((ListView)sender).Tag).AddItemFromUPC(TableNames.INVENTORY, keyboardInput);
+                keyboardInput = "";
+                UpdateTotals();
+            }
         }
     }
 }

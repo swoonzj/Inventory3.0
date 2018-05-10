@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Inventory
+namespace Inventory_3._0
 {
     public class Item
     {

@@ -32,14 +32,23 @@ namespace Inventory_3._0
             try
             {
                 InitializeComponent();
+                Search(String.Empty);
                 lvCart.ItemsSource = cart;
-                List<Item> items = new List<Item>();
-                //items.Add(new Item("Game", "System!", 2.99m, 1, .5m, 1m, "1"));
-                //items.Add(new Item("Game 2", "System!", 3.99m, 1, .5m, 1m, "2"));
-                //items.Add(new Item("Game 47", "System!", 9.99m, 3, 2m, 3m, "000023"));
-                items = DBAccess.SQLTableToList(TableNames.INVENTORY);
-                lvList.ItemsSource = items;
                 UpdateTotals();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.InnerException.ToString());
+            }
+        }
+
+        private void Search(string searchString)
+        {
+            try
+            {
+                List<Item> items = new List<Item>();
+                items = DBAccess.SQLTableToList(TableNames.INVENTORY, searchtext: searchString);
+                lvList.ItemsSource = items;
             }
             catch (Exception ex)
             {
@@ -93,20 +102,78 @@ namespace Inventory_3._0
         // Handle input from Price Scanner
         private void lvCart_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            //MessageBox.Show(e.Key.ToString());
+            //MessageBox.Show(e.InputSource.ToString());
             // Keep accepting input until "RETURN" is hit
             if (e.Key != Key.Return)
             {
-                keyboardInput += e.Key.ToString();
+                keyboardInput += processScannerInput(e.Key);
             }
             // When "RETURN" is hit, look up UPC & add item to currently focused cart
             else
             {
-                MessageBox.Show(keyboardInput);
-                //((Cart)((ListView)sender).Tag).AddItemFromUPC(TableNames.INVENTORY, keyboardInput);
-                keyboardInput = "";
-                UpdateTotals();
+                //MessageBox.Show(keyboardInput);
+                Item item = DBAccess.GetItemWithUPC(TableNames.INVENTORY, keyboardInput); // Returns NULL if UPC does not match an item
+                if (item != null)
+                {
+                    cart.Add(item);
+                    keyboardInput = "";
+                    UpdateTotals();
+                }
+                else
+                    MessageBox.Show("Unknown UPC");
             }
+        }
+
+        private string processScannerInput(Key key)
+        {
+            switch (key){
+                case Key.D0:
+                    return "0";
+                case Key.D1:
+                    return "1";
+                case Key.D2:
+                    return "2";
+                case Key.D3:
+                    return "3";
+                case Key.D4:
+                    return "4";
+                case Key.D5:
+                    return "5";
+                case Key.D6:
+                    return "6";
+                case Key.D7:
+                    return "7";
+                case Key.D8:
+                    return "8";
+                case Key.D9:
+                    return "9";
+                default:
+                    return "";
+            }
+        }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            txtSearch.Text = "";
+        }
+
+        private void DetectEnterKey(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Search(txtSearch.Text);
+            }
+        }
+
+        private void lvCart_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // Give focus to lvCart, so that the KeyDown Event actually works. (Only works if you click on the column headers, otherwise)
+            lvCart.Focus();
+        }
+
+        private void btnEditCart_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Cart Editor Placeholder!");
         }
     }
 }

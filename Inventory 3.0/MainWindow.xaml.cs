@@ -124,6 +124,7 @@ namespace Inventory_3._0
             }
         }
 
+        // UPC Scanner registers Digits differently from the normal keyboard digits
         private string processScannerInput(Key key)
         {
             switch (key){
@@ -173,7 +174,18 @@ namespace Inventory_3._0
 
         private void btnEditCart_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Cart Editor Placeholder!");
+            MessageBox.Show("Cart Editor Placeholder!");            
+        }
+
+        private void ManagementMenu_Click(object sender, RoutedEventArgs e)
+        {
+            Window management = new Management();
+            management.Show();
+        }
+
+        private void btnClearCart_Click(object sender, RoutedEventArgs e)
+        {
+            cart = new ObservableCollection<Item>();
         }
     }
 }

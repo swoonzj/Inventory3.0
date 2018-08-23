@@ -74,7 +74,7 @@
                         <MenuItem Header="_Quit"/>
                     </MenuItem>
                     <MenuItem Header="_Manage">
-                        <MenuItem Header="Open _Management Screen" />
+                        <MenuItem Header="Open _Management Screen" Click="ManagementMenu_Click"/>
                     </MenuItem>
                     
                 </Menu>
@@ -86,7 +86,7 @@
         
         <Button Name="btnAdd" Margin="20" Grid.Column="1" Grid.RowSpan="2" Click="btnAdd_Click">Add</Button>
         <Button Name="btnRemove" Margin="20" Grid.Column="1" Grid.Row="2" Click="btnRemove_Click">Remove</Button>
-        <Button Name="btnClearCart" Margin="20" Grid.Column="1" Grid.Row="3" Click="btnRemove_Click" Height="Auto" Width="Auto" >Clear Cart</Button>
+        <Button Name="btnClearCart" Margin="20" Grid.Column="1" Grid.Row="3" Click="btnClearCart_Click" Height="Auto" Width="Auto" >Clear Cart</Button>
         <Button Name="btnEditCart" Margin="20" Grid.Column="1" Grid.Row="4" Click="btnEditCart_Click">Edit Cart</Button>
     
         <TextBlock Name="txtTotalCash" FontSize="15" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="5" />

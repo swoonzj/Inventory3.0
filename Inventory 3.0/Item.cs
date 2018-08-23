@@ -12,6 +12,17 @@ namespace Inventory_3._0
         public decimal tradeCredit { get; set; }
         public string UPC { get; set; }
 
+        public Item()
+        {
+            this.name = "";
+            this.system = "";
+            this.price = 0;
+            this.quantity = 0;
+            this.tradeCash = 0;
+            this.tradeCredit = 0;
+            this.UPC = "";
+        }
+
         public Item(string name, string system, decimal price, int quantity, decimal cash, decimal credit, string upc)
         {
             this.name = name;

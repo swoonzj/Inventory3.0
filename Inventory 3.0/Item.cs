@@ -1,48 +1,79 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Inventory_3._0
 {
     public class Item
     {
+        public int SQLid { get; set; }
         public string name { get; set; }
         public string system { get; set; }
         public decimal price { get; set; }
         public int quantity { get; set; }
         public decimal tradeCash { get; set; }
         public decimal tradeCredit { get; set; }
-        public string UPC { get; set; }
+        public List<string> UPCs { get; set; }
 
-        public Item()
+        public Item()        
         {
+            UPCs = new List<string>();
+            this.SQLid = 0;
             this.name = "";
             this.system = "";
             this.price = 0;
             this.quantity = 0;
             this.tradeCash = 0;
             this.tradeCredit = 0;
-            this.UPC = "";
         }
 
         public Item(string name, string system, decimal price, int quantity, decimal cash, decimal credit, string upc)
         {
+            UPCs = new List<string>();
+            this.SQLid = 0;
             this.name = name;
             this.system = system;
             this.price = price;
             this.quantity = quantity;
             this.tradeCash = cash;
             this.tradeCredit = credit;
-            this.UPC = upc;
+            this.UPCs.Add(upc);
         }
 
-        public Item(string name, string system = "", string price = "0", string quantity = "0", string cash = "0", string credit = "0", string upc = "0")
+        public Item(string name, string system, decimal price, int quantity, decimal cash, decimal credit, List<string> upcs)
         {
+            UPCs = new List<string>();
+            this.SQLid = 0;
+            this.name = name;
+            this.system = system;
+            this.price = price;
+            this.quantity = quantity;
+            this.tradeCash = cash;
+            this.tradeCredit = credit;
+            this.UPCs = upcs;
+        }
+
+        public Item(string name, string system = "", string price = "0", string quantity = "0", string cash = "0", string credit = "0", string SQLid = "0")
+        {
+            UPCs = new List<string>();
+            this.SQLid = Convert.ToInt32(SQLid);
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
             this.quantity = Convert.ToInt32(quantity);
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
-            this.UPC = upc;
+        }
+
+        public Item(string name, string system, decimal price, int quantity, decimal cash, decimal credit, List<string> upcs, int SQLid = 0)
+        {
+            UPCs = new List<string>();
+            this.SQLid = SQLid;
+            this.name = name;
+            this.system = system;
+            this.price = price;
+            this.quantity = quantity;
+            this.tradeCash = cash;
+            this.tradeCredit = credit;
         }
 
 //        public void AddToDatabase(string tablename)
@@ -57,7 +88,7 @@ namespace Inventory_3._0
 
         public Item Clone()
         {
-            return new Item(name, system, price, quantity, tradeCash, tradeCredit, UPC);
+            return new Item(name, system, price, quantity, tradeCash, tradeCredit, UPCs, SQLid);
         }
 
 //        // ==================================|

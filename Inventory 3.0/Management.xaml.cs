@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,31 +61,38 @@ namespace Inventory_3._0
                 items.Add(item);
             }
             FillTextBoxes(CompareSelection(items)); 
+
+            if (items.Count == 1)
+            {
+                lvUPC.IsEnabled = true;
+                PopulateUPClistview(items[0]);
+            }
+            else
+            {
+                lvUPC.IsEnabled = false;
+                PopulateUPClistview(null);
+            }
         }
 
         private void FillTextBoxes(Item item)
         {
             if (item == null)
             {
-                chkName.IsEnabled = true;
-                chkSystem.IsEnabled = true;
-                chkPrice.IsEnabled = true;
-                chkQuantity.IsEnabled = true;
-                chkCash.IsEnabled = true;
-                chkCredit.IsEnabled = true;
+                
                 txtName.Text = "";
                 txtSystem.Text = "";
                 txtPrice.Text = "";
                 txtQuantity.Text = "";
                 txtCash.Text = "";
                 txtCredit.Text = "";
+                lvUPC.ItemsSource = null;
                 return;
             }
             if (item.name != null)
                 txtName.Text = item.name;
             else
             {
-                chkName.IsEnabled = false;
+                txtName.IsEnabled = false;
                 txtName.Text = "";
             }
             if (item.system != null)
@@ -119,14 +127,35 @@ namespace Inventory_3._0
             }
         }
 
+        private void PopulateUPClistview(Item item)
+        {
+            // Get UPCs
+            if (item == null)
+            {
+                lvUPC.ItemsSource = null;
+                return;
+            }
+            if (item.UPCs.Count == 0)
+            {
+                DBAccess.GetItemUPCs(item);
+            }
+            
+            lvUPC.ItemsSource = new ObservableCollection<string>(item.UPCs);
+        }
+            
+
         private Item CompareSelection(List<Item> items)
         {
             if (items.Count == 0)
             {
                 return null;
             }
-            Item selection = items[0].Clone();
 
+            if (items.Count == 1) 
+                return items[0];
+
+            Item selection = items[0].Clone();
+            
             foreach (Item item in items)
             {
                 if (item.name != selection.name) selection.name = null;
@@ -135,10 +164,57 @@ namespace Inventory_3._0
                 if (item.quantity != selection.quantity) selection.quantity = int.MinValue;
                 if (item.tradeCash != selection.tradeCash) selection.tradeCash = decimal.MinValue;
                 if (item.tradeCredit != selection.tradeCredit) selection.tradeCredit = decimal.MinValue;
-                if (item.UPC != selection.UPC) selection.UPC = null;
+                if (item.SQLid != selection.SQLid) selection.SQLid = 0;
             }
 
             return selection;
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            string changes = "";
+            if (txtName.IsEnabled == true && txtName.Text.ToString() != "") 
+                changes += txtName.Text + " \n";
+            if (txtSystem.Text.ToString() != "") 
+                changes += txtSystem.Text + "\n";
+            if (txtPrice.Text.ToString() != "") 
+                changes += txtPrice.Text + "\n";
+            if (txtQuantity.Text.ToString() != "") 
+                changes += txtQuantity.Text + "\n";
+            if (txtCash.Text.ToString() != "") 
+                changes += txtCash.Text + "\n";
+            if (txtCredit.Text.ToString() != "") 
+                changes += txtCredit.Text + "\n";
+
+
+            changes += "\nUPCs:\n";
+            foreach (string upc in lvUPC.ItemsSource)
+            {
+                changes += upc + "\n";
+            }
+
+            MessageBoxResult result = MessageBox.Show("Save the following changes?\n" + changes, "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                MessageBox.Show("Saved. (but not really)");
+                // ACTUALLY SAVE CHANGES !!!!!!
+
+            }
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            // Check if lvUPC is disabled
+            if (lvList.SelectedItems.Count != 1)
+            {
+                MessageBox.Show("Can only add UPCs to single items. Select only one item.", "Too many/few items selected", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                return;
+            }
+            // Make sure there is text in the field. If not, do nothing.
+            if (txtUPC.Text == "") return;
+
+            ((Item)lvList.SelectedItems[0]).UPCs.Add(txtUPC.Text);
+            PopulateUPClistview((Item)lvList.SelectedItems[0]); 
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Inventory_3._0.Properties;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -35,6 +36,8 @@ namespace Inventory_3._0
                 Search(String.Empty);
                 lvCart.ItemsSource = cart;
                 UpdateTotals();
+
+                // TEST!
             }
             catch (Exception ex)
             {
@@ -42,12 +45,18 @@ namespace Inventory_3._0
             }
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            Settings.Default.Save();
+            base.OnClosing(e);
+        }
+
         private void Search(string searchString)
         {
             try
             {
                 List<Item> items = new List<Item>();
-                items = DBAccess.SQLTableToList(TableNames.INVENTORY, searchtext: searchString);
+                items = DBAccess.SQLTableToList(Settings.Default.CurrentInventory, searchtext: searchString);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)
@@ -112,7 +121,10 @@ namespace Inventory_3._0
             else
             {
                 //MessageBox.Show(keyboardInput);
-                Item item = DBAccess.GetItemWithUPC(TableNames.INVENTORY, keyboardInput); // Returns NULL if UPC does not match an item
+                List<Item> items = DBAccess.UPCLookup(Settings.Default.CurrentInventory, keyboardInput); // Returns NULL if UPC does not match an item
+                
+                // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
+                Item item = items[0]; 
                 if (item != null)
                 {
                     cart.Add(item);
@@ -149,7 +161,7 @@ namespace Inventory_3._0
                 case Key.D9:
                     return "9";
                 default:
-                    return "";
+                    return key.ToString();
             }
         }
 
@@ -172,6 +184,7 @@ namespace Inventory_3._0
             lvCart.Focus();
         }
 
+        // Finish this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         private void btnEditCart_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Cart Editor Placeholder!");            
@@ -185,7 +198,28 @@ namespace Inventory_3._0
 
         private void btnClearCart_Click(object sender, RoutedEventArgs e)
         {
-            cart = new ObservableCollection<Item>();
+            cart.Clear();
+        }
+
+        private void menuInvMain_Click(object sender, RoutedEventArgs e)
+        {
+            menuInvOutBack.IsChecked = false;
+            menuInvStorage.IsChecked = false;
+            Properties.Settings.Default.CurrentInventory = TableNames.INVENTORY;
+        }
+
+        private void menuInvOutBack_Click(object sender, RoutedEventArgs e)
+        {
+            menuInvMain.IsChecked = false;
+            menuInvStorage.IsChecked = false;
+            Properties.Settings.Default.CurrentInventory = TableNames.OUTBACK;
+        }
+
+        private void menuInvStorage_Click(object sender, RoutedEventArgs e)
+        {
+            menuInvOutBack.IsChecked = false;
+            menuInvMain.IsChecked = false;
+            Properties.Settings.Default.CurrentInventory = TableNames.STORAGE;
         }
     }
 }

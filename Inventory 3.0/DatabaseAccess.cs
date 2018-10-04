@@ -11,7 +11,8 @@ namespace Inventory_3._0
 {
     class DBAccess
     {
-        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
+        //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
+        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2);
     
         // Export table to Comma Separated Values file (.csv)
         public static void ExportCSV(string filepath, string tblname)
@@ -56,7 +57,7 @@ namespace Inventory_3._0
 
         //// Add an item to the passed Tablename, 
         ////   but specifically designed for the Inventory & TemporaryInventory(when importing from CSV) tables
-        public static void AddToTable(string tblname, string name, string system, decimal price, int inventory, decimal cash, decimal credit, string upc)
+        public static void AddToTable(string tblname, string name, string system, decimal price, int inventory, decimal cash, decimal credit, List<string> upcs)
         {
 
             name = CheckForSpecialCharacters(name);
@@ -70,7 +71,9 @@ namespace Inventory_3._0
             cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = inventory;
             cmd.Parameters.Add("@TRADE_CASH", SqlDbType.Money).Value = cash;
             cmd.Parameters.Add("@TRADE_CREDIT", SqlDbType.Money).Value = credit;
-            cmd.Parameters.Add("@UPC", SqlDbType.VarChar).Value = upc;
+            
+            // Handle UPCS!!!!!!
+            //cmd.Parameters.Add("@UPC", SqlDbType.VarChar).Value = upcs;
 
             // execute command  & close connection
             try
@@ -99,39 +102,44 @@ namespace Inventory_3._0
             else
             {
                 // Add data to table
-                AddToTable(tblname, item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPC);                
+                AddToTable(tblname, item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);                
             }
+        }
+
+        public static void SaveItemChanges(Item item, string sqlTable)
+        {
+            // Finish this!!!!!!!
         }
 
         // For recording transactions (Transaction Total)
-        public static void AddToTransactionTable(string tblname, Item item, string type, int transactionNumber, string date) // Should only be used for Table of Transactions
-        {
-            SqlCommand cmd = new SqlCommand("INSERT INTO " + tblname + " VALUES(@NAME, @SYSTEM, @PRICE, @QUANTITY, @UPC, @TYPE, @TRANSACTIONNUMBER, @DATE)", connect);
-            cmd.Parameters.Add("@NAME", SqlDbType.VarChar).Value = item.name;
-            cmd.Parameters.Add("@SYSTEM", SqlDbType.NVarChar).Value = item.system;
-            cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.price;
-            cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = item.quantity;
-            cmd.Parameters.Add("@UPC", SqlDbType.VarChar).Value = item.UPC;
-            cmd.Parameters.Add("@TYPE", SqlDbType.NVarChar).Value = type;
-            cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
-            cmd.Parameters.Add("@DATE", SqlDbType.DateTime).Value = date;
+        //public static void AddToTransactionTable(string tblname, Item item, string type, int transactionNumber, string date) // Should only be used for Table of Transactions
+        //{
+        //    SqlCommand cmd = new SqlCommand("INSERT INTO " + tblname + " VALUES(@NAME, @SYSTEM, @PRICE, @QUANTITY, @UPC, @TYPE, @TRANSACTIONNUMBER, @DATE)", connect);
+        //    cmd.Parameters.Add("@NAME", SqlDbType.VarChar).Value = item.name;
+        //    cmd.Parameters.Add("@SYSTEM", SqlDbType.NVarChar).Value = item.system;
+        //    cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.price;
+        //    cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = item.quantity;
+        //    cmd.Parameters.Add("@UPC", SqlDbType.VarChar).Value = item.UPC;
+        //    cmd.Parameters.Add("@TYPE", SqlDbType.NVarChar).Value = type;
+        //    cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
+        //    cmd.Parameters.Add("@DATE", SqlDbType.DateTime).Value = date;
 
-            // execute command  & close connection
-            try
-            {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-                connect.Close();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN AddToTransactionTable:\n" + e.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-        }
+        //    // execute command  & close connection
+        //    try
+        //    {
+        //        connect.Open();
+        //        cmd.ExecuteNonQuery();
+        //        connect.Close();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show("ERROR IN AddToTransactionTable:\n" + e.Message);
+        //    }
+        //    finally
+        //    {
+        //        connect.Close();
+        //    }
+        //}
 
         // Decrease an item's inventory by subtracting the passed "Item.quantity" value
         public static void DecrementInventory(string tablename, Item item)
@@ -143,7 +151,7 @@ namespace Inventory_3._0
                                             "AND PRICE = '" + item.price + "' " +
                                             "AND TRADECASH = '" + item.tradeCash + "' " +
                                             "AND TRADECREDIT = '" + item.tradeCredit + "' " +
-                                            "AND UPC = '" + item.UPC + "'",
+                                            //"AND UPC = '" + item.UPC + "'",
                                             connect); // Find an exact match for the passed string, increase inventory
 
             try
@@ -172,7 +180,7 @@ namespace Inventory_3._0
                                             "AND PRICE = '" + item.price + "' " +
                                             "AND TRADECASH = '" + item.tradeCash + "' " +
                                             "AND TRADECREDIT = '" + item.tradeCredit + "' " +
-                                            "AND UPC = '" + item.UPC + "'",
+                                            //"AND UPC = '" + item.UPC + "'",
                                             connect); // Find an exact match for the passed string, increase inventory
 
             try
@@ -201,14 +209,14 @@ namespace Inventory_3._0
                                             "Quantity = " + newItem.quantity + ", " +
                                             "TradeCash = " + newItem.tradeCash + ", " +
                                             "TradeCredit = " + newItem.tradeCredit + ", " +
-                                            "UPC = '" + newItem.UPC +
+                                           // "UPC = '" + newItem.UPC +
                                             "' WHERE Name = '" + CheckForSpecialCharacters(oldItem.name) +
                                             "' AND System = '" + CheckForSpecialCharacters(oldItem.system) + "' " + 
                                             "AND PRICE = '" + oldItem.price + "' " +
                                             "AND TRADECASH = '" + oldItem.tradeCash + "' " +
                                             "AND TRADECREDIT = '" + oldItem.tradeCredit + "' " +
-                                            "AND UPC = '" + oldItem.UPC + "'"
-                                            , connect); // Find an exact match for the passed string, increase inventory
+                                           // "AND UPC = '" + oldItem.UPC + "'"
+                                            connect); // Find an exact match for the passed string, increase inventory
 
             try
             {
@@ -234,8 +242,7 @@ namespace Inventory_3._0
                                             "' AND System = '" + CheckForSpecialCharacters(item.system) + "' " +
                                             "AND PRICE = '" + item.price + "' " +
                                             "AND TRADECASH = '" + item.tradeCash + "' " +
-                                            "AND TRADECREDIT = '" + item.tradeCredit + "' " +
-                                            "AND UPC = '" + item.UPC + "'"                                            
+                                            "AND TRADECREDIT = '" + item.tradeCredit + "' "                                   
                                             , connect); // Find an exact match for the passed string, increase inventory
 
             try
@@ -256,13 +263,13 @@ namespace Inventory_3._0
         
 
         /// <summary>
-        /// Gets an INVENTORY table and returns a Collection of all contained Items
+        /// Gets an INVENTORY table and returns a List of all contained Items
         /// </summary>
         /// <param name="tablename">Table name of an INVENTORY type table</param>
         /// <param name="sortBy">Column to sort by.   (Optional)</param>
         /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
         /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
-        /// <returns>A Collection of Items</returns>
+        /// <returns>A List of Items</returns>
         public static List<Item> SQLTableToList(string tablename, string sortBy = "System", bool ascending = true, string searchtext = "")
         {
             List<Item> collection = new List<Item>();
@@ -336,8 +343,7 @@ namespace Inventory_3._0
                 "AND SYSTEM = '" + CheckForSpecialCharacters(item.system) + "' " +
                 "AND PRICE = '" + item.price + "' " +
                 "AND TRADECASH = '" + item.tradeCash + "' " +
-                "AND TRADECREDIT = '" + item.tradeCredit + "' " +
-                "AND UPC = '" + item.UPC + "'";
+                "AND TRADECREDIT = '" + item.tradeCredit + "' ";
             SqlCommand cmd = new SqlCommand(command, connect);
 
             // Execute command
@@ -370,18 +376,115 @@ namespace Inventory_3._0
         public static Item SQLReaderToItem(SqlDataReader reader)
         {
             Item item = null;
-            item = new Item(reader[0].ToString(),
-                    reader[1].ToString(),
-                    reader[2].ToString(),
-                    reader[3].ToString(),
-                    reader[4].ToString(),
-                    reader[5].ToString(),
-                    reader[6].ToString());
 
+            // FOR OLD TABLE:            
+            //item = new Item(reader[0].ToString(),
+            //        reader[1].ToString(),
+            //        reader[2].ToString(),
+            //        reader[3].ToString(),
+            //        reader[4].ToString(),
+            //        reader[5].ToString(),
+            //        reader[6].ToString());
+           
+            // FOR NEW TABLE
+            item = new Item(reader[1].ToString(), // Name
+                    reader[2].ToString(),   // System
+                    reader[3].ToString(),   // Price
+                    reader[4].ToString(),   // Quantity
+                    reader[5].ToString(),   // Cash
+                    reader[6].ToString(),   // Credit
+                    reader[0].ToString());  // SQL ID
+            
             return item;
         }
 
-        #region UPC and Transaction Numbers
+        #region UPC
+
+        /// <summary>
+        /// Gets List of Items that have the passed UPC parameter
+        /// </summary>
+        /// <param name="tablename">Table containing Item information</param>
+        /// <param name="UPC">The UPC to search for</param>
+        /// <returns></returns>
+        public static List<Item> UPCLookup(string tablename, string UPC)
+        {
+            List<Item> items = new List<Item>();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM " + tablename +
+                " INNER JOIN tblUPC on " + tablename + ".id=" + TableNames.UPC + ".id " +
+                "WHERE UPC="+ UPC, connect);
+            try
+            {
+                connect.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.HasRows)
+                {
+                    if (reader.Read())
+                    {
+                        items.Add(SQLReaderToItem(reader));
+                    }
+                    else break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN UPCLookup():\n" + e.Message + e.Data);
+            }
+            finally
+            {
+                connect.Close();
+            }
+
+            return items;
+        }
+
+        /// <summary>
+        /// Get all UPCs associated with passed item
+        /// </summary>
+        /// <param name="item">Item to find associated UPCs</param>
+        public static void GetItemUPCs(Item item)
+        {
+            if (item.SQLid != 0)
+                item.UPCs = GetUPCsWithID(item.SQLid);
+            else
+                MessageBox.Show("ITEM DOESN'T HAVE A SQL ID ASSOCIATED WITH IT"); // CHANGE THIS !!!!!!!!!!
+        }
+
+        /// <summary>
+        /// Gets a list of UPCs (as strings) based on the unique sql ID of each item
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static List<string> GetUPCsWithID(int id)
+        {
+            List<string> upcs = new List<string>();
+
+            SqlCommand cmd = new SqlCommand("SELECT UPC FROM " + TableNames.UPC +
+                " WHERE id =" + id, connect);
+            try
+            {
+                connect.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.HasRows)
+                {
+                    if (reader.Read())
+                    {
+                        upcs.Add(reader[0].ToString());
+                    }
+                    else break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN GetUPCsWithID():\n" + e.Message + e.Data);
+            }
+            finally
+            {
+                connect.Close();
+            }
+
+            return upcs;
+        }
         
         /// <summary>
         /// Retrieves items from database with matching UPC
@@ -534,7 +637,9 @@ namespace Inventory_3._0
             if (value == 1) return true;
             else return false;
         }
+#endregion
 
+        #region Transaction Methods
         /// <summary>
         /// Retrieves the next unused Transaction number from the Variable database
         /// </summary>
@@ -567,7 +672,7 @@ namespace Inventory_3._0
             connect.Close();
         }
 
-        #endregion
+       
 
         /// <summary>
         /// Returns the monetary value of the entire inventory (each item's price * quantity)
@@ -667,7 +772,7 @@ namespace Inventory_3._0
             }
         }
 
-
+        #endregion
         /// <summary>
         /// Returns the total quantity of items currently in stock
         /// </summary>
@@ -701,69 +806,6 @@ namespace Inventory_3._0
         }
 
         /// <summary>
-        /// Adds Item's UPC to the AutoPrint table.
-        /// </summary>
-        /// <param name="item">Item whose label should be printed automatically at Trade-In checkout</param>
-        public static void AddToAutoPrintTable(Item item)
-        {
-            // Make sure item is not already in the table, to avoid duplicates
-            if (IsItemInAutoPrintTable(item))
-                return;
-
-            // Item is not in table, so add it.
-            string command = "INSERT INTO " + TableNames.AUTOPRINT + " VALUES(@UPC)";
-            SqlCommand cmd = new SqlCommand(command, connect);
-            cmd.Parameters.Add("@UPC", SqlDbType.Float).Value = item.UPC;
-
-            // Execute command
-            connect.Open();
-            cmd.ExecuteNonQuery();
-            connect.Close();
-        }
-
-        /// <summary>
-        /// Removes an item from the auto-print list
-        /// </summary>
-        /// <param name="item">Item to be taken off of the AutoPrintLabel list</param>
-        public static void RemoveFromAutoPrintTable(Item item)
-        {
-            if (IsItemInAutoPrintTable(item))
-            {
-                string command = "DELETE FROM " + TableNames.AUTOPRINT + " WHERE UPC = " + item.UPC.ToString();
-                SqlCommand cmd = new SqlCommand(command, connect);
-
-                // Execute command
-                connect.Open();
-                cmd.ExecuteNonQuery();
-                connect.Close();
-            }
-        }
-
-        /// <summary>
-        /// Checks if an item's UPC is in the Autoprint table
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns>True if item is in table, false otherwise</returns>
-        public static bool IsItemInAutoPrintTable(Item item)
-        {
-            object result = null;
-            string command = "SELECT * FROM " + TableNames.AUTOPRINT +
-                " WHERE  UPC = '" + item.UPC + "'";
-            SqlCommand cmd = new SqlCommand(command, connect);
-
-            // Execute command
-            connect.Open();
-            result = cmd.ExecuteScalar();
-            connect.Close();
-
-            // If the result is still null, then the item does not exist in the table
-            if (result == null)
-                return false;
-            else
-                return true;
-        }
-
-        /// <summary>
         /// Determines whether or not the passed item is currently in stock, based on UPC and item Name
         /// </summary>
         /// <param name="item">Item to check</param>
@@ -772,16 +814,9 @@ namespace Inventory_3._0
         {
             object result = null; // Result of SQL query
             string command;
-
-            // If UPC isn't 0, find a match based on UPC. Otherwise find match based on Name and System.
-            if (item.UPC != "0")
-            {
-                command = "SELECT QUANTITY FROM " + TableNames.INVENTORY + " WHERE UPC = '" + item.UPC + "'";
-            }
-            else
-            {
-                command = "SELECT QUANTITY FROM " + TableNames.INVENTORY + " WHERE NAME = '" + item.name + "' AND SYSTEM = '" + item.system + "'";
-            }
+                        
+            command = "SELECT QUANTITY FROM " + TableNames.INVENTORY + " WHERE NAME = '" + item.name + "' AND SYSTEM = '" + item.system + "'";
+            
             SqlCommand cmd = new SqlCommand(command, connect);
 
             try
@@ -806,6 +841,8 @@ namespace Inventory_3._0
                 return false;
             }
         }
+
+
 
     }
 }

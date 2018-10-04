@@ -32,6 +32,9 @@ namespace Inventory_3._0
         public const string TRANSACTION = "tblTransactions";
         public const string VARIABLES = "tblVariables";
         public const string AUTOPRINT = "tblAutoPrint";
+        public const string UPC = "tblUPC";
+        public const string OUTBACK = "tblOutBack";
+        public const string STORAGE = "tblStorage";
     }
 
     public static class TransactionTypes

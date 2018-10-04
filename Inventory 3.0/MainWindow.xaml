@@ -49,6 +49,7 @@
                     </GridViewColumn>
                     <GridViewColumn Header="Name" Width ="Auto" DisplayMemberBinding="{Binding Path=name}"/>
                     <GridViewColumn Header="System" Width="Auto" DisplayMemberBinding="{Binding Path=system}"/>
+                    <GridViewColumn Header="Quantity" Width="Auto" DisplayMemberBinding="{Binding Path=quantity}"/>
                     <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
                     <GridViewColumn Header="Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
                     <GridViewColumn Header="Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
@@ -70,10 +71,15 @@
                             <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Center"/>
                         </ItemsPanelTemplate>
                     </Menu.ItemsPanel>
-                    <MenuItem Header="_File">
-                        <MenuItem Header="_Quit"/>
-                    </MenuItem>
-                    <MenuItem Header="_Manage">
+                        <MenuItem Header="_Settings">
+                            <MenuItem Name="menuInventory" Header="_Inventory">
+                                <MenuItem Name="menuInvMain" IsCheckable ="True" Header="_Main" Click="menuInvMain_Click"/>
+                                <MenuItem Name="menuInvOutBack" IsCheckable ="True" Header="_Out Back" Click="menuInvOutBack_Click"/>
+                                <MenuItem Name="menuInvStorage" IsCheckable ="True" Header="_Storage" Click="menuInvStorage_Click"/>
+                            </MenuItem>
+                            <MenuItem IsCheckable="True" Header="_Add Trade to Inventory"/>
+                        </MenuItem>
+                        <MenuItem Header="_Manage">
                         <MenuItem Header="Open _Management Screen" Click="ManagementMenu_Click"/>
                     </MenuItem>
                     

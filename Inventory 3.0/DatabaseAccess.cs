@@ -11,6 +11,48 @@ namespace Inventory_3._0
 {
     class DBAccess
     {
+        // Example of SQL command to select data from all tables using unique item ID to JOIN tables
+
+        //SELECT tblItems.Name, tblItems.System, tblPrices.Price, tblInventory.Store, tblPrices.Cash, tblPrices.Credit, tblUPC.UPC
+        //From tblItems
+        //JOIN tblInventory ON tblInventory.id = tblItems.id
+        //JOIN tblPrices ON tblInventory.id = tblPrices.id
+        //JOIN tblUPC ON tblInventory.id = tblUPC.id
+        //WHERE UPC=2222;
+
+        // SQL table structures:
+
+        //tblInventory:
+        //id
+        //Store
+        //OutBack
+        //Storage
+
+        //tblItems:
+        //id
+        //Name
+        //System
+
+        //tblPrices:
+        //id
+        //Price
+        //Cash
+        //Credit
+
+        //tblTransactions:
+        //Number
+        //Date
+        //Type
+        //Price
+        //id
+
+        //tblUPC:
+        //UPC
+        //id
+
+
+
+
         //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
         static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2);
     

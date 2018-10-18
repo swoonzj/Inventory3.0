@@ -34,6 +34,7 @@
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=name}"/>
                     <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
                     <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
+                    <GridViewColumn Header="In Stock"  DisplayMemberBinding="{Binding Path=quantity}"/>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -34,13 +34,16 @@ namespace Inventory_3._0
         public const string UPC = "tblUPC";
         public const string TRANSACTION = "tblTransactions";
 
-        public const int STORE = 1;
-        public const int OUTBACK = 2;
-        public const int STORAGE = 3;
-
         // Currently unused
         public const string VARIABLES = "tblVariables";
         public const string AUTOPRINT = "tblAutoPrint";           
+    }
+
+    public static class ColumnNames
+    {
+        public const string STORE = "Store";
+        public const string OUTBACK = "OutBack";
+        public const string STORAGE = "Storage";
     }
 
     public static class TransactionTypes

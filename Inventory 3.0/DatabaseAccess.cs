@@ -76,6 +76,7 @@ namespace Inventory_3._0
 
         /// <summary>
         /// Returns a List of all Items (matching an optional search string), with inventory information on passed Inventory column
+        /// Does NOT fetch UPC information
         /// </summary>
         /// <param name="inventoryColumn">Table name of an INVENTORY type table</param>
         /// <param name="sortBy">Column to sort by.   (Optional)</param>
@@ -106,19 +107,17 @@ namespace Inventory_3._0
 
             if (sortBy != "Name")
             {
-                cmd = new SqlCommand("SELECT Name, System, Price, "+ inventoryColumn +", Cash, Credit, id FROM " + TableNames.ITEMS +
+                cmd = new SqlCommand("SELECT Name, System, Price, " + inventoryColumn + ", Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
                     "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.PRICES + ".id " +
-                    "JOIN " + TableNames.UPC + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.UPC + ".id " +
                     "WHERE " + searchTerms.GenerateSQLSearchString() +
-                    " ORDER BY " + sortBy + " " + order + ", Name, System;", connect);
+                    " ORDER BY " + sortBy + " " + order + ", Name;", connect);
             }
             else
             {
-                cmd = new SqlCommand("SELECT Name, System, Price, Store, Cash, Credit, id FROM " + TableNames.ITEMS +
+                cmd = new SqlCommand("SELECT Name, System, Price, Store, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
-                    "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.PRICES + ".id " +
-                    "JOIN " + TableNames.UPC + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.UPC + ".id " +
+                    "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id = " + TableNames.PRICES + ".id " +
                     "WHERE " + searchTerms.GenerateSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order + ";", connect);
             }
@@ -449,13 +448,14 @@ namespace Inventory_3._0
             //        reader[6].ToString());
            
             // FOR NEW TABLE
-            item = new Item(reader[1].ToString(), // Name
-                    reader[2].ToString(),   // System
-                    reader[3].ToString(),   // Price
-                    reader[4].ToString(),   // Quantity
-                    reader[5].ToString(),   // Cash
-                    reader[6].ToString(),   // Credit
-                    reader[0].ToString());  // SQL ID
+            item = new Item(reader[0].ToString(), // Name
+                    reader[1].ToString(),   // System
+                    reader[2].ToString(),   // Price
+                    reader[3].ToString(),   // Quantity
+                    reader[4].ToString(),   // Cash
+                    reader[5].ToString(),   // Credit
+                    reader[6].ToString());   // SQL ID
+                     
             
             return item;
         }
@@ -472,9 +472,11 @@ namespace Inventory_3._0
         {
             List<Item> items = new List<Item>();
 
-            SqlCommand cmd = new SqlCommand("SELECT * FROM " + inventoryColumn +
-                " INNER JOIN tblUPC on " + inventoryColumn + ".id=" + TableNames.UPC + ".id " +
-                "WHERE UPC="+ UPC, connect);
+            SqlCommand cmd = new SqlCommand("SELECT Name, System, Price, " + inventoryColumn + ", Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+                    " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
+                    "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.PRICES + ".id " +
+                " JOIN " + TableNames.UPC + " on " + TableNames.ITEMS + ".id=" + TableNames.UPC + ".id " +
+                "WHERE UPC=" + UPC, connect);
             try
             {
                 connect.Open();

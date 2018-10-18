@@ -48,7 +48,7 @@ namespace Inventory_3._0.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Store")]
         public string CurrentInventory {
             get {
                 return ((string)(this["CurrentInventory"]));

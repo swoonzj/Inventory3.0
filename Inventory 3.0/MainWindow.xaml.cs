@@ -123,16 +123,18 @@ namespace Inventory_3._0
                 //MessageBox.Show(keyboardInput);
                 List<Item> items = DBAccess.UPCLookup(Settings.Default.CurrentInventory, keyboardInput); // Returns NULL if UPC does not match an item
                 
+                
+
                 // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
-                Item item = items[0]; 
-                if (item != null)
+                if (items.Count != 0)
                 {
-                    cart.Add(item);
-                    keyboardInput = "";
+                    cart.Add(items[0]);
                     UpdateTotals();
                 }
                 else
                     MessageBox.Show("Unknown UPC");
+
+                keyboardInput = "";
             }
         }
 
@@ -205,21 +207,21 @@ namespace Inventory_3._0
         {
             menuInvOutBack.IsChecked = false;
             menuInvStorage.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = TableNames.STORE;
+            Properties.Settings.Default.CurrentInventory = ColumnNames.STORE;
         }
 
         private void menuInvOutBack_Click(object sender, RoutedEventArgs e)
         {
             menuInvMain.IsChecked = false;
             menuInvStorage.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = TableNames.OUTBACK;
+            Properties.Settings.Default.CurrentInventory = ColumnNames.OUTBACK;
         }
 
         private void menuInvStorage_Click(object sender, RoutedEventArgs e)
         {
             menuInvOutBack.IsChecked = false;
             menuInvMain.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = TableNames.STORAGE;
+            Properties.Settings.Default.CurrentInventory = ColumnNames.STORAGE;
         }
     }
 }

@@ -28,13 +28,19 @@ namespace Inventory_3._0
 
     public static class TableNames
     {
+        public const string ITEMS = "tblItems";
         public const string INVENTORY = "tblInventory";
-        public const string TRANSACTION = "tblTransactions";
-        public const string VARIABLES = "tblVariables";
-        public const string AUTOPRINT = "tblAutoPrint";
+        public const string PRICES = "tblPrices";
         public const string UPC = "tblUPC";
-        public const string OUTBACK = "tblOutBack";
-        public const string STORAGE = "tblStorage";
+        public const string TRANSACTION = "tblTransactions";
+
+        public const int STORE = 1;
+        public const int OUTBACK = 2;
+        public const int STORAGE = 3;
+
+        // Currently unused
+        public const string VARIABLES = "tblVariables";
+        public const string AUTOPRINT = "tblAutoPrint";           
     }
 
     public static class TransactionTypes

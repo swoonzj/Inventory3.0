@@ -205,7 +205,7 @@ namespace Inventory_3._0
         {
             menuInvOutBack.IsChecked = false;
             menuInvStorage.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = TableNames.INVENTORY;
+            Properties.Settings.Default.CurrentInventory = TableNames.STORE;
         }
 
         private void menuInvOutBack_Click(object sender, RoutedEventArgs e)

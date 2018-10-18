@@ -36,13 +36,13 @@ namespace Inventory_3._0
             // Case: list of terms is empty
             if (terms.Count == 0)
             {
-                return "(Name LIKE \'%%\' OR system LIKE \'%%\') ";
+                return "(Name LIKE \'%%\' OR System LIKE \'%%\') ";
             }
 
             for (int i = 0; i < terms.Count; i++)
             {
                 string term = terms[i];
-                output += "(Name LIKE \'%" + term + "%\' OR system LIKE \'%" + term + "%\') ";
+                output += "(Name LIKE \'%" + term + "%\' OR System LIKE \'%" + term + "%\') ";
 
                 // Add an "AND" in between conditions
                 // Do not add one if it is the last search term

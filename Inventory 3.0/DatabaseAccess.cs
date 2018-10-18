@@ -55,7 +55,142 @@ namespace Inventory_3._0
 
         //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
         static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2);
-    
+
+
+
+        #region Updated Methods (for new SQL table structure)
+
+
+
+        // Check a string for characters that would throw off SQL formatting
+        private static string CheckForSpecialCharacters(string input)
+        {
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == '\'') // check for ' (apostrophe)
+                { input = input.Insert(i, "\'"); i++; }
+
+            }
+            return input;
+        }
+
+        /// <summary>
+        /// Returns a List of all Items (matching an optional search string), with inventory information on passed Inventory column
+        /// </summary>
+        /// <param name="inventoryColumn">Table name of an INVENTORY type table</param>
+        /// <param name="sortBy">Column to sort by.   (Optional)</param>
+        /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
+        /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
+        /// <returns>A List of Items</returns>
+        public static List<Item> SQLTableToList(string inventoryColumn, string sortBy = "System", bool ascending = true, string searchtext = "")
+        {
+            List<Item> collection = new List<Item>();
+            Item item;
+            SearchTerms searchTerms;
+
+            // Save sorting order to string "order" (descending/ascending)
+            string order;
+            SqlCommand cmd;
+            if (ascending)
+                order = "ASC";
+            else
+                order = "DESC";
+
+            // parameters cannot be null
+            if (searchtext == null) searchtext = "";
+            if (sortBy == null) sortBy = "System";
+
+            // Check for special characters, then divide searchtext into individual terms
+            searchtext = CheckForSpecialCharacters(searchtext);
+            searchTerms = new SearchTerms(searchtext);
+
+            if (sortBy != "Name")
+            {
+                cmd = new SqlCommand("SELECT Name, System, Price, "+ inventoryColumn +", Cash, Credit, id FROM " + TableNames.ITEMS +
+                    " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
+                    "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.PRICES + ".id " +
+                    "JOIN " + TableNames.UPC + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.UPC + ".id " +
+                    "WHERE " + searchTerms.GenerateSQLSearchString() +
+                    " ORDER BY " + sortBy + " " + order + ", Name, System;", connect);
+            }
+            else
+            {
+                cmd = new SqlCommand("SELECT Name, System, Price, Store, Cash, Credit, id FROM " + TableNames.ITEMS +
+                    " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
+                    "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.PRICES + ".id " +
+                    "JOIN " + TableNames.UPC + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.UPC + ".id " +
+                    "WHERE " + searchTerms.GenerateSQLSearchString() +
+                    " ORDER BY " + sortBy + " " + order + ";", connect);
+            }
+
+            try
+            {
+                connect.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read() == true)
+                {
+                    item = SQLReaderToItem(reader);
+                    if (item != null)
+                        collection.Add(item);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN SQLTableToCollection:\n" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+
+            return collection;
+        }
+
+        public static void AddNewItemToTable(int tblname, string name, string system, decimal price, int inventory, decimal cash, decimal credit, List<string> upcs)
+        {
+
+            name = CheckForSpecialCharacters(name);
+            system = CheckForSpecialCharacters(system);
+
+            // Add data to table
+            SqlCommand cmdItem = new SqlCommand("INSERT INTO " + TableNames.ITEMS + " VALUES(@NAME, @SYSTEM) OUTPUT INSERTED.ID", connect);
+            cmdItem.Parameters.Add("@NAME", SqlDbType.VarChar).Value = name;
+            cmdItem.Parameters.Add("@SYSTEM", SqlDbType.VarChar).Value = system;
+
+            SqlCommand cmdPrice = new SqlCommand("INSERT INTO " + TableNames.PRICES + " VALUES(@ID, @PRICE, @CASH, @CREDIT)", connect);
+            cmdPrice.Parameters.Add("@PRICE", SqlDbType.Money).Value = price;
+            cmdPrice.Parameters.Add("@CASH", SqlDbType.Money).Value = cash;
+            cmdPrice.Parameters.Add("@CREDIT", SqlDbType.Money).Value = credit;
+
+            SqlCommand cmdUPC = new SqlCommand("INSERT INTO " + TableNames.UPC + " (ID, UPC) VALUES @VALUE", connect);
+
+            // execute command  & close connection
+            try
+            {
+                connect.Open();
+                int ID = (int)cmdItem.ExecuteScalar(); // Get the unique, auto-incremented ID for the item.
+
+                cmdPrice.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
+                cmdUPC.CommandText.Replace("@VALUE", CreateUPCInsertString(upcs, ID));
+
+                cmdPrice.ExecuteNonQuery();
+                cmdUPC.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN AddNewItemToTable:\n" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+        }
+
+
+        #endregion
+
+
         // Export table to Comma Separated Values file (.csv)
         public static void ExportCSV(string filepath, string tblname)
         {
@@ -85,69 +220,22 @@ namespace Inventory_3._0
 
         }
 
-        // Check a string for characters that would throw off SQL formatting
-        private static string CheckForSpecialCharacters(string input)
+       public static string CreateUPCInsertString(List<string> upcs, int ID)
         {
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (input[i] == '\'') // check for ' (apostrophe)
-                { input = input.Insert(i, "\'"); i++; }
+            string output = "";
 
+            foreach (string upc in upcs)
+            {
+                output += "(" + ID + ", " + upc + "),";
             }
-            return input;
+
+           // Remove the last comma
+            return output.Remove(output.Length - 1);
         }
 
-        //// Add an item to the passed Tablename, 
-        ////   but specifically designed for the Inventory & TemporaryInventory(when importing from CSV) tables
-        public static void AddToTable(string tblname, string name, string system, decimal price, int inventory, decimal cash, decimal credit, List<string> upcs)
-        {
-
-            name = CheckForSpecialCharacters(name);
-            system = CheckForSpecialCharacters(system);
-
-            // Add data to table
-            SqlCommand cmd = new SqlCommand("INSERT INTO " + tblname + " VALUES(@NAME, @SYSTEM, @PRICE, @QUANTITY, @TRADE_CASH, @TRADE_CREDIT, @UPC)", connect);
-            cmd.Parameters.Add("@NAME", SqlDbType.VarChar).Value = name;
-            cmd.Parameters.Add("@SYSTEM", SqlDbType.VarChar).Value = system;
-            cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = price;
-            cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = inventory;
-            cmd.Parameters.Add("@TRADE_CASH", SqlDbType.Money).Value = cash;
-            cmd.Parameters.Add("@TRADE_CREDIT", SqlDbType.Money).Value = credit;
-            
-            // Handle UPCS!!!!!!
-            //cmd.Parameters.Add("@UPC", SqlDbType.VarChar).Value = upcs;
-
-            // execute command  & close connection
-            try
-            {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN AddToTable:\n" + e.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-        }
+        //// Add an item to the passed Tablename
         
-        public static void AddToTable(string tblname, Item item)
-        {
-            // Make sure no duplicates exist
-            if (IsItemInTable(tblname, item))
-            {
-                IncrementInventory(tblname, item);
-            }
-
-            else
-            {
-                // Add data to table
-                AddToTable(tblname, item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);                
-            }
-        }
-
+        
         public static void SaveItemChanges(Item item, string sqlTable)
         {
             // Finish this!!!!!!!
@@ -303,74 +391,6 @@ namespace Inventory_3._0
 
         }
         
-
-        /// <summary>
-        /// Gets an INVENTORY table and returns a List of all contained Items
-        /// </summary>
-        /// <param name="tablename">Table name of an INVENTORY type table</param>
-        /// <param name="sortBy">Column to sort by.   (Optional)</param>
-        /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
-        /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
-        /// <returns>A List of Items</returns>
-        public static List<Item> SQLTableToList(string tablename, string sortBy = "System", bool ascending = true, string searchtext = "")
-        {
-            List<Item> collection = new List<Item>();
-            Item item;
-            SearchTerms searchTerms;
-
-            // Save sorting order to string "order" (descending/ascending)
-            string order;
-            SqlCommand cmd;
-            if (ascending)
-                order = "ASC";
-            else
-                order = "DESC";
-
-            // parameters cannot be null
-            if (searchtext == null) searchtext = "";
-            if (sortBy == null) sortBy = "System";
-
-            // Check for special characters, then divide searchtext into individual terms
-            searchtext = CheckForSpecialCharacters(searchtext);
-            searchTerms = new SearchTerms(searchtext);
-
-            if (sortBy != "Name")
-            {
-                cmd = new SqlCommand("SELECT * FROM " + tablename +
-                   " WHERE " + searchTerms.GenerateSQLSearchString() +
-                   "ORDER BY " + sortBy + " " + order + ", Name;", connect);
-            }
-            else
-            {
-                cmd = new SqlCommand("SELECT * FROM " + tablename +
-                   " WHERE " + searchTerms.GenerateSQLSearchString() +
-                   "ORDER BY " + sortBy + " " + order + ";", connect);
-            }
-
-            try
-            {
-                connect.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read() == true)
-                {
-                    item = SQLReaderToItem(reader);
-                    if (item != null)
-                        collection.Add(item);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN SQLTableToCollection:\n" + e.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-
-            return collection;
-        }        
-        
         /// <summary>
         /// Checks if an Item is already present in an inventory table
         /// </summary>
@@ -445,15 +465,15 @@ namespace Inventory_3._0
         /// <summary>
         /// Gets List of Items that have the passed UPC parameter
         /// </summary>
-        /// <param name="tablename">Table containing Item information</param>
+        /// <param name="inventoryColumn">Table containing Item information</param>
         /// <param name="UPC">The UPC to search for</param>
         /// <returns></returns>
-        public static List<Item> UPCLookup(string tablename, string UPC)
+        public static List<Item> UPCLookup(string inventoryColumn, string UPC) // FIX THIS !!!!!!!!!!!!!!
         {
             List<Item> items = new List<Item>();
 
-            SqlCommand cmd = new SqlCommand("SELECT * FROM " + tablename +
-                " INNER JOIN tblUPC on " + tablename + ".id=" + TableNames.UPC + ".id " +
+            SqlCommand cmd = new SqlCommand("SELECT * FROM " + inventoryColumn +
+                " INNER JOIN tblUPC on " + inventoryColumn + ".id=" + TableNames.UPC + ".id " +
                 "WHERE UPC="+ UPC, connect);
             try
             {

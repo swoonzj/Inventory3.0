@@ -48,7 +48,7 @@ namespace Inventory_3._0.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("tblInventory")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public string CurrentInventory {
             get {
                 return ((string)(this["CurrentInventory"]));

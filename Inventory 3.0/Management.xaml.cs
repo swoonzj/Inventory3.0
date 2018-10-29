@@ -18,20 +18,24 @@ namespace Inventory_3._0
     /// <summary>
     /// Interaction logic for Management.xaml
     /// </summary>
+    /// 
     public partial class Management : Window
     {
+        public List<string> UPCsToDelete;
+
         public Management()
         {
+            UPCsToDelete = new List<string>();
             InitializeComponent();
-            Search(String.Empty);
+            Search();
         }
 
-        private void Search(string searchString)
+        private void Search()
         {
             try
             {
                 List<Item> items = new List<Item>();
-                items = DBAccess.SQLTableToList(ColumnNames.STORE, searchtext: searchString);
+                items = DBAccess.SQLTableToList(Properties.Settings.Default.CurrentInventory, searchtext: txtSearch.Text);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)
@@ -49,7 +53,7 @@ namespace Inventory_3._0
         {
             if (e.Key == Key.Enter)
             {
-                Search(txtSearch.Text);
+                Search();
             }
         }
 
@@ -89,7 +93,10 @@ namespace Inventory_3._0
                 return;
             }
             if (item.name != null)
+            {
                 txtName.Text = item.name;
+                txtName.IsEnabled = true;
+            }
             else
             {
                 txtName.IsEnabled = false;
@@ -171,34 +178,44 @@ namespace Inventory_3._0
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
-        {
-            string changes = "";
-            if (txtName.IsEnabled == true && txtName.Text.ToString() != "") 
-                changes += txtName.Text + " \n";
-            if (txtSystem.Text.ToString() != "") 
-                changes += txtSystem.Text + "\n";
-            if (txtPrice.Text.ToString() != "") 
-                changes += txtPrice.Text + "\n";
-            if (txtQuantity.Text.ToString() != "") 
-                changes += txtQuantity.Text + "\n";
-            if (txtCash.Text.ToString() != "") 
-                changes += txtCash.Text + "\n";
-            if (txtCredit.Text.ToString() != "") 
-                changes += txtCredit.Text + "\n";
-
-
-            changes += "\nUPCs:\n";
-            foreach (string upc in lvUPC.ItemsSource)
-            {
-                changes += upc + "\n";
-            }
-
-            MessageBoxResult result = MessageBox.Show("Save the following changes?\n" + changes, "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        {  
+            
+            // Save item information
+            MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
-            {
-                MessageBox.Show("Saved. (but not really)");
-                // ACTUALLY SAVE CHANGES !!!!!!
+            {                
+                foreach (Item item in lvList.SelectedItems)
+                {
+                    Item newItem = item.Clone();
 
+                    if (txtName.IsEnabled == true && txtName.Text.ToString() != "")
+                        newItem.name = txtName.Text;
+                    if (txtSystem.Text.ToString() != "")
+                        newItem.system = txtSystem.Text;
+                    if (txtPrice.Text.ToString() != "")
+                        newItem.price = Convert.ToDecimal(txtPrice.Text);
+                    if (txtQuantity.Text.ToString() != "")
+                        newItem.quantity = Convert.ToInt32(txtQuantity.Text);
+                    if (txtCash.Text.ToString() != "")
+                        newItem.tradeCash = Convert.ToDecimal(txtCash.Text);
+                    if (txtCredit.Text.ToString() != "")
+                        newItem.tradeCredit = Convert.ToDecimal(txtCredit.Text);
+
+                    DBAccess.SaveItemChanges(newItem, Properties.Settings.Default.CurrentInventory);
+
+                // SAVE UPCS !!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                    // Add new UPCs
+                    List<string> newUPCs = new List<string>();
+                    foreach (ListViewItem UPC in lvUPC.SelectedItems) newUPCs.Add(UPC.ToString());
+                    
+                    List<string> duplicateUPCs = DBAccess.GetDuplicateUPCs(newItem);
+
+                    // Delete Removed UPCs
+                }
+
+                MessageBox.Show("Saved.");
+                Search();
             }
         }
 
@@ -216,5 +233,40 @@ namespace Inventory_3._0
             ((Item)lvList.SelectedItems[0]).UPCs.Add(txtUPC.Text);
             PopulateUPClistview((Item)lvList.SelectedItems[0]); 
         }
+        
+        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (ListViewItem upc in lvUPC.SelectedItems){
+                UPCsToDelete.Add(upc.ToString());
+            }
+        }
+
+        private void menuInvMain_Click(object sender, RoutedEventArgs e)
+        {
+            menuInvOutBack.IsChecked = false;
+            menuInvStorage.IsChecked = false;
+            Properties.Settings.Default.CurrentInventory = ColumnNames.STORE;
+        }
+
+        private void menuInvOutBack_Click(object sender, RoutedEventArgs e)
+        {
+            menuInvMain.IsChecked = false;
+            menuInvStorage.IsChecked = false;
+            Properties.Settings.Default.CurrentInventory = ColumnNames.OUTBACK;
+        }
+
+        private void menuInvStorage_Click(object sender, RoutedEventArgs e)
+        {
+            menuInvOutBack.IsChecked = false;
+            menuInvMain.IsChecked = false;
+            Properties.Settings.Default.CurrentInventory = ColumnNames.STORAGE;
+        }
+
+        private void menuAddNewItem_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("NEW ITEM HANDLER!"); // Do this !!!!!!!!
+        }
+
+        
     }
 }

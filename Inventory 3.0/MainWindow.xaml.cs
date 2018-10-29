@@ -120,7 +120,8 @@ namespace Inventory_3._0
             // When "RETURN" is hit, look up UPC & add item to currently focused cart
             else
             {
-                //MessageBox.Show(keyboardInput);
+                if (keyboardInput == "") return; // Return if the input is empty. Prevents a SQL error.
+
                 List<Item> items = DBAccess.UPCLookup(Settings.Default.CurrentInventory, keyboardInput); // Returns NULL if UPC does not match an item
                 
                 

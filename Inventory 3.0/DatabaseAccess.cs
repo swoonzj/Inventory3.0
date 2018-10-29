@@ -186,8 +186,138 @@ namespace Inventory_3._0
             }
         }
 
+        private static string CreateUPCInsertString(List<string> upcs, int ID)
+        {
+            string output = "";
+
+            foreach (string upc in upcs)
+            {
+                output += "(" + ID + ", " + upc + "),";
+            }
+
+            // Remove the last comma
+            return output.Remove(output.Length - 1);
+        }
+
+        /// <summary>
+        /// Returns Items with duplicate Name/System data
+        /// </summary>
+        /// <param name="item">Item to check for duplicates</param>
+        /// <returns>List of duplicate items. If empty, there are no duplicates</returns>
+        public List<Item> GetItemDuplicates(Item item)
+        {
+            List<Item> items = new List<Item>();
+
+            string sqlcommand = String.Format("SELECT Name, System FROM {0} WHERE Name like \'{1}\' AND System like\'{2}\'", TableNames.ITEMS, item.name, item.system); // Might need to select more !!!!!!
+            SqlCommand cmd = new SqlCommand(sqlcommand);
+
+            try
+            {
+                connect.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read() == true)
+                {
+                    item = SQLReaderToItem(reader);
+                    if (item != null)
+                        items.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in GetItemDuplicates:\n" + ex.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+            
+            return items;
+        }
+
+        /// <summary>
+        /// Gets a list of duplicate UPCs matching the ID and passed. Item MUST have SQL ID.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        static public List<string> GetDuplicateUPCs(Item item)
+        {
+            List<string> upcs = new List<string>();
+
+            for (int i = 0; i < item.UPCs.Count; i++)
+            {
+                string sqlcommand = String.Format("SELECT UPC FROM {0} WHERE id={1} AND UPC={2}", TableNames.UPC, item.SQLid, item.UPCs[i]);
+                SqlCommand cmd = new SqlCommand(sqlcommand);
+
+                try
+                {
+                    connect.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read() == true)
+                    {
+                        upcs.Add(reader[0].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in GetDuplicateUPCs:\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            }
+            return upcs;
+        }
+
+        public static void SaveItemChanges(Item item, string inventoryColumn)
+        {
+            string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2} WHERE id = {3}", TableNames.INVENTORY, inventoryColumn, item.quantity, item.SQLid);
+            string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
+
+            SqlCommand cmd = new SqlCommand(itemUpdate, connect);
+            
+            try
+            {
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+                cmd = new SqlCommand(inventoryUpdate, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+                cmd = new SqlCommand(priceUpdate, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in SaveItemChanges:\n" + ex.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+        }
+
+
+
 
         #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         // Export table to Comma Separated Values file (.csv)
@@ -218,28 +348,7 @@ namespace Inventory_3._0
             connect.Close();
 
         }
-
-       public static string CreateUPCInsertString(List<string> upcs, int ID)
-        {
-            string output = "";
-
-            foreach (string upc in upcs)
-            {
-                output += "(" + ID + ", " + upc + "),";
-            }
-
-           // Remove the last comma
-            return output.Remove(output.Length - 1);
-        }
-
-        //// Add an item to the passed Tablename
         
-        
-        public static void SaveItemChanges(Item item, string sqlTable)
-        {
-            // Finish this!!!!!!!
-        }
-
         // For recording transactions (Transaction Total)
         //public static void AddToTransactionTable(string tblname, Item item, string type, int transactionNumber, string date) // Should only be used for Table of Transactions
         //{
@@ -476,7 +585,8 @@ namespace Inventory_3._0
                     " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
                     "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.PRICES + ".id " +
                 " JOIN " + TableNames.UPC + " on " + TableNames.ITEMS + ".id=" + TableNames.UPC + ".id " +
-                "WHERE UPC=" + UPC, connect);
+                "WHERE UPC=\'" + UPC + "\'", connect);
+
             try
             {
                 connect.Open();

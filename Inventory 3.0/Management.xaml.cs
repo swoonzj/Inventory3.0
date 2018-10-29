@@ -207,9 +207,16 @@ namespace Inventory_3._0
 
                     // Add new UPCs
                     List<string> newUPCs = new List<string>();
-                    foreach (ListViewItem UPC in lvUPC.SelectedItems) newUPCs.Add(UPC.ToString());
+                    foreach (ListViewItem UPC in lvUPC.SelectedItems) // Get all UPCs from table
+                        newUPCs.Add(UPC.ToString());
                     
                     List<string> duplicateUPCs = DBAccess.GetDuplicateUPCs(newItem);
+                    foreach(string upc in duplicateUPCs)
+                    {
+                        newUPCs.Remove(upc);
+                    }
+
+                    DBAccess.AddUPCs
 
                     // Delete Removed UPCs
                 }

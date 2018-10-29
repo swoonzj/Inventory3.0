@@ -239,7 +239,7 @@ namespace Inventory_3._0
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        static public List<string> GetDuplicateUPCs(Item item)
+        public static List<string> GetDuplicateUPCs(Item item)
         {
             List<string> upcs = new List<string>();
 
@@ -300,7 +300,13 @@ namespace Inventory_3._0
             }
         }
 
+        public static void AddUPCs(List<string> upcs, int SQLid)
+        {
+            CreateUPCInsertString(upcs, SQLid)
+            {
 
+            }
+        }
 
 
         #endregion

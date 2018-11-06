@@ -27,6 +27,22 @@ namespace Inventory_3._0
         {
             UPCsToDelete = new List<string>();
             InitializeComponent();
+            // Check Settings for current Inventory
+            switch (Properties.Settings.Default.CurrentInventory)
+            {
+                case ColumnNames.STORE:
+                    menuInvMain.IsChecked = true;
+                    break;
+                case ColumnNames.STORAGE:
+                    menuInvStorage.IsChecked = true;
+                    break;
+                case ColumnNames.OUTBACK:
+                    menuInvOutBack.IsChecked = true;
+                    break;
+                default:
+                    menuInvOutBack_Click(this,null);
+                    break;
+            }
             Search();
         }
 
@@ -81,8 +97,7 @@ namespace Inventory_3._0
         private void FillTextBoxes(Item item)
         {
             if (item == null)
-            {
-                
+            {                
                 txtName.Text = "";
                 txtSystem.Text = "";
                 txtPrice.Text = "";
@@ -203,22 +218,22 @@ namespace Inventory_3._0
 
                     DBAccess.SaveItemChanges(newItem, Properties.Settings.Default.CurrentInventory);
 
-                // SAVE UPCS !!!!!!!!!!!!!!!!!!!!!!!!!!!
-
                     // Add new UPCs
                     List<string> newUPCs = new List<string>();
-                    foreach (ListViewItem UPC in lvUPC.SelectedItems) // Get all UPCs from table
-                        newUPCs.Add(UPC.ToString());
-                    
-                    List<string> duplicateUPCs = DBAccess.GetDuplicateUPCs(newItem);
-                    foreach(string upc in duplicateUPCs)
+                    foreach (string UPC in lvUPC.Items) // Get all UPCs from table
                     {
-                        newUPCs.Remove(upc);
+                        newUPCs.Add(UPC);
                     }
 
-                    DBAccess.AddUPCs
+                    DBAccess.AddUPCs(newUPCs, item.SQLid);
 
-                    // Delete Removed UPCs
+                    if (UPCsToDelete.Count > 0)
+                    {
+                        DBAccess.RemoveUPCs(UPCsToDelete, item.SQLid);
+                        UPCsToDelete.Clear();
+                    }
+                    
+                    
                 }
 
                 MessageBox.Show("Saved.");
@@ -243,9 +258,13 @@ namespace Inventory_3._0
         
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-            foreach (ListViewItem upc in lvUPC.SelectedItems){
-                UPCsToDelete.Add(upc.ToString());
+            ObservableCollection<string> upcs = new ObservableCollection<string>(lvUPC.ItemsSource as ObservableCollection<string>);
+            foreach (string upc in lvUPC.SelectedItems)
+            {
+                UPCsToDelete.Add(upc);
+                upcs.Remove(upc);
             }
+            lvUPC.ItemsSource = upcs;
         }
 
         private void menuInvMain_Click(object sender, RoutedEventArgs e)
@@ -253,6 +272,7 @@ namespace Inventory_3._0
             menuInvOutBack.IsChecked = false;
             menuInvStorage.IsChecked = false;
             Properties.Settings.Default.CurrentInventory = ColumnNames.STORE;
+            Search();
         }
 
         private void menuInvOutBack_Click(object sender, RoutedEventArgs e)
@@ -260,6 +280,7 @@ namespace Inventory_3._0
             menuInvMain.IsChecked = false;
             menuInvStorage.IsChecked = false;
             Properties.Settings.Default.CurrentInventory = ColumnNames.OUTBACK;
+            Search();
         }
 
         private void menuInvStorage_Click(object sender, RoutedEventArgs e)
@@ -267,6 +288,7 @@ namespace Inventory_3._0
             menuInvOutBack.IsChecked = false;
             menuInvMain.IsChecked = false;
             Properties.Settings.Default.CurrentInventory = ColumnNames.STORAGE;
+            Search();
         }
 
         private void menuAddNewItem_Click(object sender, RoutedEventArgs e)

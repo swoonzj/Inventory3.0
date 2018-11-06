@@ -162,8 +162,6 @@ namespace Inventory_3._0
             cmdPrice.Parameters.Add("@CASH", SqlDbType.Money).Value = cash;
             cmdPrice.Parameters.Add("@CREDIT", SqlDbType.Money).Value = credit;
 
-            SqlCommand cmdUPC = new SqlCommand("INSERT INTO " + TableNames.UPC + " (ID, UPC) VALUES @VALUE", connect);
-
             // execute command  & close connection
             try
             {
@@ -171,10 +169,9 @@ namespace Inventory_3._0
                 int ID = (int)cmdItem.ExecuteScalar(); // Get the unique, auto-incremented ID for the item.
 
                 cmdPrice.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
-                cmdUPC.CommandText.Replace("@VALUE", CreateUPCInsertString(upcs, ID));
 
                 cmdPrice.ExecuteNonQuery();
-                cmdUPC.ExecuteNonQuery();
+                AddUPCs(upcs, ID);
             }
             catch (Exception e)
             {
@@ -186,6 +183,12 @@ namespace Inventory_3._0
             }
         }
 
+        /// <summary>
+        /// Creates a string in the format of "([ID],[UPC])" for insertion into SQL table
+        /// </summary>
+        /// <param name="upcs">List of UPCs</param>
+        /// <param name="ID">SQL ID of associated item</param>
+        /// <returns>A string in the format of "([ID],[UPC])"</returns>
         private static string CreateUPCInsertString(List<string> upcs, int ID)
         {
             string output = "";
@@ -241,12 +244,17 @@ namespace Inventory_3._0
         /// <returns></returns>
         public static List<string> GetDuplicateUPCs(Item item)
         {
-            List<string> upcs = new List<string>();
+            return GetDuplicateUPCs(item.UPCs, item.SQLid);
+        }
 
-            for (int i = 0; i < item.UPCs.Count; i++)
+        public static List<string> GetDuplicateUPCs(List<string> upcs, int SQLid)
+        {
+            List<string> duplicateUPCs = new List<string>();
+
+            for (int i = 0; i < upcs.Count; i++)
             {
-                string sqlcommand = String.Format("SELECT UPC FROM {0} WHERE id={1} AND UPC={2}", TableNames.UPC, item.SQLid, item.UPCs[i]);
-                SqlCommand cmd = new SqlCommand(sqlcommand);
+                string sqlcommand = String.Format("SELECT UPC FROM {0} WHERE id={1} AND UPC={2}", TableNames.UPC, SQLid, upcs[i]);
+                SqlCommand cmd = new SqlCommand(sqlcommand, connect);
 
                 try
                 {
@@ -254,7 +262,7 @@ namespace Inventory_3._0
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read() == true)
                     {
-                        upcs.Add(reader[0].ToString());
+                        duplicateUPCs.Add(reader[0].ToString());
                     }
                 }
                 catch (Exception ex)
@@ -266,7 +274,7 @@ namespace Inventory_3._0
                     connect.Close();
                 }
             }
-            return upcs;
+            return duplicateUPCs;
         }
 
         public static void SaveItemChanges(Item item, string inventoryColumn)
@@ -300,11 +308,69 @@ namespace Inventory_3._0
             }
         }
 
+        /// <summary>
+        /// Adds List of UPCs to the UPC table. Does not add duplicates.
+        /// </summary>
+        /// <param name="upcs"></param>
+        /// <param name="SQLid"></param>
         public static void AddUPCs(List<string> upcs, int SQLid)
         {
-            CreateUPCInsertString(upcs, SQLid)
+            List<string> duplicates = GetDuplicateUPCs(upcs, SQLid);
+            foreach (string dup in duplicates)
             {
+                upcs.Remove(dup);
+            }
 
+            if (upcs.Count == 0) // Return if no changes made to upcs
+                return;
+
+            SqlCommand cmdUPC = new SqlCommand("INSERT INTO " + TableNames.UPC + " (ID, UPC) VALUES @VALUE", connect);
+            cmdUPC.CommandText = cmdUPC.CommandText.Replace("@VALUE", CreateUPCInsertString(upcs, SQLid));
+
+            try
+            {
+                connect.Open();
+                cmdUPC.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in AddUPCs():\n" + ex.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+        }
+
+        public static void RemoveUPCs(List<string> upcs, int SQLid)
+        {
+            string upcValues = "(";
+            if (upcs.Count == 0) // Return if no changes made to upcs
+                return;
+
+            SqlCommand cmdUPC = new SqlCommand("DELETE FROM " + TableNames.UPC + " WHERE UPC in @VALUE AND id = " + SQLid, connect);
+
+            // Format Command String
+            foreach (string upc in upcs)
+            {
+                upcValues += upc + ",";
+            }
+            upcValues = upcValues.Remove(upcValues.Length-1); // remove last ","
+            upcValues += ")" ;
+            cmdUPC.CommandText = cmdUPC.CommandText.Replace("@VALUE", upcValues);
+            
+            try
+            {
+                connect.Open();
+                cmdUPC.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in RemoveUPCs():\n" + ex.Message);
+            }
+            finally
+            {
+                connect.Close();
             }
         }
 
@@ -583,7 +649,7 @@ namespace Inventory_3._0
         /// <param name="inventoryColumn">Table containing Item information</param>
         /// <param name="UPC">The UPC to search for</param>
         /// <returns></returns>
-        public static List<Item> UPCLookup(string inventoryColumn, string UPC) // FIX THIS !!!!!!!!!!!!!!
+        public static List<Item> UPCLookup(string inventoryColumn, string UPC) 
         {
             List<Item> items = new List<Item>();
 

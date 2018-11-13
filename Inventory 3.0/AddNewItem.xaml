@@ -1,0 +1,84 @@
+﻿<Window x:Class="Inventory_3._0.AddNewItem"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="New Item" Height="400" Width="500">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <!--Labels-->
+        <Label Grid.Column="0" Grid.Row ="0" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Name</Label>
+        <Label Grid.Column="0" Grid.Row ="1" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">System</Label>
+        <Label Grid.Column="0" Grid.Row ="2" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Price</Label>
+        <Label Grid.Column="0" Grid.Row ="3" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Quantity</Label>
+        <Label Grid.Column="0" Grid.Row ="4" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Trade: Cash</Label>
+        <Label Grid.Column="0" Grid.Row ="5" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Trade: Credit</Label>
+        <Label Grid.Column="0" Grid.Row ="6" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">UPCs</Label>
+        
+        <!--Text Boxes-->
+        <DockPanel Grid.Column="1" Grid.Row="0">
+            <!--Name-->
+            <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="1">
+            <!--System-->
+            <TextBox Name="txtSystem" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="2">
+            <!--Price-->
+            <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="3">
+            <!--Quantity-->
+            <TextBox Name="txtQuantity" Width="70" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <ComboBox Name="cmboInventorySelection" Margin ="5" DockPanel.Dock="Right" VerticalContentAlignment="Center" SelectionChanged="cmboInventorySelection_SelectionChanged">
+                <ComboBoxItem Name="cmboStore">Store Floor</ComboBoxItem>
+                <ComboBoxItem Name="cmboOutBack">Out Back</ComboBoxItem>
+                <ComboBoxItem Name="cmboStorage">Storage</ComboBoxItem>
+            </ComboBox>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="4">
+            <!--Trade: Cash-->
+            <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="5">
+            <!--Trade: Cash-->
+            <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="6">
+            <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="300">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Margin="2" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="UPC" DisplayMemberBinding="{Binding}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel VerticalAlignment="Center">
+                <TextBox Name="txtUPC" Margin="5"/>
+                <Button Name="btnAdd" Margin="5" Click="btnAdd_Click">Add</Button>
+                <Button Name="btnRemove" Margin="5" Click="btnRemove_Click">Remove</Button>
+            </StackPanel>
+        </DockPanel>
+        <Button Name="btnSave" Margin="5" Grid.Column="1" Grid.Row="7" Click="btnSave_Click">Save</Button>
+
+    </Grid>
+</Window>

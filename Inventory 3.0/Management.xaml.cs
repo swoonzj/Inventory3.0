@@ -193,8 +193,7 @@ namespace Inventory_3._0
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
-        {  
-            
+        {              
             // Save item information
             MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)

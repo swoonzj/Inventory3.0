@@ -146,7 +146,12 @@ namespace Inventory_3._0
             return collection;
         }
 
-        public static void AddNewItemToTable(int tblname, string name, string system, decimal price, int inventory, decimal cash, decimal credit, List<string> upcs)
+        public static void AddNewItem(Item item, string tblname)
+        {
+            AddNewItemToTable(tblname, item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);
+        }
+
+        public static void AddNewItemToTable(string tblname, string name, string system, decimal price, int inventory, decimal cash, decimal credit, List<string> upcs)
         {
 
             name = CheckForSpecialCharacters(name);
@@ -161,6 +166,8 @@ namespace Inventory_3._0
             cmdPrice.Parameters.Add("@PRICE", SqlDbType.Money).Value = price;
             cmdPrice.Parameters.Add("@CASH", SqlDbType.Money).Value = cash;
             cmdPrice.Parameters.Add("@CREDIT", SqlDbType.Money).Value = credit;
+             
+            //SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY)") // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             // execute command  & close connection
             try
@@ -169,8 +176,8 @@ namespace Inventory_3._0
                 int ID = (int)cmdItem.ExecuteScalar(); // Get the unique, auto-incremented ID for the item.
 
                 cmdPrice.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
-
                 cmdPrice.ExecuteNonQuery();
+
                 AddUPCs(upcs, ID);
             }
             catch (Exception e)

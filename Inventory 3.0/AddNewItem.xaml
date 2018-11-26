@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Inventory_3._0.AddNewItem"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="New Item" Height="400" Width="500">
+        Title="New Item" Height="500" Width="500" Icon="Shaq.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -42,12 +42,13 @@
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="3">
             <!--Quantity-->
-            <TextBox Name="txtQuantity" Width="70" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
-            <ComboBox Name="cmboInventorySelection" Margin ="5" DockPanel.Dock="Right" VerticalContentAlignment="Center" SelectionChanged="cmboInventorySelection_SelectionChanged">
-                <ComboBoxItem Name="cmboStore">Store Floor</ComboBoxItem>
-                <ComboBoxItem Name="cmboOutBack">Out Back</ComboBoxItem>
-                <ComboBoxItem Name="cmboStorage">Storage</ComboBoxItem>
-            </ComboBox>
+            <DataGrid Name="dgQuantities">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Store" Binding="{Binding Quantity[0]}" />
+                    <DataGridTextColumn Header="Out Back" Binding="{Binding Quantity[1]}" />
+                    <DataGridTextColumn Header="Storage" Binding="{Binding Quantity[2]}" />
+                </DataGrid.Columns>
+            </DataGrid>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="4">
             <!--Trade: Cash-->

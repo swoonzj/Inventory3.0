@@ -20,7 +20,7 @@ namespace Inventory_3._0
     /// </summary>
     public partial class AddNewItem : Window
     {
-        List<string> quantities = new List<string> {"0","0","0"};
+        List<int> quantities = new List<int> {0,0,0};
 
         public AddNewItem()
         {
@@ -39,7 +39,6 @@ namespace Inventory_3._0
                 newItem.name = txtName.Text;
                 newItem.system = txtSystem.Text;
                 newItem.price = Convert.ToDecimal(txtPrice.Text);
-                newItem.quantity = Convert.ToInt32(txtQuantity.Text);
                 newItem.tradeCash = Convert.ToDecimal(txtCash.Text);
                 newItem.tradeCredit = Convert.ToDecimal(txtCredit.Text);
 
@@ -61,59 +60,25 @@ namespace Inventory_3._0
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {            
             // Make sure there is text in the field. If not, do nothing.
+            // Make sure there are no doubles
             if (txtUPC.Text == "") return;
+            if (lvUPC.Items.Contains(txtUPC.Text)) return;
 
             lvUPC.Items.Add(txtUPC.Text);
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-            List<string> upcs = new List<string>(lvUPC.ItemsSource as List<string>); //!!!!!!
-            foreach (string upc in lvUPC.SelectedItems)
+            List<string> selectedItems = new List<string>();
+            foreach (string itemSelected in lvUPC.SelectedItems)
             {
-                upcs.Remove(upc);
+                selectedItems.Add(itemSelected);
             }
-            lvUPC.ItemsSource = upcs;
-        }
 
-        private void cmboInventorySelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Array Indexes :
-            // Store = 0
-            // OutBack = 1
-            // Storage = 2
-
-            // Assign changed values
-            if (e.RemovedItems.Count > 0)
+            foreach (string item in selectedItems)
             {
-                if (e.RemovedItems[0] == cmboStore)
-                {
-                    quantities[0] = txtQuantity.Text;
-                }
-                if (e.RemovedItems[0] == cmboOutBack)
-                {
-                    quantities[1] = txtQuantity.Text;
-                }
-                if (e.RemovedItems[0] == cmboStorage)
-                {
-                    quantities[2] = txtQuantity.Text;
-                }
+                lvUPC.Items.Remove(item);
             }
-            // Display selected values
-            if (e.AddedItems[0] == cmboStore)
-            {
-                txtQuantity.Text = quantities[0];
-            }
-            if (e.AddedItems[0] == cmboOutBack)
-            {
-                txtQuantity.Text = quantities[1];
-            }
-            if (e.AddedItems[0] == cmboStorage)
-            {
-                txtQuantity.Text = quantities[2];
-            }
-        }
-
-
+        }        
     }
 }

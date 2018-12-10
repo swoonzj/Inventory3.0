@@ -101,7 +101,7 @@ namespace Inventory_3._0
                 txtName.Text = "";
                 txtSystem.Text = "";
                 txtPrice.Text = "";
-                txtQuantity.Text = "";
+                // Quantities !!!!!!!
                 txtCash.Text = "";
                 txtCredit.Text = "";
                 lvUPC.ItemsSource = null;
@@ -129,12 +129,12 @@ namespace Inventory_3._0
             {
                 txtPrice.Text = "";
             }
-            if (item.quantity != int.MinValue)
-                txtQuantity.Text = item.quantity.ToString();
-            else
-            {
-                txtQuantity.Text = "";
-            }
+            //if (item.quantity != int.MinValue) !!!!!!!!!!!!!!!!!!!!!
+            //    txtQuantity.Text = item.quantity.ToString();
+            //else
+            //{
+            //    txtQuantity.Text = "";
+            //}
             if (item.tradeCash != decimal.MinValue)
                 txtCash.Text = item.tradeCash.ToString("0.00");
             else
@@ -183,11 +183,14 @@ namespace Inventory_3._0
                 if (item.name != selection.name) selection.name = null;
                 if (item.system != selection.system) selection.system = null;
                 if (item.price != selection.price) selection.price = decimal.MinValue;
-                if (item.quantity != selection.quantity) selection.quantity = int.MinValue;
                 if (item.tradeCash != selection.tradeCash) selection.tradeCash = decimal.MinValue;
                 if (item.tradeCredit != selection.tradeCredit) selection.tradeCredit = decimal.MinValue;
                 if (item.SQLid != selection.SQLid) selection.SQLid = 0;
+
+                List<int> quantites = DBAccess.GetQuantities(item.SQLid);
             }
+
+            
 
             return selection;
         }
@@ -208,8 +211,7 @@ namespace Inventory_3._0
                         newItem.system = txtSystem.Text;
                     if (txtPrice.Text.ToString() != "")
                         newItem.price = Convert.ToDecimal(txtPrice.Text);
-                    if (txtQuantity.Text.ToString() != "")
-                        newItem.quantity = Convert.ToInt32(txtQuantity.Text);
+                    // Quantity !!!!!!!!!!!!!!!!!!!!!!!
                     if (txtCash.Text.ToString() != "")
                         newItem.tradeCash = Convert.ToDecimal(txtCash.Text);
                     if (txtCredit.Text.ToString() != "")

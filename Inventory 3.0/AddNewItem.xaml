@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Inventory_3._0.AddNewItem"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="New Item" Height="500" Width="500" Icon="Shaq.ico">
+        Title="New Item" Height="600" Width="500" Icon="Shaq.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -42,11 +42,11 @@
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="3">
             <!--Quantity-->
-            <DataGrid Name="dgQuantities">
+            <DataGrid Name="dgQuantities" Margin="5">                
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Store" Binding="{Binding Quantity[0]}" />
-                    <DataGridTextColumn Header="Out Back" Binding="{Binding Quantity[1]}" />
-                    <DataGridTextColumn Header="Storage" Binding="{Binding Quantity[2]}" />
+                    <DataGridTextColumn Header="Store" Binding="{Binding ToString}" />
+                    <DataGridTextColumn Header="Out Back" Binding="{Binding ToString}" />
+                    <DataGridTextColumn Header="Storage" Binding="{Binding ToString}" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

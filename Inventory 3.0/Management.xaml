@@ -75,7 +75,13 @@
             <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="4"> <!--Quantity-->
-            <TextBox Name="txtQuantity" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <DataGrid Margin ="5" Name="dgQuantities">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Store" Binding="{Binding ToString}" />
+                    <DataGridTextColumn Header="Out Back" Binding="{Binding ToString}" />
+                    <DataGridTextColumn Header="Storage" Binding="{Binding ToString}" />
+                </DataGrid.Columns>
+            </DataGrid>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="5"> <!--Trade: Cash-->
             <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>

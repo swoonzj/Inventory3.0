@@ -25,6 +25,7 @@ namespace Inventory_3._0
         public AddNewItem()
         {
             InitializeComponent();
+            dgQuantities.ItemsSource = quantities;
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)

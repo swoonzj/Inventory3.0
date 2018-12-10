@@ -39,6 +39,13 @@ namespace Inventory_3._0
         public const string AUTOPRINT = "tblAutoPrint";           
     }
 
+    public static class QuantityColumns
+    {
+        public const int Store = 1;
+        public const int OutBack = 2;
+        public const int Storage = 3;
+    }
+
     public static class ColumnNames
     {
         public const string STORE = "Store";

@@ -151,7 +151,7 @@ namespace Inventory_3._0
             AddNewItemToTable(tblname, item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);
         }
 
-        public static void AddNewItemToTable(string tblname, string name, string system, decimal price, int inventory, decimal cash, decimal credit, List<string> upcs)
+        public static void AddNewItemToTable(string tblname, string name, string system, decimal price, List<int> inventory, decimal cash, decimal credit, List<string> upcs)
         {
 
             name = CheckForSpecialCharacters(name);
@@ -381,6 +381,36 @@ namespace Inventory_3._0
             }
         }
 
+        public static List<int> GetQuantities(int ID)
+        {
+            
+            List<int> quantities = new List<int>();
+            SqlCommand cmd = new SqlCommand("SELECT * FROM " + TableNames.INVENTORY + "WHERE id = " + ID, connect);
+
+            try
+            {
+                connect.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    quantities.Add((int)reader[QuantityColumns.Store]);
+                    quantities.Add((int)reader[QuantityColumns.OutBack]);
+                    quantities.Add((int)reader[QuantityColumns.Storage]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in GetQuantities():\n" + ex.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+
+
+            return quantities;
+        }
 
         #endregion
 
@@ -639,7 +669,7 @@ namespace Inventory_3._0
             item = new Item(reader[0].ToString(), // Name
                     reader[1].ToString(),   // System
                     reader[2].ToString(),   // Price
-                    reader[3].ToString(),   // Quantity
+                    new List<int>{(int)reader[3]},   // Quantity
                     reader[4].ToString(),   // Cash
                     reader[5].ToString(),   // Credit
                     reader[6].ToString());   // SQL ID

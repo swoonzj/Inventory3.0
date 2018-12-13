@@ -107,17 +107,15 @@ namespace Inventory_3._0
 
             if (sortBy != "Name")
             {
-                cmd = new SqlCommand("SELECT Name, System, Price, " + inventoryColumn + ", Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
-                    " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
-                    "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.PRICES + ".id " +
+                cmd = new SqlCommand("SELECT Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+                    "JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
                     "WHERE " + searchTerms.GenerateSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order + ", Name;", connect);
             }
             else
             {
-                cmd = new SqlCommand("SELECT Name, System, Price, Store, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
-                    " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
-                    "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id = " + TableNames.PRICES + ".id " +
+                cmd = new SqlCommand("SELECT Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+                    "JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
                     "WHERE " + searchTerms.GenerateSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order + ";", connect);
             }
@@ -131,7 +129,10 @@ namespace Inventory_3._0
                 {
                     item = SQLReaderToItem(reader);
                     if (item != null)
+                    {
                         collection.Add(item);
+                        item.quantity = DBAccess.GetQuantities(item.SQLid);
+                    }
                 }
             }
             catch (Exception e)

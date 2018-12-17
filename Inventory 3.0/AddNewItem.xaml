@@ -30,33 +30,38 @@
         <!--Text Boxes-->
         <DockPanel Grid.Column="1" Grid.Row="0">
             <!--Name-->
-            <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
+                     Text="{Binding name, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="1">
             <!--System-->
-            <TextBox Name="txtSystem" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtSystem" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
+                     Text="{Binding system, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="2">
             <!--Price-->
-            <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
+                     Text="{Binding price, Mode=TwoWay, StringFormat='#.00'}"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="3">
             <!--Quantity-->
-            <DataGrid Name="dgQuantities" Margin="5">                
+            <DataGrid Name="dgQuantities" Margin="5" CanUserResizeColumns="True" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">                
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Store" Binding="{Binding ToString}" />
-                    <DataGridTextColumn Header="Out Back" Binding="{Binding ToString}" />
-                    <DataGridTextColumn Header="Storage" Binding="{Binding ToString}" />
+                    <DataGridTextColumn Header="Store" Binding="{Binding quantity[0], Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Out Back" Binding="{Binding quantity[1], Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Storage" Binding="{Binding quantity[2], Mode=TwoWay}" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="4">
             <!--Trade: Cash-->
-            <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
+                     Text="{Binding tradeCash, Mode=TwoWay, StringFormat='#.00'}"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="5">
             <!--Trade: Cash-->
-            <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
+                     Text="{Binding tradeCredit, Mode=TwoWay, StringFormat='#.00'}"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="6">
             <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="300">

@@ -20,12 +20,15 @@ namespace Inventory_3._0
     /// </summary>
     public partial class AddNewItem : Window
     {
-        List<int> quantities = new List<int> {0,0,0};
+        Item item = new Item();
+        ObservableCollection<Item> items = new ObservableCollection<Item>();
 
         public AddNewItem()
         {
+            items.Add(item);
             InitializeComponent();
-            dgQuantities.ItemsSource = quantities;
+            //dgQuantities.ItemsSource = items;
+            this.DataContext = item;
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -34,7 +37,6 @@ namespace Inventory_3._0
             MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-
                 Item newItem = new Item();
 
                 newItem.name = txtName.Text;

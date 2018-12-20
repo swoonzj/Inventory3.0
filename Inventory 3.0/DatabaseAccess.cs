@@ -147,12 +147,12 @@ namespace Inventory_3._0
             return collection;
         }
 
-        public static void AddNewItem(Item item, string tblname)
+        public static void AddNewItem(Item item)
         {
-            AddNewItemToTable(tblname, item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);
+            AddNewItem(item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);
         }
 
-        public static void AddNewItemToTable(string tblname, string name, string system, decimal price, List<int> inventory, decimal cash, decimal credit, List<string> upcs)
+        public static void AddNewItem(string name, string system, decimal price, List<int> inventory, decimal cash, decimal credit, List<string> upcs)
         {
 
             name = CheckForSpecialCharacters(name);
@@ -167,9 +167,12 @@ namespace Inventory_3._0
             cmdPrice.Parameters.Add("@PRICE", SqlDbType.Money).Value = price;
             cmdPrice.Parameters.Add("@CASH", SqlDbType.Money).Value = cash;
             cmdPrice.Parameters.Add("@CREDIT", SqlDbType.Money).Value = credit;
-             
-            //SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY)") // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3)");
+            cmdInventory.Parameters.Add("@QUANTITY1", SqlDbType.Int).Value = inventory[0];
+            cmdInventory.Parameters.Add("@QUANTITY2", SqlDbType.Int).Value = inventory[1];
+            cmdInventory.Parameters.Add("@QUANTITY3", SqlDbType.Int).Value = inventory[2];
+            
             // execute command  & close connection
             try
             {
@@ -178,6 +181,9 @@ namespace Inventory_3._0
 
                 cmdPrice.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
                 cmdPrice.ExecuteNonQuery();
+
+                cmdInventory.Parameters.Add("@ID", SqlDbType.Int).Value =  ID;
+                cmdInventory.ExecuteNonQuery();
 
                 AddUPCs(upcs, ID);
             }

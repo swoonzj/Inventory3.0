@@ -41,7 +41,7 @@
         <DockPanel Grid.Column="1" Grid.Row="2">
             <!--Price-->
             <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
-                     Text="{Binding price, Mode=TwoWay, StringFormat='#.00'}"/>
+                     Text="{Binding price, Mode=TwoWay, StringFormat='0.00'}"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="3">
             <!--Quantity-->
@@ -56,15 +56,15 @@
         <DockPanel Grid.Column="1" Grid.Row="4">
             <!--Trade: Cash-->
             <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
-                     Text="{Binding tradeCash, Mode=TwoWay, StringFormat='#.00'}"/>
+                     Text="{Binding tradeCash, Mode=TwoWay, StringFormat='0.00'}"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="5">
             <!--Trade: Cash-->
             <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
-                     Text="{Binding tradeCredit, Mode=TwoWay, StringFormat='#.00'}"/>
+                     Text="{Binding tradeCredit, Mode=TwoWay, StringFormat='0.00'}"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="6">
-            <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="300">
+            <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="300" ItemsSource="{Binding UPCs, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn>
@@ -74,7 +74,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="UPC" DisplayMemberBinding="{Binding}"/>
+                        <GridViewColumn Header="UPC"/>
                     </GridView>
                 </ListView.View>
             </ListView>

@@ -25,9 +25,12 @@ namespace Inventory_3._0
 
         public AddNewItem()
         {
+            item.UPCs.Add("123456");
+            item.UPCs.Add("999999");
             items.Add(item);
+
             InitializeComponent();
-            //dgQuantities.ItemsSource = items;
+            dgQuantities.ItemsSource = items;
             this.DataContext = item;
         }
 
@@ -37,24 +40,7 @@ namespace Inventory_3._0
             MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                Item newItem = new Item();
-
-                newItem.name = txtName.Text;
-                newItem.system = txtSystem.Text;
-                newItem.price = Convert.ToDecimal(txtPrice.Text);
-                newItem.tradeCash = Convert.ToDecimal(txtCash.Text);
-                newItem.tradeCredit = Convert.ToDecimal(txtCredit.Text);
-
-                // Add new UPCs
-                List<string> newUPCs = new List<string>();
-                foreach (string UPC in lvUPC.Items) // Get all UPCs from table
-                {
-                    newUPCs.Add(UPC);
-                }
-
-                newItem.UPCs = newUPCs;
-
-                DBAccess.AddNewItem(newItem, Properties.Settings.Default.CurrentInventory);
+                DBAccess.AddNewItem(item);
 
                 MessageBox.Show("Saved.");
             }
@@ -65,9 +51,10 @@ namespace Inventory_3._0
             // Make sure there is text in the field. If not, do nothing.
             // Make sure there are no doubles
             if (txtUPC.Text == "") return;
-            if (lvUPC.Items.Contains(txtUPC.Text)) return;
+            if (item.UPCs.Contains(txtUPC.Text)) return;
 
-            lvUPC.Items.Add(txtUPC.Text);
+            item.UPCs.Add(txtUPC.Text);
+            CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
@@ -78,10 +65,12 @@ namespace Inventory_3._0
                 selectedItems.Add(itemSelected);
             }
 
-            foreach (string item in selectedItems)
+            foreach (string upc in selectedItems)
             {
-                lvUPC.Items.Remove(item);
+                item.UPCs.Remove(upc);
             }
-        }        
+
+            CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
+        }
     }
 }

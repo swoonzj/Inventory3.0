@@ -1,10 +1,14 @@
 ﻿<Window x:Class="Inventory_3._0.Management"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Inventory_3._0"
         Title="Management"
         Icon="shaq.ico"
         Height="500" Width="1000"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Window.Resources>
+        <local:MyConverter x:Key="IntConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*" />            
@@ -16,7 +20,7 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="1.5*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="2*" />
@@ -24,12 +28,7 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Center">
-            <MenuItem Name="menuAddNewItem" Header="_Add New Item" Click="menuAddNewItem_Click"/>
-            <MenuItem Name="menuInventory" Header="_Inventory">
-                <MenuItem Name="menuInvMain" IsCheckable ="True" Header="_Main" Click="menuInvMain_Click"/>
-                <MenuItem Name="menuInvOutBack" IsCheckable ="True" Header="_Out Back" Click="menuInvOutBack_Click"/>
-                <MenuItem Name="menuInvStorage" IsCheckable ="True" Header="_Storage" Click="menuInvStorage_Click"/>
-            </MenuItem>
+            <MenuItem Name="menuAddNewItem" Header="_Add New Item" Click="menuAddNewItem_Click"/>            
         </Menu>
         <ListView  Margin="5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Multiple" SelectionChanged="lvList_SelectionChanged">
             <ListView.View>
@@ -55,10 +54,14 @@
         <Label Grid.Column="1" Grid.Row ="1" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Name</Label>
         <Label Grid.Column="1" Grid.Row ="2" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">System</Label>
         <Label Grid.Column="1" Grid.Row ="3" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Price</Label>
-        <Label Grid.Column="1" Grid.Row ="4" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Quantity</Label>
+        <StackPanel Grid.Column="1" Grid.Row ="4" Orientation="Horizontal">
+            <Label Grid.Column="1" Grid.Row ="4" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Quantity</Label>
+            <CheckBox Name="chkQuantities" IsChecked="True" Grid.Column="1" Grid.Row ="4" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        </StackPanel>
         <Label Grid.Column="1" Grid.Row ="5" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Trade: Cash</Label>
         <Label Grid.Column="1" Grid.Row ="6" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Trade: Credit</Label>
         <Label Grid.Column="1" Grid.Row ="7" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">UPCs</Label>
+
         
         <!--Text Boxes-->
         <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1"> <!--Search Bar-->
@@ -66,31 +69,36 @@
             <TextBox Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="1"> <!--Name-->
-            <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                     Text="{Binding name, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="2"> <!--System-->
-            <TextBox Name="txtSystem" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtSystem" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                     Text="{Binding system, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="3"> <!--Price-->
-            <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                     Text="{Binding price, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="4"> <!--Quantity-->
-            <DataGrid Margin ="5" Name="dgQuantities">
+            <DataGrid Name="dgQuantities" Margin="5" CanUserResizeColumns="True" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Store" Binding="{Binding ToString}" />
-                    <DataGridTextColumn Header="Out Back" Binding="{Binding ToString}" />
-                    <DataGridTextColumn Header="Storage" Binding="{Binding ToString}" />
+                    <DataGridTextColumn Header="Store" Binding="{Binding quantity[0], Mode=TwoWay, Converter={StaticResource IntConverter}}" />
+                    <DataGridTextColumn Header="Out Back" Binding="{Binding quantity[1], Mode=TwoWay, Converter={StaticResource IntConverter}}" />
+                    <DataGridTextColumn Header="Storage" Binding="{Binding quantity[2], Mode=TwoWay, Converter={StaticResource IntConverter}}" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="5"> <!--Trade: Cash-->
-            <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                     Text="{Binding tradeCash, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="6"> <!--Trade: Cash-->
-            <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                     Text="{Binding tradeCredit, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="7">
-            <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="300">
+            <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="300" ItemsSource="{Binding UPCs, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn>
@@ -100,7 +108,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="UPC" DisplayMemberBinding="{Binding}"/>
+                        <GridViewColumn Header="UPC"/>
                     </GridView>
                 </ListView.View>
             </ListView>

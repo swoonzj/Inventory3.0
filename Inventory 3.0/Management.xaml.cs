@@ -23,27 +23,25 @@ namespace Inventory_3._0
     {
         public List<string> UPCsToDelete;
 
+        Item managedItem = new Item();
+        ObservableCollection<Item> managedItems = new ObservableCollection<Item>();
+
         public Management()
         {
+            managedItem.quantity[0] = 0;
+            managedItem.quantity[1] = 1;
+            managedItem.quantity[2] = int.MinValue;
+            managedItem.UPCs.Add("12345");
+            managedItem.UPCs.Add("67890");
+
             UPCsToDelete = new List<string>();
             InitializeComponent();
-            // Check Settings for current Inventory
-            switch (Properties.Settings.Default.CurrentInventory)
-            {
-                case ColumnNames.STORE:
-                    menuInvMain.IsChecked = true;
-                    break;
-                case ColumnNames.STORAGE:
-                    menuInvStorage.IsChecked = true;
-                    break;
-                case ColumnNames.OUTBACK:
-                    menuInvOutBack.IsChecked = true;
-                    break;
-                default:
-                    menuInvOutBack_Click(this,null);
-                    break;
-            }
-            Search();
+
+            managedItems.Add(managedItem);
+            dgQuantities.ItemsSource = managedItems;
+            this.DataContext = managedItem;
+            
+            //Search();
         }
 
         private void Search()
@@ -80,91 +78,21 @@ namespace Inventory_3._0
             {
                 items.Add(item);
             }
-            FillTextBoxes(CompareSelection(items)); 
+            managedItem = CompareSelection(items); 
 
             if (items.Count == 1)
             {
                 lvUPC.IsEnabled = true;
-                PopulateUPClistview(items[0]);
+                btnAdd.IsEnabled = true;
+                btnRemove.IsEnabled = true;
             }
             else
             {
                 lvUPC.IsEnabled = false;
-                PopulateUPClistview(null);
+                btnAdd.IsEnabled = false;
+                btnRemove.IsEnabled = false;
             }
         }
-
-        private void FillTextBoxes(Item item)
-        {
-            if (item == null)
-            {                
-                txtName.Text = "";
-                txtSystem.Text = "";
-                txtPrice.Text = "";
-                // Quantities !!!!!!!
-                txtCash.Text = "";
-                txtCredit.Text = "";
-                lvUPC.ItemsSource = null;
-                return;
-            }
-            if (item.name != null)
-            {
-                txtName.Text = item.name;
-                txtName.IsEnabled = true;
-            }
-            else
-            {
-                txtName.IsEnabled = false;
-                txtName.Text = "";
-            }
-            if (item.system != null)
-                txtSystem.Text = item.system;
-            else
-            {
-                txtSystem.Text = "";
-            }
-            if (item.price != decimal.MinValue)
-                txtPrice.Text = item.price.ToString("0.00");
-            else
-            {
-                txtPrice.Text = "";
-            }
-            //if (item.quantity != int.MinValue) !!!!!!!!!!!!!!!!!!!!!
-            //    txtQuantity.Text = item.quantity.ToString();
-            //else
-            //{
-            //    txtQuantity.Text = "";
-            //}
-            if (item.tradeCash != decimal.MinValue)
-                txtCash.Text = item.tradeCash.ToString("0.00");
-            else
-            {
-                txtCash.Text = "";
-            }
-            if (item.tradeCredit != decimal.MinValue)
-                txtCredit.Text = item.tradeCredit.ToString("0.00");
-            else
-            { 
-                txtCredit.Text = "";
-            }
-        }
-
-        private void PopulateUPClistview(Item item)
-        {
-            // Get UPCs
-            if (item == null)
-            {
-                lvUPC.ItemsSource = null;
-                return;
-            }
-            if (item.UPCs.Count == 0)
-            {
-                DBAccess.GetItemUPCs(item);
-            }
-            
-            lvUPC.ItemsSource = new ObservableCollection<string>(item.UPCs);
-        }
-            
 
         private Item CompareSelection(List<Item> items)
         {
@@ -244,59 +172,34 @@ namespace Inventory_3._0
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            // Check if lvUPC is disabled
-            if (lvList.SelectedItems.Count != 1)
-            {
-                MessageBox.Show("Can only add UPCs to single items. Select only one item.", "Too many/few items selected", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                return;
-            }
             // Make sure there is text in the field. If not, do nothing.
             if (txtUPC.Text == "") return;
 
-            ((Item)lvList.SelectedItems[0]).UPCs.Add(txtUPC.Text);
-            PopulateUPClistview((Item)lvList.SelectedItems[0]); 
+            managedItem.UPCs.Add(txtUPC.Text);
+            CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
+            txtUPC.Text = "";
         }
         
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-            ObservableCollection<string> upcs = new ObservableCollection<string>(lvUPC.ItemsSource as ObservableCollection<string>);
-            foreach (string upc in lvUPC.SelectedItems)
+            List<string> selectedItems = new List<string>();
+            foreach (string itemSelected in lvUPC.SelectedItems)
             {
-                UPCsToDelete.Add(upc);
-                upcs.Remove(upc);
+                selectedItems.Add(itemSelected);
             }
-            lvUPC.ItemsSource = upcs;
-        }
 
-        private void menuInvMain_Click(object sender, RoutedEventArgs e)
-        {
-            menuInvOutBack.IsChecked = false;
-            menuInvStorage.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = ColumnNames.STORE;
-            Search();
-        }
+            foreach (string upc in selectedItems)
+            {
+                managedItem.UPCs.Remove(upc);
+            }
 
-        private void menuInvOutBack_Click(object sender, RoutedEventArgs e)
-        {
-            menuInvMain.IsChecked = false;
-            menuInvStorage.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = ColumnNames.OUTBACK;
-            Search();
-        }
-
-        private void menuInvStorage_Click(object sender, RoutedEventArgs e)
-        {
-            menuInvOutBack.IsChecked = false;
-            menuInvMain.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = ColumnNames.STORAGE;
-            Search();
+            CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
         }
 
         private void menuAddNewItem_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("NEW ITEM HANDLER!"); // Do this !!!!!!!!
-        }
-
-        
+            Window addNewItem = new AddNewItem();
+            addNewItem.Show();
+        }        
     }
 }

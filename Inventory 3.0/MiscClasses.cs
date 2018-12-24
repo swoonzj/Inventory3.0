@@ -72,7 +72,7 @@ namespace Inventory_3._0
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value == string.Empty || (string)value == " ")
+            if ((string)value == string.Empty || (string)value == " ")
                 return int.MinValue;
 
             return value;

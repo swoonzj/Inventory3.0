@@ -43,7 +43,7 @@
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=name}"/>
                     <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
                     <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
-                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity}"/>
+                    <!--<GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity}"/>-->
                     <GridViewColumn Header="Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
                     <GridViewColumn Header="Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
                                     

@@ -28,12 +28,6 @@ namespace Inventory_3._0
 
         public Management()
         {
-            managedItem.quantity[0] = 0;
-            managedItem.quantity[1] = 1;
-            managedItem.quantity[2] = int.MinValue;
-            managedItem.UPCs.Add("12345");
-            managedItem.UPCs.Add("67890");
-
             UPCsToDelete = new List<string>();
             InitializeComponent();
 
@@ -41,7 +35,7 @@ namespace Inventory_3._0
             dgQuantities.ItemsSource = managedItems;
             this.DataContext = managedItem;
             
-            //Search();
+            Search();
         }
 
         private void Search()
@@ -77,21 +71,23 @@ namespace Inventory_3._0
             foreach (Item item in lvList.SelectedItems)
             {
                 items.Add(item);
-            }
-            managedItem = CompareSelection(items); 
+            }            
 
             if (items.Count == 1)
             {
+                managedItem = items[0];
                 lvUPC.IsEnabled = true;
                 btnAdd.IsEnabled = true;
                 btnRemove.IsEnabled = true;
             }
             else
             {
+                managedItem = CompareSelection(items); 
                 lvUPC.IsEnabled = false;
                 btnAdd.IsEnabled = false;
                 btnRemove.IsEnabled = false;
             }
+            
         }
 
         private Item CompareSelection(List<Item> items)
@@ -114,11 +110,11 @@ namespace Inventory_3._0
                 if (item.tradeCash != selection.tradeCash) selection.tradeCash = decimal.MinValue;
                 if (item.tradeCredit != selection.tradeCredit) selection.tradeCredit = decimal.MinValue;
                 if (item.SQLid != selection.SQLid) selection.SQLid = 0;
-
-                List<int> quantites = DBAccess.GetQuantities(item.SQLid);
-            }
-
-            
+                // Quantities
+                if (item.quantity[0] != selection.quantity[0]) selection.quantity[0] = int.MinValue;
+                if (item.quantity[1] != selection.quantity[1]) selection.quantity[1] = int.MinValue;
+                if (item.quantity[2] != selection.quantity[2]) selection.quantity[2] = int.MinValue;
+            }           
 
             return selection;
         }

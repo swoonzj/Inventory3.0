@@ -108,14 +108,14 @@ namespace Inventory_3._0
             if (sortBy != "Name")
             {
                 cmd = new SqlCommand("SELECT Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
-                    "JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
+                    " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
                     "WHERE " + searchTerms.GenerateSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order + ", Name;", connect);
             }
             else
             {
                 cmd = new SqlCommand("SELECT Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
-                    "JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
+                    " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
                     "WHERE " + searchTerms.GenerateSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order + ";", connect);
             }
@@ -124,14 +124,12 @@ namespace Inventory_3._0
             {
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
-
                 while (reader.Read() == true)
                 {
                     item = SQLReaderToItem(reader);
                     if (item != null)
                     {
-                        collection.Add(item);
-                        item.quantity = DBAccess.GetQuantities(item.SQLid);
+                        collection.Add(item);                        
                     }
                 }
             }
@@ -142,6 +140,11 @@ namespace Inventory_3._0
             finally
             {
                 connect.Close();
+            }
+
+            foreach (Item newitem in collection)
+            {
+                newitem.quantity = DBAccess.GetQuantities(newitem.SQLid);
             }
 
             return collection;
@@ -159,7 +162,7 @@ namespace Inventory_3._0
             system = CheckForSpecialCharacters(system);
 
             // Add data to table
-            SqlCommand cmdItem = new SqlCommand("INSERT INTO " + TableNames.ITEMS + " VALUES(@NAME, @SYSTEM) OUTPUT INSERTED.ID", connect);
+            SqlCommand cmdItem = new SqlCommand("INSERT INTO " + TableNames.ITEMS + " OUTPUT INSERTED.ID VALUES(@NAME, @SYSTEM)", connect);
             cmdItem.Parameters.Add("@NAME", SqlDbType.VarChar).Value = name;
             cmdItem.Parameters.Add("@SYSTEM", SqlDbType.VarChar).Value = system;
 
@@ -168,7 +171,7 @@ namespace Inventory_3._0
             cmdPrice.Parameters.Add("@CASH", SqlDbType.Money).Value = cash;
             cmdPrice.Parameters.Add("@CREDIT", SqlDbType.Money).Value = credit;
 
-            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3)");
+            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3)", connect);
             cmdInventory.Parameters.Add("@QUANTITY1", SqlDbType.Int).Value = inventory[0];
             cmdInventory.Parameters.Add("@QUANTITY2", SqlDbType.Int).Value = inventory[1];
             cmdInventory.Parameters.Add("@QUANTITY3", SqlDbType.Int).Value = inventory[2];
@@ -392,7 +395,7 @@ namespace Inventory_3._0
         {
             
             List<int> quantities = new List<int>();
-            SqlCommand cmd = new SqlCommand("SELECT * FROM " + TableNames.INVENTORY + "WHERE id = " + ID, connect);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM " + TableNames.INVENTORY + " WHERE id = " + ID, connect);
 
             try
             {
@@ -673,13 +676,14 @@ namespace Inventory_3._0
             //        reader[6].ToString());
            
             // FOR NEW TABLE
-            item = new Item(reader[0].ToString(), // Name
-                    reader[1].ToString(),   // System
-                    reader[2].ToString(),   // Price
-                    new List<int>{(int)reader[3]},   // Quantity
-                    reader[4].ToString(),   // Cash
-                    reader[5].ToString(),   // Credit
-                    reader[6].ToString());   // SQL ID
+
+            item = new Item();
+            item.name = reader[0].ToString(); // Name
+            item.system = reader[1].ToString();   // System
+            item.price = (decimal)reader[2];   // Price
+            item.tradeCash = (decimal)reader[3];   // Cash
+            item.tradeCredit = (decimal)reader[4];   // Credit
+            item.SQLid = (int)reader[5];   // SQL ID
                      
             
             return item;

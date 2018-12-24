@@ -34,7 +34,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            //this.quantity.Add(quantity); // Handle multiple quantities!!!!!!!
+            this.quantity = new List<int> { 0, 0, 0 };
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs.Add(upc);
@@ -47,7 +47,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            //this.quantity = quantity; !!!!!!!!
+            this.quantity = new List<int> { 0, 0, 0 }; 
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs = upcs;
@@ -60,7 +60,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = quantity;
+            this.quantity = new List<int> { 0, 0, 0 }; 
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
         }

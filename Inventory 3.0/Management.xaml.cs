@@ -25,6 +25,7 @@ namespace Inventory_3._0
 
         Item managedItem = new Item();
         ObservableCollection<Item> managedItems = new ObservableCollection<Item>();
+        ObservableCollection<Item> searchResults = new ObservableCollection<Item>();
 
         public Management()
         {
@@ -32,8 +33,8 @@ namespace Inventory_3._0
             InitializeComponent();
 
             managedItems.Add(managedItem);
-            dgQuantities.ItemsSource = managedItems;
-            this.DataContext = managedItem;
+            //lvList.ItemsSource = searchResults;
+            //dgQuantities.ItemsSource = managedItems;
             
             Search();
         }
@@ -42,14 +43,13 @@ namespace Inventory_3._0
         {
             try
             {
-                List<Item> items = new List<Item>();
-                items = DBAccess.SQLTableToList(Properties.Settings.Default.CurrentInventory, searchtext: txtSearch.Text);
-                lvList.ItemsSource = items;
+                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(Properties.Settings.Default.CurrentInventory, searchtext: txtSearch.Text));                
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.ToString());
             }
+            lvList.ItemsSource = searchResults;
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)

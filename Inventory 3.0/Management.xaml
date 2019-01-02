@@ -4,8 +4,7 @@
         xmlns:local="clr-namespace:Inventory_3._0"
         Title="Management"
         Icon="shaq.ico"
-        Height="500" Width="1000"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        Height="500" Width="1000">
     <Window.Resources>
         <local:MyConverter x:Key="IntConverter" />
     </Window.Resources>
@@ -30,26 +29,17 @@
         <Menu Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Center">
             <MenuItem Name="menuAddNewItem" Header="_Add New Item" Click="menuAddNewItem_Click"/>            
         </Menu>
-        <ListView  Margin="5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Multiple" SelectionChanged="lvList_SelectionChanged">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox Margin="2" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=name}"/>
-                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
-                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
-                    <!--<GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity}"/>-->
-                    <GridViewColumn Header="Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
-                    <GridViewColumn Header="Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
-                                    
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <DataGrid Margin="5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Extended" ItemsSource="{Binding searchResults}" AutoGenerateColumns="False" SelectionChanged="lvList_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn/>                           
+                <DataGridTextColumn Header="Name" Binding="{Binding name}"/>
+                <DataGridTextColumn Header="System"  Binding="{Binding Path=system}"/>
+                <DataGridTextColumn Header="Price"  Binding="{Binding Path=price, StringFormat=C}"/>
+                <!--<DataGridTextColumn Header="Quantity" Binding="{Binding Path=quantity}"/>-->
+                <DataGridTextColumn Header="Cash" Binding="{Binding Path=tradeCash, StringFormat=C}"/>
+                <DataGridTextColumn Header="Credit" Binding="{Binding Path=tradeCredit, StringFormat=C}"/>                
+            </DataGrid.Columns>
+        </DataGrid>
         <!--Labels-->
         <Label Grid.Column="1" Grid.Row ="1" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Name</Label>
         <Label Grid.Column="1" Grid.Row ="2" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">System</Label>

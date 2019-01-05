@@ -29,12 +29,19 @@ namespace Inventory_3._0
 
         public Management()
         {
+            //// For testing
+            //List<int> quant = new List<int> { 1, 1, 1 };
+            //Item item1 = new Item("Item1", "Test", "12.99", quant, "3", "4");
+            //Item item2 = new Item("Item2", "Test", "15.99", quant, "5", "6");
+            //searchResults.Add(item1);
+            //searchResults.Add(item2);
+
             UPCsToDelete = new List<string>();
+            dgQuantities.ItemsSource = managedItems;
             InitializeComponent();
 
-            managedItems.Add(managedItem);
             //lvList.ItemsSource = searchResults;
-            //dgQuantities.ItemsSource = managedItems;
+            DataContext = managedItem;
             
             Search();
         }
@@ -43,7 +50,7 @@ namespace Inventory_3._0
         {
             try
             {
-                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(Properties.Settings.Default.CurrentInventory, searchtext: txtSearch.Text));                
+               // searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(Properties.Settings.Default.CurrentInventory, searchtext: txtSearch.Text));                
             }
             catch (Exception ex)
             {
@@ -87,7 +94,7 @@ namespace Inventory_3._0
                 btnAdd.IsEnabled = false;
                 btnRemove.IsEnabled = false;
             }
-            
+            DataContext = managedItem;
         }
 
         private Item CompareSelection(List<Item> items)

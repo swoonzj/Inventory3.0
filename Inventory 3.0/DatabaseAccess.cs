@@ -83,7 +83,7 @@ namespace Inventory_3._0
         /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
         /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
         /// <returns>A List of Items</returns>
-        public static List<Item> SQLTableToList(string inventoryColumn, string sortBy = "System", bool ascending = true, string searchtext = "")
+        public static List<Item> SQLTableToList(string sortBy = "System", bool ascending = true, string searchtext = "")
         {
             List<Item> collection = new List<Item>();
             Item item;
@@ -294,10 +294,10 @@ namespace Inventory_3._0
             return duplicateUPCs;
         }
 
-        public static void SaveItemChanges(Item item, string inventoryColumn)
+        public static void SaveItemChanges(Item item)
         {
             string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
-            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2} WHERE id = {3}", TableNames.INVENTORY, inventoryColumn, item.quantity, item.SQLid);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6} WHERE id = {7}", TableNames.INVENTORY, ColumnNames.STORE, item.quantity[QuantityColumns.Store], ColumnNames.OUTBACK, item.quantity[QuantityColumns.OutBack], ColumnNames.STORAGE, item.quantity[QuantityColumns.Storage], item.SQLid);
             string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
 
             SqlCommand cmd = new SqlCommand(itemUpdate, connect);
@@ -697,13 +697,12 @@ namespace Inventory_3._0
         /// <param name="inventoryColumn">Table containing Item information</param>
         /// <param name="UPC">The UPC to search for</param>
         /// <returns></returns>
-        public static List<Item> UPCLookup(string inventoryColumn, string UPC) 
+        public static List<Item> UPCLookup(string UPC) 
         {
             List<Item> items = new List<Item>();
 
-            SqlCommand cmd = new SqlCommand("SELECT Name, System, Price, " + inventoryColumn + ", Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
-                    " JOIN " + TableNames.INVENTORY + " ON " + TableNames.INVENTORY + ".id = " + TableNames.ITEMS + ".id " +
-                    "JOIN " + TableNames.PRICES + " ON " + TableNames.INVENTORY + ".id =  " + TableNames.PRICES + ".id " +
+            SqlCommand cmd = new SqlCommand("SELECT Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+                    "JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
                 " JOIN " + TableNames.UPC + " on " + TableNames.ITEMS + ".id=" + TableNames.UPC + ".id " +
                 "WHERE UPC=\'" + UPC + "\'", connect);
 
@@ -727,6 +726,11 @@ namespace Inventory_3._0
             finally
             {
                 connect.Close();
+            }
+
+            foreach (Item item in items)
+            {
+                item.quantity = GetQuantities(item.SQLid);
             }
 
             return items;

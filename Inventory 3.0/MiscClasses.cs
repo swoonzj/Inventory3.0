@@ -58,22 +58,40 @@ namespace Inventory_3._0
         }
     }
 
-    public class MyConverter : IValueConverter
+    public class IntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if ((int)value == int.MinValue)
                 return string.Empty;
+            
 
             return value;
         }
 
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (String.IsNullOrWhiteSpace((string)value))
+                return int.MinValue;
 
+            return value;
+        }
+    }
+
+    public class DecimalConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {            
+            if ((decimal)value == decimal.MinValue)
+                return string.Empty;           
+
+            return value;
+        }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if ((string)value == string.Empty || (string)value == " ")
-                return int.MinValue;
+            if (String.IsNullOrWhiteSpace((string)value))
+                return decimal.MinValue;
 
             return value;
         }

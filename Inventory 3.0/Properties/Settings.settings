@@ -16,8 +16,5 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="StoreInventory";Persist Security Info=True;User ID=inventory;Password=inventory</Value>
     </Setting>
-    <Setting Name="CurrentInventory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Store</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

@@ -126,9 +126,8 @@ namespace Inventory_3._0
             this.UPCs = upcs;
         }
 
-        public Item(string name, string system = "", string price = "0", List<int> quantity = null, string cash = "0", string credit = "0", string SQLid = "0")
+        public Item(string name, string system = "", string price = "0", List<int> quantity = null, string cash = "0", string credit = "0", List<string> upcs = null, string SQLid = "0")
         {
-            UPCs = new List<string>();
             this.SQLid = Convert.ToInt32(SQLid);
             this.name = name;
             this.system = system;
@@ -136,11 +135,11 @@ namespace Inventory_3._0
             this.quantity = quantity; 
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
+            this.upcs = upcs;
         }
 
         public Item(string name, string system, decimal price, List<int> quantity, decimal cash, decimal credit, List<string> upcs, int SQLid = 0)
-        {
-            UPCs = new List<string>();
+        {            
             this.SQLid = SQLid;
             this.name = name;
             this.system = system;
@@ -148,11 +147,12 @@ namespace Inventory_3._0
             this.quantity = quantity;
             this.tradeCash = cash;
             this.tradeCredit = credit;
+            this.upcs = upcs;
         }
 
         public Item Clone()
         {
-            return new Item(name, system, price, quantity, tradeCash, tradeCredit, UPCs, SQLid);
+            return new Item(name, system, price, new List<int>(quantity), tradeCash, tradeCredit, new List<string>(UPCs), SQLid);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

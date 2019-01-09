@@ -45,17 +45,5 @@ namespace Inventory_3._0.Properties {
                 return ((string)(this["SQLServerConnectionString2"]));
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Store")]
-        public string CurrentInventory {
-            get {
-                return ((string)(this["CurrentInventory"]));
-            }
-            set {
-                this["CurrentInventory"] = value;
-            }
-        }
     }
 }

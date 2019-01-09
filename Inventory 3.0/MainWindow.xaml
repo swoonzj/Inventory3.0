@@ -72,12 +72,7 @@
                             <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Center"/>
                         </ItemsPanelTemplate>
                     </Menu.ItemsPanel>
-                        <MenuItem Header="_Settings">
-                            <MenuItem Name="menuInventory" Header="_Inventory">
-                                <MenuItem Name="menuInvMain" IsCheckable ="True" Header="_Main" Click="menuInvMain_Click"/>
-                                <MenuItem Name="menuInvOutBack" IsCheckable ="True" Header="_Out Back" Click="menuInvOutBack_Click"/>
-                                <MenuItem Name="menuInvStorage" IsCheckable ="True" Header="_Storage" Click="menuInvStorage_Click"/>
-                            </MenuItem>
+                        <MenuItem Header="_Settings">                            
                             <MenuItem IsCheckable="True" Header="_Add Trade to Inventory"/>
                         </MenuItem>
                         <MenuItem Header="_Manage">

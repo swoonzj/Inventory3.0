@@ -30,14 +30,16 @@ namespace Inventory_3._0
         public Management()
         {
             //// For testing
-            //List<int> quant = new List<int> { 1, 1, 1 };
-            //Item item1 = new Item("Item1", "Test", "12.99", quant, "3", "4");
-            //Item item2 = new Item("Item2", "Test", "15.99", quant, "5", "6");
-            //searchResults.Add(item1);
-            //searchResults.Add(item2);
+            List<int> quant = new List<int> { 1, 1, 1 };
+            List<string> upcs = new List<string> { "1111", "1" };
+            Item item1 = new Item("Item1", "Test", "12.99", quant, "3", "4", upcs);
+            Item item2 = new Item("Item2", "Test", "15.99", quant, "5", "6", upcs);
+            searchResults.Add(item1);
+            searchResults.Add(item2);
 
             UPCsToDelete = new List<string>();
-            dgQuantities.ItemsSource = managedItems;
+            managedItems.Add(managedItem);
+            //dgQuantities.ItemsSource = managedItems;
             InitializeComponent();
 
             //lvList.ItemsSource = searchResults;
@@ -74,6 +76,7 @@ namespace Inventory_3._0
 
         private void lvList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            UPCsToDelete.Clear();
             List<Item> items = new List<Item>();
             foreach (Item item in lvList.SelectedItems)
             {
@@ -82,17 +85,17 @@ namespace Inventory_3._0
 
             if (items.Count == 1)
             {
-                managedItem = items[0];
-                lvUPC.IsEnabled = true;
-                btnAdd.IsEnabled = true;
-                btnRemove.IsEnabled = true;
+                managedItem = items[0].Clone();
+                //lvUPC.IsEnabled = true;
+                //btnAdd.IsEnabled = true;
+                //btnRemove.IsEnabled = true;
             }
             else
             {
                 managedItem = CompareSelection(items); 
-                lvUPC.IsEnabled = false;
-                btnAdd.IsEnabled = false;
-                btnRemove.IsEnabled = false;
+                //lvUPC.IsEnabled = false;
+                //btnAdd.IsEnabled = false;
+                //btnRemove.IsEnabled = false;
             }
             DataContext = managedItem;
         }
@@ -105,7 +108,7 @@ namespace Inventory_3._0
             }
 
             if (items.Count == 1) 
-                return items[0];
+                return items[0].Clone();
 
             Item selection = items[0].Clone();
             
@@ -136,19 +139,24 @@ namespace Inventory_3._0
                 {
                     Item newItem = item.Clone();
 
-                    if (txtName.IsEnabled == true && txtName.Text.ToString() != "")
+                    if (txtName.IsEnabled == true && !String.IsNullOrWhiteSpace(txtName.Text))
                         newItem.name = txtName.Text;
-                    if (txtSystem.Text.ToString() != "")
+                    if (!String.IsNullOrWhiteSpace(txtSystem.Text))
                         newItem.system = txtSystem.Text;
-                    if (txtPrice.Text.ToString() != "")
+                    if (!String.IsNullOrWhiteSpace(txtPrice.Text))
                         newItem.price = Convert.ToDecimal(txtPrice.Text);
-                    // Quantity !!!!!!!!!!!!!!!!!!!!!!!
-                    if (txtCash.Text.ToString() != "")
+                    if (!String.IsNullOrWhiteSpace(txtStore.Text))
+                        newItem.quantity[0] = Convert.ToInt32(txtStore.Text);
+                    if (!String.IsNullOrWhiteSpace(txtOutBack.Text))
+                        newItem.quantity[1] = Convert.ToInt32(txtOutBack.Text);
+                    if (!String.IsNullOrWhiteSpace(txtStorage.Text))
+                        newItem.quantity[2] = Convert.ToInt32(txtStorage.Text);
+                    if (!String.IsNullOrWhiteSpace(txtCash.Text))
                         newItem.tradeCash = Convert.ToDecimal(txtCash.Text);
-                    if (txtCredit.Text.ToString() != "")
+                    if (!String.IsNullOrWhiteSpace(txtCredit.Text))
                         newItem.tradeCredit = Convert.ToDecimal(txtCredit.Text);
 
-                    DBAccess.SaveItemChanges(newItem, Properties.Settings.Default.CurrentInventory);
+                    DBAccess.SaveItemChanges(newItem);
 
                     // Add new UPCs
                     List<string> newUPCs = new List<string>();

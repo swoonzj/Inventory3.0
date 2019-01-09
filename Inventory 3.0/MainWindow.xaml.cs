@@ -36,8 +36,6 @@ namespace Inventory_3._0
                 Search(String.Empty);
                 lvCart.ItemsSource = cart;
                 UpdateTotals();
-
-                // TEST!
             }
             catch (Exception ex)
             {
@@ -56,7 +54,7 @@ namespace Inventory_3._0
             try
             {
                 List<Item> items = new List<Item>();
-                items = DBAccess.SQLTableToList(Settings.Default.CurrentInventory, searchtext: searchString);
+                items = DBAccess.SQLTableToList(searchtext: searchString);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)
@@ -122,7 +120,7 @@ namespace Inventory_3._0
             {
                 if (keyboardInput == "") return; // Return if the input is empty. Prevents a SQL error.
 
-                List<Item> items = DBAccess.UPCLookup(Settings.Default.CurrentInventory, keyboardInput); // Returns NULL if UPC does not match an item
+                List<Item> items = DBAccess.UPCLookup(keyboardInput); // Returns NULL if UPC does not match an item
                 
                 
 
@@ -202,27 +200,6 @@ namespace Inventory_3._0
         private void btnClearCart_Click(object sender, RoutedEventArgs e)
         {
             cart.Clear();
-        }
-
-        private void menuInvMain_Click(object sender, RoutedEventArgs e)
-        {
-            menuInvOutBack.IsChecked = false;
-            menuInvStorage.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = ColumnNames.STORE;
-        }
-
-        private void menuInvOutBack_Click(object sender, RoutedEventArgs e)
-        {
-            menuInvMain.IsChecked = false;
-            menuInvStorage.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = ColumnNames.OUTBACK;
-        }
-
-        private void menuInvStorage_Click(object sender, RoutedEventArgs e)
-        {
-            menuInvOutBack.IsChecked = false;
-            menuInvMain.IsChecked = false;
-            Properties.Settings.Default.CurrentInventory = ColumnNames.STORAGE;
         }
     }
 }

@@ -125,6 +125,10 @@ namespace Inventory_3._0
                 if (item.quantity[0] != selection.quantity[0]) selection.quantity[0] = int.MinValue;
                 if (item.quantity[1] != selection.quantity[1]) selection.quantity[1] = int.MinValue;
                 if (item.quantity[2] != selection.quantity[2]) selection.quantity[2] = int.MinValue;
+                // UPCs
+                foreach(string upc in item.UPCs){
+                    if (selection.UPCs.Contains(upc))
+                }
             }           
 
             return selection;

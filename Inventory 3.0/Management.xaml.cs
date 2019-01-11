@@ -30,12 +30,12 @@ namespace Inventory_3._0
         public Management()
         {
             //// For testing
-            List<int> quant = new List<int> { 1, 1, 1 };
-            List<string> upcs = new List<string> { "1111", "1" };
-            Item item1 = new Item("Item1", "Test", "12.99", quant, "3", "4", upcs);
-            Item item2 = new Item("Item2", "Test", "15.99", quant, "5", "6", upcs);
-            searchResults.Add(item1);
-            searchResults.Add(item2);
+            //List<int> quant = new List<int> { 1, 1, 1 };
+            //List<string> upcs = new List<string> { "1111", "1" };
+            //Item item1 = new Item("Item1", "Test", "12.99", quant, "3", "4", upcs);
+            //Item item2 = new Item("Item2", "Test", "15.99", quant, "5", "6", upcs);
+            //searchResults.Add(item1);
+            //searchResults.Add(item2);
 
             UPCsToDelete = new List<string>();
             managedItems.Add(managedItem);
@@ -52,7 +52,7 @@ namespace Inventory_3._0
         {
             try
             {
-               // searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(Properties.Settings.Default.CurrentInventory, searchtext: txtSearch.Text));                
+                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(searchtext: txtSearch.Text));                
             }
             catch (Exception ex)
             {
@@ -98,6 +98,7 @@ namespace Inventory_3._0
                 //btnRemove.IsEnabled = false;
             }
             DataContext = managedItem;
+            if (managedItem != null) lvUPC.ItemsSource = managedItem.UPCs;
         }
 
         private Item CompareSelection(List<Item> items)
@@ -138,6 +139,7 @@ namespace Inventory_3._0
                 foreach (Item item in lvList.SelectedItems)
                 {
                     Item newItem = item.Clone();
+                    if (newItem.quantity.Count != 3) newItem.quantity = new List<int> { 0, 0, 0 };
 
                     if (txtName.IsEnabled == true && !String.IsNullOrWhiteSpace(txtName.Text))
                         newItem.name = txtName.Text;

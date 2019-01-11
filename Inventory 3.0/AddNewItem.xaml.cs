@@ -25,8 +25,6 @@ namespace Inventory_3._0
 
         public AddNewItem()
         {
-            item.UPCs.Add("123456");
-            item.UPCs.Add("999999");
             items.Add(item);
 
             InitializeComponent();

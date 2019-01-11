@@ -144,7 +144,9 @@ namespace Inventory_3._0
 
             foreach (Item newitem in collection)
             {
+                newitem.UPCs = DBAccess.GetUPCsWithID(newitem.SQLid);
                 newitem.quantity = DBAccess.GetQuantities(newitem.SQLid);
+                if (newitem.quantity.Count != 3) newitem.quantity = new List<int> { 0, 0, 0 };
             }
 
             return collection;
@@ -187,7 +189,7 @@ namespace Inventory_3._0
 
                 cmdInventory.Parameters.Add("@ID", SqlDbType.Int).Value =  ID;
                 cmdInventory.ExecuteNonQuery();
-
+                connect.Close();
                 AddUPCs(upcs, ID);
             }
             catch (Exception e)
@@ -297,7 +299,7 @@ namespace Inventory_3._0
         public static void SaveItemChanges(Item item)
         {
             string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
-            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6} WHERE id = {7}", TableNames.INVENTORY, ColumnNames.STORE, item.quantity[QuantityColumns.Store], ColumnNames.OUTBACK, item.quantity[QuantityColumns.OutBack], ColumnNames.STORAGE, item.quantity[QuantityColumns.Storage], item.SQLid);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6} WHERE id = {7}", TableNames.INVENTORY, ColumnNames.STORE, item.quantity[0], ColumnNames.OUTBACK, item.quantity[1], ColumnNames.STORAGE, item.quantity[2], item.SQLid);
             string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
 
             SqlCommand cmd = new SqlCommand(itemUpdate, connect);

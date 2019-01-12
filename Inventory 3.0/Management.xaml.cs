@@ -127,7 +127,7 @@ namespace Inventory_3._0
                 if (item.quantity[2] != selection.quantity[2]) selection.quantity[2] = int.MinValue;
                 // UPCs
                 foreach(string upc in item.UPCs){
-                    if (selection.UPCs.Contains(upc))
+                    if (!selection.UPCs.Contains(upc)) selection.UPCs.Remove(upc);
                 }
             }           
 
@@ -217,6 +217,17 @@ namespace Inventory_3._0
         {
             Window addNewItem = new AddNewItem();
             addNewItem.Show();
-        }        
+        }    
+    
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Permanently delete selected items?", "This could be a big deal.", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+            if (result != MessageBoxResult.Yes) return;
+
+            foreach (Item item in lvList.SelectedItems)
+            {
+                DBAccess.DeleteItem(item.SQLid);
+            }
+        }
     }
 }

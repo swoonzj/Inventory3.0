@@ -61,7 +61,8 @@
         
         <!--Text Boxes-->
         <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1"> <!--Search Bar-->
-            <Button  Name="btnClear" Margin="5" Width="20" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
+            <Button  Name="btnClear" Margin="5" Width="20" DockPanel.Dock="Left" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
+            <Button Name="btnDelete" Margin="5" Width="150" DockPanel.Dock="Right" Click="btnDelete_Click">Delete Selected Items</Button>
             <TextBox Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="1" > <!--Name-->

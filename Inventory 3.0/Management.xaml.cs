@@ -99,6 +99,7 @@ namespace Inventory_3._0
             }
             DataContext = managedItem;
             if (managedItem != null) lvUPC.ItemsSource = managedItem.UPCs;
+            if (lvUPC.ItemsSource != null) CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
         }
 
         private Item CompareSelection(List<Item> items)
@@ -113,8 +114,9 @@ namespace Inventory_3._0
 
             Item selection = items[0].Clone();
             
-            foreach (Item item in items)
+            foreach (Item item in items.Skip(1))
             {
+                List<string> upcsToRemove = new List<string>();
                 if (item.name != selection.name) selection.name = null;
                 if (item.system != selection.system) selection.system = null;
                 if (item.price != selection.price) selection.price = decimal.MinValue;
@@ -126,8 +128,12 @@ namespace Inventory_3._0
                 if (item.quantity[1] != selection.quantity[1]) selection.quantity[1] = int.MinValue;
                 if (item.quantity[2] != selection.quantity[2]) selection.quantity[2] = int.MinValue;
                 // UPCs
-                foreach(string upc in item.UPCs){
-                    if (!selection.UPCs.Contains(upc)) selection.UPCs.Remove(upc);
+                foreach(string upc in selection.UPCs){
+                    if (!item.UPCs.Contains(upc)) upcsToRemove.Add(upc);
+                }
+                foreach (string upc in upcsToRemove)
+                {
+                    selection.UPCs.Remove(upc);
                 }
             }           
 
@@ -146,42 +152,33 @@ namespace Inventory_3._0
                     if (newItem.quantity.Count != 3) newItem.quantity = new List<int> { 0, 0, 0 };
 
                     if (txtName.IsEnabled == true && !String.IsNullOrWhiteSpace(txtName.Text))
-                        newItem.name = txtName.Text;
+                        newItem.name = managedItem.name;
                     if (!String.IsNullOrWhiteSpace(txtSystem.Text))
-                        newItem.system = txtSystem.Text;
+                        newItem.system = managedItem.system;
                     if (!String.IsNullOrWhiteSpace(txtPrice.Text))
-                        newItem.price = Convert.ToDecimal(txtPrice.Text);
+                        newItem.price = managedItem.price;
                     if (!String.IsNullOrWhiteSpace(txtStore.Text))
-                        newItem.quantity[0] = Convert.ToInt32(txtStore.Text);
+                        newItem.quantity[0] = managedItem.quantity[0];
                     if (!String.IsNullOrWhiteSpace(txtOutBack.Text))
-                        newItem.quantity[1] = Convert.ToInt32(txtOutBack.Text);
+                        newItem.quantity[1] = managedItem.quantity[1];
                     if (!String.IsNullOrWhiteSpace(txtStorage.Text))
-                        newItem.quantity[2] = Convert.ToInt32(txtStorage.Text);
+                        newItem.quantity[2] = managedItem.quantity[2];
                     if (!String.IsNullOrWhiteSpace(txtCash.Text))
-                        newItem.tradeCash = Convert.ToDecimal(txtCash.Text);
+                        newItem.tradeCash = managedItem.tradeCash;
                     if (!String.IsNullOrWhiteSpace(txtCredit.Text))
-                        newItem.tradeCredit = Convert.ToDecimal(txtCredit.Text);
+                        newItem.tradeCredit = managedItem.tradeCredit;
 
                     DBAccess.SaveItemChanges(newItem);
 
                     // Add new UPCs
-                    List<string> newUPCs = new List<string>();
-                    foreach (string UPC in lvUPC.Items) // Get all UPCs from table
-                    {
-                        newUPCs.Add(UPC);
-                    }
-
-                    DBAccess.AddUPCs(newUPCs, item.SQLid);
+                    DBAccess.AddUPCs(managedItem.UPCs, item.SQLid);
 
                     if (UPCsToDelete.Count > 0)
                     {
-                        DBAccess.RemoveUPCs(UPCsToDelete, item.SQLid);
-                        UPCsToDelete.Clear();
-                    }
-                    
-                    
+                        DBAccess.RemoveUPCs(UPCsToDelete, item.SQLid);                        
+                    }                    
                 }
-
+                UPCsToDelete.Clear();
                 MessageBox.Show("Saved.");
                 Search();
             }
@@ -197,17 +194,13 @@ namespace Inventory_3._0
             txtUPC.Text = "";
         }
         
+        // Remove UPCs from selected items
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-            List<string> selectedItems = new List<string>();
-            foreach (string itemSelected in lvUPC.SelectedItems)
+            foreach (string upc in lvUPC.SelectedItems)
             {
-                selectedItems.Add(itemSelected);
-            }
-
-            foreach (string upc in selectedItems)
-            {
-                managedItem.UPCs.Remove(upc);
+               UPCsToDelete.Add(upc);
+               managedItem.UPCs.Remove(upc);
             }
 
             CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
@@ -228,6 +221,8 @@ namespace Inventory_3._0
             {
                 DBAccess.DeleteItem(item.SQLid);
             }
+
+            Search();
         }
     }
 }

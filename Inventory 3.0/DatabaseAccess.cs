@@ -426,7 +426,7 @@ namespace Inventory_3._0
 
         public static void DeleteItem(int ID)
         {
-            string deleteCommand = String.Format("DELETE FROM {0} WHERE ID = {1}; DELETE FROM {2} WHERE ID = {1}; DELETE FROM {3} WHERE ID = {1}; DELETE FROM {4} WHERE ID = {1};", TableNames.ITEMS, ID, TableNames.PRICES, TableNames.INVENTORY, TableNames.UPC);
+            string deleteCommand = String.Format("DELETE FROM {0} WHERE ID = {1}; DELETE FROM {2} WHERE ID = {1}; DELETE FROM {3} WHERE ID = {1}; DELETE FROM {4} WHERE ID = {1};", TableNames.UPC, ID, TableNames.PRICES, TableNames.INVENTORY, TableNames.ITEMS);
             SqlCommand cmd = new SqlCommand(deleteCommand, connect);
 
             try

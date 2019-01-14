@@ -30,7 +30,7 @@
         <Menu Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Center">
             <MenuItem Name="menuAddNewItem" Header="_Add New Item" Click="menuAddNewItem_Click"/>            
         </Menu>
-        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged">
+        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Extended"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>
@@ -75,7 +75,7 @@
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="3"> <!--Price-->
             <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                     Text="{Binding price, Mode=TwoWay, Converter={StaticResource DecimalConverter}}"/>
+                     Text="{Binding price, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}"/>
         </DockPanel>
         <UniformGrid Grid.Column="2" Grid.Row="4" Columns="3"> <!--Quantity-->
             <StackPanel Margin="5">
@@ -93,11 +93,11 @@
         </UniformGrid>
         <DockPanel Grid.Column="2" Grid.Row="5"> <!--Trade: Cash-->
             <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                     Text="{Binding tradeCash, Mode=TwoWay, Converter={StaticResource DecimalConverter}}"/>
+                     Text="{Binding tradeCash, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="6"> <!--Trade: Cash-->
             <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                     Text="{Binding tradeCredit, Mode=TwoWay, Converter={StaticResource DecimalConverter}}"/>
+                     Text="{Binding tradeCredit, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="7">
             <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="200" ItemsSource="{Binding UPCs, Mode=TwoWay}">

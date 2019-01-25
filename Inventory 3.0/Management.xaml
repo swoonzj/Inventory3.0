@@ -30,7 +30,7 @@
         <Menu Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Center">
             <MenuItem Name="menuAddNewItem" Header="_Add New Item" Click="menuAddNewItem_Click"/>            
         </Menu>
-        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Extended"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged">
+        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>

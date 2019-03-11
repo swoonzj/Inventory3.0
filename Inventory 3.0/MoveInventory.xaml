@@ -16,10 +16,9 @@
         <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="0">
             <!--Search Bar-->
             <Button  Name="btnClear" Margin="5" Width="20" DockPanel.Dock="Left" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
-            <Button Name="btnDelete" Margin="5" Width="150" DockPanel.Dock="Right" Click="btnDelete_Click">Delete Selected Items</Button>
             <TextBox Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center"/>
         </DockPanel>
-        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged">
+        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>
@@ -37,19 +36,34 @@
             </ListView.View>
         </ListView>
         <StackPanel Grid.Column="1" Grid.Row="1">
-            <Button Height="30" Margin="5,5,5,50">Edit</Button>
-            <Button Height="30" Margin="5,5,5,50">Add --></Button>
+            <Button Name="btnEdit" Height="30" Margin="5,5,5,50">Edit</Button>
+            <Button Name="btnAdd" Height="30" Margin="5,5,5,50" Click="btnAdd_Click">Add --></Button>
             <Label FontWeight="Bold" HorizontalAlignment="Center">FROM:</Label>
-            <RadioButton Name="radioFromTrade" GroupName="From" Margin="5">Trade</RadioButton>
+            <RadioButton Name="radioFromTrade" GroupName="From" Margin="5">New Item</RadioButton>
             <RadioButton Name="radioFromOutBack" GroupName="From" Margin="5">Out Back</RadioButton>
             <RadioButton Name="radioFromStorage" GroupName="From" Margin="5">Storage</RadioButton>
             <RadioButton Name="radioFromSalesFloor" GroupName="From" Margin="5,5,5,50">Sales Floor</RadioButton>
             <Label FontWeight="Bold" HorizontalAlignment="Center">TO:</Label>
-            <RadioButton Name="radioToTrade" GroupName="To" Margin="5">Trade</RadioButton>
             <RadioButton Name="radioToOutBack" GroupName="To" Margin="5">Out Back</RadioButton>
             <RadioButton Name="radioToStorage" GroupName="To" Margin="5">Storage</RadioButton>
             <RadioButton Name="radioToSalesFloor" GroupName="To" Margin="5,5,5,50">Sales Floor</RadioButton>
         </StackPanel>
-        
+        <ListView Margin="0,5,10,5" Name="lvMove" Grid.Column="2" Grid.Row="1" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="2" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity}"/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
+                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
+                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

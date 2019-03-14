@@ -490,35 +490,6 @@ namespace Inventory_3._0
 
         }
         
-        // For recording transactions (Transaction Total)
-        //public static void AddToTransactionTable(string tblname, Item item, string type, int transactionNumber, string date) // Should only be used for Table of Transactions
-        //{
-        //    SqlCommand cmd = new SqlCommand("INSERT INTO " + tblname + " VALUES(@NAME, @SYSTEM, @PRICE, @QUANTITY, @UPC, @TYPE, @TRANSACTIONNUMBER, @DATE)", connect);
-        //    cmd.Parameters.Add("@NAME", SqlDbType.VarChar).Value = item.name;
-        //    cmd.Parameters.Add("@SYSTEM", SqlDbType.NVarChar).Value = item.system;
-        //    cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.price;
-        //    cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = item.quantity;
-        //    cmd.Parameters.Add("@UPC", SqlDbType.VarChar).Value = item.UPC;
-        //    cmd.Parameters.Add("@TYPE", SqlDbType.NVarChar).Value = type;
-        //    cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
-        //    cmd.Parameters.Add("@DATE", SqlDbType.DateTime).Value = date;
-
-        //    // execute command  & close connection
-        //    try
-        //    {
-        //        connect.Open();
-        //        cmd.ExecuteNonQuery();
-        //        connect.Close();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        MessageBox.Show("ERROR IN AddToTransactionTable:\n" + e.Message);
-        //    }
-        //    finally
-        //    {
-        //        connect.Close();
-        //    }
-        //}
 
         // Decrease an item's inventory by subtracting the passed "Item.quantity" value
         public static void DecrementInventory(string tablename, Item item)
@@ -992,33 +963,45 @@ namespace Inventory_3._0
             connect.Close();
         }
 
-       
-
-        /// <summary>
-        /// Returns the monetary value of the entire inventory (each item's price * quantity)
-        /// </summary>
-        /// <returns>Monetary value of all in-stock items in inventory as a Decimal</returns>
-        public static decimal GetInventoryValue()
+        public static void AddTransaction(Item item, string type, int transactionNumber, string date) // Should only be used for Table of Transactions
         {
-            decimal total;
+            SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.TRANSACTION + " VALUES(@ID, @NAME, @SYSTEM, @PRICE, @QUANTITY, @TYPE, @TRANSACTIONNUMBER, @DATE)", connect);
+            cmd.Parameters.Add("@ID", SqlDbType.Int).Value = item.SQLid;
+            cmd.Parameters.Add("@NAME", SqlDbType.VarChar).Value = item.name;
+            cmd.Parameters.Add("@SYSTEM", SqlDbType.NVarChar).Value = item.system;
+            cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = item.quantity;
+            cmd.Parameters.Add("@TYPE", SqlDbType.NVarChar).Value = type;
+            cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
+            cmd.Parameters.Add("@DATE", SqlDbType.DateTime).Value = date;
 
-            string command = "SELECT SUM(Price * Quantity) FROM " + TableNames.INVENTORY ;
+            switch (type)
+            {
+                case TransactionTypes.SALE:
+                    cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.price;
+                    break;
+                case TransactionTypes.TRADE_CASH:
+                    cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.tradeCash;
+                    break;
+                case TransactionTypes.TRADE_CREDIT:
+                    cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.tradeCredit;
+                    break;
+            }
 
+            // execute command  & close connection
             try
             {
-                SqlCommand cmd = new SqlCommand(command, connect);
                 connect.Open();
-                total = Convert.ToDecimal(cmd.ExecuteScalar());
+                cmd.ExecuteNonQuery();
                 connect.Close();
-                return total; //return the total
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("ERROR IN AddToTransactionTable:\n" + e.Message);
+            }
+            finally
+            {
                 connect.Close();
             }
-
-            return -1M; // Something went wrong. (Although, -1 could be a legitimate return value if there are an abundance of negative quantity of items in inventory.)
         }
 
         public static List<Item> GetBestSellingItems(string type, bool ascending = false)
@@ -1046,14 +1029,15 @@ namespace Inventory_3._0
                     Item item = new Item(reader[0].ToString(), reader[1].ToString(), reader[2].ToString());
                     collection.Add(item);
                 }
-                connect.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+            finally
+            {
                 connect.Close();
             }
-
             return collection;
         }
 
@@ -1093,6 +1077,34 @@ namespace Inventory_3._0
         }
 
         #endregion
+        
+        /// <summary>
+        /// Returns the monetary value of the entire inventory (each item's price * quantity)
+        /// </summary>
+        /// <returns>Monetary value of all in-stock items in inventory as a Decimal</returns>
+        public static decimal GetInventoryValue()
+        {
+            decimal total;
+
+            string command = "SELECT SUM(Price * Quantity) FROM " + TableNames.INVENTORY ;
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand(command, connect);
+                connect.Open();
+                total = Convert.ToDecimal(cmd.ExecuteScalar());
+                connect.Close();
+                return total; //return the total
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+            }
+
+            return -1M; // Something went wrong. (Although, -1 could be a legitimate return value if there are an abundance of negative quantity of items in inventory.)
+        }
+
         /// <summary>
         /// Returns the total quantity of items currently in stock
         /// </summary>

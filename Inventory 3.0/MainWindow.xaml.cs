@@ -201,5 +201,35 @@ namespace Inventory_3._0
         {
             cart.Clear();
         }
+
+        private void btnCash_Click(object sender, RoutedEventArgs e)
+        {
+            Checkout(TransactionTypes.TRADE_CASH);
+        }
+
+
+        private void btnCredit_Click(object sender, RoutedEventArgs e)
+        {
+            Checkout(TransactionTypes.TRADE_CREDIT);
+        }
+
+        private void Checkout(string transactionType)
+        {
+            try
+            {
+                int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
+                string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                foreach (Item item in cart)
+                {
+                    DBAccess.AddTransaction(item, transactionType, transactionNumber, date);
+                }
+                DBAccess.IncrementTransactionNumber();
+                cart.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in Checkout:\n" + ex.Message);
+            }
+        }
     }
 }

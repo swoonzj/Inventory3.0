@@ -94,7 +94,7 @@
         <TextBlock Name="txtTotalCash" FontSize="15" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="5" />
         <TextBlock Name="txtTotalCredit" FontSize="15" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="5" />
         
-        <Button Name="btnCash" FontSize="20" Margin ="5" Padding="5" Grid.Column="2" Grid.Row="6" >Cash</Button>
-        <Button Name="btnCredit" FontSize="20" Margin ="5" Padding="5" Grid.Column="3" Grid.Row="6" >Credit</Button>
+        <Button Name="btnCash" FontSize="20" Margin ="5" Padding="5" Grid.Column="2" Grid.Row="6" Click="btnCash_Click" >Cash</Button>
+        <Button Name="btnCredit" FontSize="20" Margin ="5" Padding="5" Grid.Column="3" Grid.Row="6" Click="btnCredit_Click" >Credit</Button>
     </Grid>
 </Window>

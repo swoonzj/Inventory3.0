@@ -32,10 +32,11 @@ namespace Inventory_3._0
         {
             try
             {
+                DBAccess.MigrateDatabase();
                 InitializeComponent();
-                Search(String.Empty);
-                lvCart.ItemsSource = cart;
-                UpdateTotals();
+                //Search(String.Empty);
+                //lvCart.ItemsSource = cart;
+                //UpdateTotals();
             }
             catch (Exception ex)
             {

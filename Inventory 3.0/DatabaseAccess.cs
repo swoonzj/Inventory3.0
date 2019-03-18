@@ -53,7 +53,7 @@ namespace Inventory_3._0
 
 
 
-        //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
+        static SqlConnection connectOldDatabase = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
         static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2);
 
 
@@ -459,7 +459,45 @@ namespace Inventory_3._0
 
 
 
+        public static void MigrateDatabase()
+        {
+            List<Item> itemCollection = new List<Item>();
+            // Fetch entire database as new Items
+            // Add each item as "new item" to new database
+            SqlCommand cmd = new SqlCommand("SELECT * FROM tblInventory;", connectOldDatabase);
+            try
+            {
+                connectOldDatabase.Open();
+                List<int> quant = new List<int>();
+                quant = [0,0,0];
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read() == true)
+                {
+                    Item newItem = new Item(
+                        reader[0].ToString(),
+                        reader[1].ToString(),
+                        reader[2].ToString(),
+                        new List<int>([0,0,0]),
+                        reader[4].ToString(),
+                        reader[5].ToString(),
+                        reader[6].ToString());
+                    itemCollection.Add(newItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                connectOldDatabase.Close();
+            }
 
+            foreach (Item item in itemCollection)
+            {
+                DBAccess.AddNewItem(item);
+            }
+        }
 
         // Export table to Comma Separated Values file (.csv)
         public static void ExportCSV(string filepath, string tblname)
@@ -1004,42 +1042,42 @@ namespace Inventory_3._0
             }
         }
 
-        public static List<Item> GetBestSellingItems(string type, bool ascending = false)
-        {
-            List<Item> collection = new List<Item>();
-            string order;
-            if (ascending) order = "ASC";
-            else order = "DESC";
+        //public static List<Item> GetBestSellingItems(string type, bool ascending = false)
+        //{
+        //    List<Item> collection = new List<Item>();
+        //    string order;
+        //    if (ascending) order = "ASC";
+        //    else order = "DESC";
 
-            string command = "SELECT Name, System, SUM(Quantity) AS Total " +
-                        "FROM " + TableNames.TRANSACTION +
-                        " WHERE        (Type = '" + type + "') " +
-                        "GROUP BY Name, System " +
-                        "ORDER BY Total " + order;
+        //    string command = "SELECT Name, System, SUM(Quantity) AS Total " +
+        //                "FROM " + TableNames.TRANSACTION +
+        //                " WHERE        (Type = '" + type + "') " +
+        //                "GROUP BY Name, System " +
+        //                "ORDER BY Total " + order;
 
-            SqlCommand cmd = new SqlCommand(command, connect);
+        //    SqlCommand cmd = new SqlCommand(command, connect);
 
-            try
-            {
-                connect.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+        //    try
+        //    {
+        //        connect.Open();
+        //        SqlDataReader reader = cmd.ExecuteReader();
 
-                while (reader.Read() == true)
-                {
-                    Item item = new Item(reader[0].ToString(), reader[1].ToString(), reader[2].ToString());
-                    collection.Add(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-            return collection;
-        }
+        //        while (reader.Read() == true)
+        //        {
+        //            Item item = new Item(reader[0].ToString(), reader[1].ToString(), reader[2].ToString());
+        //            collection.Add(item);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        connect.Close();
+        //    }
+        //    return collection;
+        //}
 
         /// <summary>
         /// Gets the monetary total of the given transaction type starting from (and including) the DateTime "from" up to the DateTime "to"

@@ -45,7 +45,7 @@ namespace Inventory_3._0
             //lvList.ItemsSource = searchResults;
             DataContext = managedItem;
             
-            Search();
+            //Search();
         }
 
         private void Search()
@@ -223,6 +223,11 @@ namespace Inventory_3._0
             }
 
             Search();
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
         }
     }
 }

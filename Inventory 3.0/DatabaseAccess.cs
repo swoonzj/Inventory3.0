@@ -1003,13 +1003,12 @@ namespace Inventory_3._0
 
         public static void AddTransaction(Item item, string type, int transactionNumber, string date) // Should only be used for Table of Transactions
         {
-            SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.TRANSACTION + " VALUES(@ID, @NAME, @SYSTEM, @PRICE, @QUANTITY, @TYPE, @TRANSACTIONNUMBER, @DATE)", connect);
+            SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.TRANSACTION + " VALUES(@TRANSACTIONNUMBER, @ID, @NAME, @SYSTEM, @PRICE, @TYPE, @DATE)", connect);
+            cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
             cmd.Parameters.Add("@ID", SqlDbType.Int).Value = item.SQLid;
             cmd.Parameters.Add("@NAME", SqlDbType.VarChar).Value = item.name;
             cmd.Parameters.Add("@SYSTEM", SqlDbType.NVarChar).Value = item.system;
-            cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = item.quantity;
             cmd.Parameters.Add("@TYPE", SqlDbType.NVarChar).Value = type;
-            cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
             cmd.Parameters.Add("@DATE", SqlDbType.DateTime).Value = date;
 
             switch (type)

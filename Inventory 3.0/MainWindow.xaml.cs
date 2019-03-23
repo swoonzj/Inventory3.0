@@ -36,6 +36,7 @@ namespace Inventory_3._0
                 InitializeComponent();
                 //Search(String.Empty);
                 lvCart.ItemsSource = cart;
+                cart.CollectionChanged += (e, v) => UpdateTotals();
                 UpdateTotals();
             }
             catch (Exception ex)

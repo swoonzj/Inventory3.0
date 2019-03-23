@@ -37,7 +37,6 @@ namespace Inventory_3._0
                 //Search(String.Empty);
                 lvCart.ItemsSource = cart;
                 cart.CollectionChanged += (e, v) => UpdateTotals();
-                UpdateTotals();
             }
             catch (Exception ex)
             {
@@ -71,7 +70,6 @@ namespace Inventory_3._0
             {
                 cart.Insert(0, item);
             }
-            UpdateTotals();
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
@@ -85,8 +83,6 @@ namespace Inventory_3._0
             {
                 cart.Remove(item);
             }
-            
-            UpdateTotals();
         }
 
         private void UpdateTotals()
@@ -105,7 +101,6 @@ namespace Inventory_3._0
         private void ColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(((ListView)sender).ItemsSource);
-
         }
 
         // Handle input from Price Scanner
@@ -122,9 +117,7 @@ namespace Inventory_3._0
             {
                 if (keyboardInput == "") return; // Return if the input is empty. Prevents a SQL error.
 
-                List<Item> items = DBAccess.UPCLookup(keyboardInput); // Returns NULL if UPC does not match an item
-                
-                
+                List<Item> items = DBAccess.UPCLookup(keyboardInput); // Returns NULL if UPC does not match an item                
 
                 // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
                 if (items.Count != 0)

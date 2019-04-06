@@ -161,8 +161,8 @@ namespace Inventory_3._0
         public static void AddNewItem(string name, string system, decimal price, List<int> inventory, decimal cash, decimal credit, List<string> upcs)
         {
 
-            name = CheckForSpecialCharacters(name);
-            system = CheckForSpecialCharacters(system);
+            //name = CheckForSpecialCharacters(name);
+            //system = CheckForSpecialCharacters(system);
 
             // Add data to table
             SqlCommand cmdItem = new SqlCommand("INSERT INTO " + TableNames.ITEMS + " OUTPUT INSERTED.ID VALUES(@NAME, @SYSTEM)", connect);

@@ -226,5 +226,10 @@ namespace Inventory_3._0
                 MessageBox.Show("Error in Checkout:\n" + ex.Message);
             }
         }
+
+        private void btnChangeCash_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

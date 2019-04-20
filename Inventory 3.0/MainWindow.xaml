@@ -91,10 +91,13 @@
         <Button Name="btnClearCart" Margin="20" Grid.Column="1" Grid.Row="3" Click="btnClearCart_Click" Height="Auto" Width="Auto" >Clear Cart</Button>
         <Expander Name="expanderEditCart" Margin="5" Grid.Column="1" Grid.Row="4" Grid.RowSpan="3" IsExpanded="False" Header="Edit Cart">
             <StackPanel>
-                <Button Name="btnRoundUp">Round Up</Button>
-                <Button Name="btnRoundDown">Round Down</Button>
-                <Button Name="btnChangeCash">Change Cash</Button>
-                <Button Name="btnChangeCredit">Change Credit</Button>
+                <TextBox Name="txtEdit" Margin="5" TextAlignment="Right" Text="{Binding Path=txt, StringFormat=C}"/>
+                <Button Name="btnChangeCash" Margin="0,0,0,5" Click="btnChangeCash_Click">Change Cash</Button>
+                <Button Name="btnChangeCredit" Margin="0,0,0,5">Change Credit</Button>
+                <Separator/>
+                <Label HorizontalAlignment="Center" Margin="0,0,0,-5">Total:</Label>                
+                <Button Name="btnRoundUp" Margin="0,0,0,5">Round Up</Button>
+                <Button Name="btnRoundDown" Margin="0,0,0,5">Round Down</Button>
             </StackPanel>
         </Expander>
 

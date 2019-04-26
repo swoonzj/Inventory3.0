@@ -180,12 +180,6 @@ namespace Inventory_3._0
             lvCart.Focus();
         }
 
-        // Finish this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        private void btnEditCart_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Cart Editor Placeholder!");            
-        }
-
         private void ManagementMenu_Click(object sender, RoutedEventArgs e)
         {
             Window management = new Management();
@@ -227,9 +221,77 @@ namespace Inventory_3._0
             }
         }
 
+
+        #region EditCart Methods
+
         private void btnChangeCash_Click(object sender, RoutedEventArgs e)
         {
-            
+            decimal newValue;
+            // verify textbox value
+            if (decimal.TryParse(txtEdit.Text, out newValue))
+            {
+                foreach (var item in lvCart.SelectedItems)
+                {
+                    ((Item)item).tradeCash = newValue;
+                }
+            }
+            else
+            {
+                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            UpdateTotals();
+        }
+
+        private void btnChangeCredit_Click(object sender, RoutedEventArgs e)
+        {
+            decimal newValue;
+            // verify textbox value
+            if (decimal.TryParse(txtEdit.Text, out newValue))
+            {
+                foreach (var item in lvCart.SelectedItems)
+                {
+                    ((Item)item).tradeCredit = newValue;
+                }
+            }
+            else
+            {
+                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            UpdateTotals();
+        }
+
+        #endregion
+
+        private void btnRoundUp_Click(object sender, RoutedEventArgs e)
+        {
+            decimal cashup, creditup;
+            decimal remainder = cashTotal % 5;
+            if (remainder == 0) 
+                cashup = 5;
+            else 
+                cashup = 5 - remainder;
+            remainder = creditTotal % 5;
+            if (remainder == 0)
+                creditup = 5;
+            else
+                creditup = 5 - remainder;
+            cart.Add(new Item("Round Up", "Adjust Cart", 0, 1, cashup, creditup,"-1"));
+        }
+
+        private void btnRoundDown_Click(object sender, RoutedEventArgs e)
+        {
+            decimal cashdown, creditdown;
+            decimal remainder = cashTotal % 5;
+            if (remainder == 0)
+                cashdown = -5;
+            else
+                cashdown = -remainder;
+            remainder = creditTotal % 5;
+            if (remainder == 0)
+                creditdown = -5;
+            else
+                creditdown = -remainder;
+            cart.Add(new Item("Round Down", "Adjust Cart", 0, 1, cashdown, creditdown, "-1"));
         }
     }
 }

@@ -93,11 +93,11 @@
             <StackPanel>
                 <TextBox Name="txtEdit" Margin="5" TextAlignment="Right" Text="{Binding Path=txt, StringFormat=C}"/>
                 <Button Name="btnChangeCash" Margin="0,0,0,5" Click="btnChangeCash_Click">Change Cash</Button>
-                <Button Name="btnChangeCredit" Margin="0,0,0,5">Change Credit</Button>
+                <Button Name="btnChangeCredit" Margin="0,0,0,5" Click="btnChangeCredit_Click">Change Credit</Button>
                 <Separator/>
                 <Label HorizontalAlignment="Center" Margin="0,0,0,-5">Total:</Label>                
-                <Button Name="btnRoundUp" Margin="0,0,0,5">Round Up</Button>
-                <Button Name="btnRoundDown" Margin="0,0,0,5">Round Down</Button>
+                <Button Name="btnRoundUp" Margin="0,0,0,5" Click="btnRoundUp_Click">Round Up</Button>
+                <Button Name="btnRoundDown" Margin="0,0,0,5" Click="btnRoundDown_Click">Round Down</Button>
             </StackPanel>
         </Expander>
 

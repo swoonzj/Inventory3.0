@@ -293,5 +293,19 @@ namespace Inventory_3._0
                 creditdown = -remainder;
             cart.Add(new Item("Round Down", "Adjust Cart", 0, 1, cashdown, creditdown, "-1"));
         }
+
+        private void btnAddValue_Click(object sender, RoutedEventArgs e)
+        {
+            decimal newValue;
+            // verify textbox value
+            if (decimal.TryParse(txtEdit.Text, out newValue))
+            {
+                cart.Add(new Item("Add Value", "Adjust Cart", 0, 1, newValue, newValue, "-1"));
+            }
+            else
+            {
+                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
     }
 }

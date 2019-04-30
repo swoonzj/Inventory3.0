@@ -87,15 +87,18 @@
         </DockPanel>
         
         <Button Name="btnAdd" Margin="20" Grid.Column="1" Grid.RowSpan="2" Click="btnAdd_Click">Add</Button>
-        <Button Name="btnRemove" Margin="20" Grid.Column="1" Grid.Row="2" Click="btnRemove_Click">Remove</Button>
-        <Button Name="btnClearCart" Margin="20" Grid.Column="1" Grid.Row="3" Click="btnClearCart_Click" Height="Auto" Width="Auto" >Clear Cart</Button>
-        <Expander Name="expanderEditCart" Margin="5" Grid.Column="1" Grid.Row="4" Grid.RowSpan="3" IsExpanded="False" Header="Edit Cart">
+        <StackPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Center">
+            <Button Name="btnRemove" Margin="5" Click="btnRemove_Click" Height="Auto">Remove</Button>
+            <Button Name="btnClearCart" Margin="5" Click="btnClearCart_Click" Height="Auto" Width="Auto">Clear Cart</Button>
+        </StackPanel>
+        <Expander Name="expanderEditCart" Margin="5" Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" IsExpanded="False" Header="Edit Cart">
             <StackPanel>
                 <TextBox Name="txtEdit" Margin="5" TextAlignment="Right" Text="{Binding Path=txt, StringFormat=C}"/>
                 <Button Name="btnChangeCash" Margin="0,0,0,5" Click="btnChangeCash_Click">Change Cash</Button>
                 <Button Name="btnChangeCredit" Margin="0,0,0,5" Click="btnChangeCredit_Click">Change Credit</Button>
                 <Separator/>
-                <Label HorizontalAlignment="Center" Margin="0,0,0,-5">Total:</Label>                
+                <Label HorizontalAlignment="Center" Margin="0,0,0,-5">Total:</Label>
+                <Button Name="btnAddValue" Margin="0,0,0,5" Click="btnAddValue_Click">Add Value</Button>
                 <Button Name="btnRoundUp" Margin="0,0,0,5" Click="btnRoundUp_Click">Round Up</Button>
                 <Button Name="btnRoundDown" Margin="0,0,0,5" Click="btnRoundDown_Click">Round Down</Button>
             </StackPanel>

@@ -1,0 +1,18 @@
+﻿<Window x:Class="Inventory_3._0.ImportCSV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Import CSV" Height="300" Width="437">
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Name="btnBrowse">Open File</Button>
+                <Label Name="lblFileName" Content=""/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="System Name:" HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                <TextBox Name="txtSystemName" HorizontalAlignment="Left" TextWrapping="Wrap"   Width="200"/>
+            </StackPanel>
+            <CheckBox Name ="chkIgnoreFirstLine" Content="Ignore First Line" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+        </StackPanel>
+    </Grid>
+</Window>

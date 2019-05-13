@@ -38,9 +38,16 @@ namespace Inventory_3._0
             MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                DBAccess.AddNewItem(item);
 
-                MessageBox.Show("Saved.");
+                if (DBAccess.AddNewItem(item))
+                {
+                    MessageBox.Show("Saved.");
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("An error occurred. Data was NOT saved.");
+                }
             }
         }
 

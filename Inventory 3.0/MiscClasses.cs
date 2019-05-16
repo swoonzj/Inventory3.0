@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,6 +95,66 @@ namespace Inventory_3._0
                 return decimal.MinValue;
 
             return value;
+        }
+    }
+
+    /// <summary>
+    /// Interaction logic for importing Product data from .CSV (comma separated values)
+    /// </summary>
+    public class ImportCSV
+    {
+
+        /// <summary>
+        /// Used by loadCSV() to identify individual lines in the file. Returns each line, separated into strings
+        /// </summary>
+        /// <param name="input">String containing one line of data, separated by commas</param>
+        /// <returns>Each line of input, separated into individual strings contained in a List</returns>
+
+        private static List<string> ParseCSV(string input)
+        {
+            string temp = string.Empty;  //each individual word/string
+            List<string> strarray = new List<string>(); // each line, separated by commas
+            bool quote = false;
+            foreach (char c in input)
+            {
+                if (c == '\"' && !quote) quote = true;   // Test for first ' " '  (quotation mark)
+                else if (c == '\"' && quote) quote = false; // Test for second quotation mark
+                else if ((c == ',' && quote == false) || c == '\n') // if comma is encountered & no quotations, add 'temp' to 'strarray'
+                {                                                   // Or if a newline is encountered (end of line)
+                    //if (temp == string.Empty) temp = "0";
+                    strarray.Add(temp.Trim());
+                    temp = string.Empty;
+                }
+                else temp += c;
+            }
+            if (temp != String.Empty) strarray.Add(temp);  // necessary if CSV file has only no commas after final item
+            return strarray;
+        }
+
+        public static void LoadCSV(string filepath) // Add items from a Comma Separated Value file to the inventory
+        {
+            foreach (string s in File.ReadLines(filepath))
+            {
+                // Add item to collection
+                DBAccess.AddNewItem(CreateItemFromCSVLine(s));
+            }
+        }
+
+        public static Item CreateItemFromCSVLine(string CSVline)
+        {
+            List<string> line = ParseCSV(CSVline);
+            List<int> quantity = new List<int>();
+            quantity.Add(Convert.ToInt32(line[3]));
+            quantity.Add(Convert.ToInt32(line[4]));
+            quantity.Add(Convert.ToInt32(line[5]));
+
+            List<string> upcs = new List<string>();
+            for (int i = 8; i < line.Count; i++) // Index of first UPC)
+            {
+                upcs.Add(line[i]);
+            }
+
+            return new Item(line[0], line[1], line[2], quantity, line[6], line[7], upcs);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -228,6 +229,43 @@ namespace Inventory_3._0
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             ((TextBox)sender).SelectAll();
+        }
+
+        private void menuImportFromCSV_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog CSVbrowse = new OpenFileDialog();
+            CSVbrowse.Title = "Open .csv File";
+            CSVbrowse.Filter = "Comma Separated Values, brah|*.csv";
+            //CSVbrowse.InitialDirectory = @".";
+
+            try
+            {
+                if (CSVbrowse.ShowDialog() == true)
+                {
+                    // Display 1st line of file to verify,
+                    // then choose whether to import all columns, or only first (name) column
+
+
+
+                    System.IO.StreamReader file = new System.IO.StreamReader(CSVbrowse.FileName.ToString());
+                    string firstLine = file.ReadLine();
+                    var result = MessageBox.Show("First Line of File: \n\t" + firstLine +
+                                                    "\nExample Item:\n" + ImportCSV.CreateItemFromCSVLine(firstLine) +
+                                                    "\n\nClick 'Yes' to import (Make sure everything looks good. This could be a pain to undo.)\n" +
+                                                    "Click 'No' to do nothing, effectively wasting everyone's time\n", "Oh God!", MessageBoxButton.YesNoCancel);
+
+                    if (result == MessageBoxResult.Yes) // Click Yes, import only 1st column
+                    {
+                        ImportCSV.LoadCSV(CSVbrowse.FileName.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in menuImportFromCSV_Click():\n" + ex.Message);
+                MessageBox.Show("As a reminder, the proper format for a .csv file is:\n"
+                     + "Name,System,Price,Inventory Out Front, Inventory Out Back, Inventory in Storage, Trade value: Cash, Trade Value: Credit, UPC, [any additional UPCs (optional)]");
+            }
         }
     }
 }

@@ -55,6 +55,7 @@
         <Label Grid.Column="1" Grid.Row ="2" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">System</Label>
         <Label Grid.Column="1" Grid.Row ="3" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Price</Label>
         <Label Grid.Column="1" Grid.Row ="4" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Quantity</Label>
+        <Button Name="btnAutoTradeValues" Grid.Column="1" Grid.Row ="5" Margin="5" FontStretch="Normal" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnAutoTradeValue_Click">Auto</Button>
         <Label Grid.Column="1" Grid.Row ="5" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Trade: Cash</Label>
         <Label Grid.Column="1" Grid.Row ="6" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Trade: Credit</Label>
         <Label Grid.Column="1" Grid.Row ="7" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">UPCs</Label>

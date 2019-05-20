@@ -267,5 +267,19 @@ namespace Inventory_3._0
                      + "Name,System,Price,Inventory Out Front, Inventory Out Back, Inventory in Storage, Trade value: Cash, Trade Value: Credit, UPC, [any additional UPCs (optional)]");
             }
         }
+
+        private void btnAutoTradeValue_Click(object sender, RoutedEventArgs e)
+        {
+            if (managedItem.price < 5 && managedItem.price > 3)
+            {
+                managedItem.tradeCash = .5m;
+                managedItem.tradeCredit = 1m;
+            }
+            if (managedItem.price > 5)
+            {
+                managedItem.tradeCash = Math.Round(managedItem.price/4);
+                managedItem.tradeCredit = Math.Round(managedItem.price / 3);
+            }
+        }
     }
 }

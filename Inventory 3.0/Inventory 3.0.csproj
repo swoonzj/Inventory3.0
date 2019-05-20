@@ -86,6 +86,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PointOfSales.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Management.xaml.cs">
@@ -94,6 +98,9 @@
     <Compile Include="MiscClasses.cs" />
     <Compile Include="MoveInventory.xaml.cs">
       <DependentUpon>MoveInventory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PointOfSales.xaml.cs">
+      <DependentUpon>PointOfSales.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -1,0 +1,111 @@
+﻿<Window x:Class="Inventory_3._0.PointOfSales"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Icon="shaq.ico"
+        Title="Register" Height="500" Width="1000">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="1.5*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <ListView  Margin="5" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="6" SelectionMode="Multiple">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="2" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=name}"/>
+                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
+                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
+                    <GridViewColumn Header="In Stock"  DisplayMemberBinding="{Binding Path=quantity}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView Margin="5" Name="lvCart" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" SelectionMode="Multiple" KeyUp="lvCart_PreviewKeyDown" MouseDown="lvCart_MouseDown">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="2" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Name" Width ="Auto" DisplayMemberBinding="{Binding Path=name}"/>
+                    <GridViewColumn Header="System" Width="Auto" DisplayMemberBinding="{Binding Path=system}"/>
+                    <GridViewColumn Header="Quantity" Width="Auto" DisplayMemberBinding="{Binding Path=quantity}"/>
+                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
+                    <GridViewColumn Header="Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
+                    <GridViewColumn Header="Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <DockPanel LastChildFill="True">
+            <DockPanel>
+                <Border CornerRadius="5"
+                        BorderBrush="Gray"
+                        Background="LightGray"
+                        BorderThickness="1"
+                        Padding="1"
+                        Margin="5">
+                    <Menu DockPanel.Dock="Left">
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                        <MenuItem Header="_Settings">
+                            <MenuItem IsCheckable="True" Header="_Add Trade to Inventory"/>
+                        </MenuItem>
+                        <MenuItem Header="_Manage">
+                            <MenuItem Header="Open _Management Screen" Click="ManagementMenu_Click"/>
+                        </MenuItem>
+
+                    </Menu>
+                </Border>
+            </DockPanel>
+            <Button  Name="btnClear" Grid.Column="0" Grid.Row="0" Margin="5" Width="20" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
+            <TextBox Name="txtSearch" Grid.Column="0" Grid.Row="0" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center"/>
+        </DockPanel>
+
+        <Button Name="btnAdd" Margin="20" Grid.Column="1" Grid.RowSpan="2" Click="btnAdd_Click">Add</Button>
+        <StackPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Center">
+            <Button Name="btnRemove" Margin="5" Click="btnRemove_Click" Height="Auto">Remove</Button>
+            <Button Name="btnClearCart" Margin="5" Click="btnClearCart_Click" Height="Auto" Width="Auto">Clear Cart</Button>
+        </StackPanel>
+        <Expander Name="expanderEditCart" Margin="10,10,0,0" Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" IsExpanded="False" Header="Edit Cart">
+            <StackPanel>
+                <TextBox Name="txtEdit" Margin="5" TextAlignment="Right" Text="{Binding Path=txt, StringFormat=C}"/>
+                <Button Name="btnChangeCash" Margin="0,0,0,5" Click="btnChangeCash_Click">Change Cash</Button>
+                <Button Name="btnChangeCredit" Margin="0,0,0,5" Click="btnChangeCredit_Click">Change Credit</Button>
+                <Separator/>
+                <Label HorizontalAlignment="Center" Margin="0,0,0,-5">Total:</Label>
+                <Button Name="btnAddValue" Margin="0,0,0,5" Click="btnAddValue_Click">Add Value</Button>
+                <Button Name="btnRoundUp" Margin="0,0,0,5" Click="btnRoundUp_Click">Round Up</Button>
+                <Button Name="btnRoundDown" Margin="0,0,0,5" Click="btnRoundDown_Click">Round Down</Button>
+            </StackPanel>
+        </Expander>
+
+        <TextBlock Name="txtTotalCash" FontSize="15" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="5" />
+        <TextBlock Name="txtTotalCredit" FontSize="15" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="5" />
+        <Button Name="btnCheckout" FontSize="20" Margin ="5" Padding="5" Grid.Column="3" Grid.Row="6" VerticalContentAlignment="Center" Click="btnCheckout_Click">Checkout</Button>
+    </Grid>
+</Window>

@@ -22,8 +22,7 @@ namespace Inventory_3._0
     /// </summary>
     public partial class PointOfSales : Window
     {
-        decimal cashTotal = 0;
-        decimal creditTotal = 0;
+        decimal total = 0;
 
         ObservableCollection<Item> cart = new ObservableCollection<Item>();
         string keyboardInput;
@@ -87,15 +86,12 @@ namespace Inventory_3._0
 
         private void UpdateTotals()
         {
-            cashTotal = 0;
-            creditTotal = 0;
+            total = 0;
             foreach (Item item in lvCart.Items)
             {
-                cashTotal += item.tradeCash;
-                creditTotal += item.tradeCredit;
+                total += item.price;
             }
-            txtTotalCash.Text = "Cash:\t\t$" + cashTotal.ToString("0.00");
-            txtTotalCredit.Text = "\nCredit:\t\t$" + creditTotal.ToString("0.00");
+            txtTotal.Text = "Cash:\t\t$" + total.ToString("0.00");
         }
 
         private void ColumnHeader_Click(object sender, RoutedEventArgs e)
@@ -210,10 +206,15 @@ namespace Inventory_3._0
             }
         }
 
+        private void btnCheckout_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
 
         #region EditCart Methods
 
-        private void btnChangeCash_Click(object sender, RoutedEventArgs e)
+        private void btnChangePrice_Click(object sender, RoutedEventArgs e)
         {
             decimal newValue;
             // verify textbox value
@@ -221,7 +222,7 @@ namespace Inventory_3._0
             {
                 foreach (var item in lvCart.SelectedItems)
                 {
-                    ((Item)item).tradeCash = newValue;
+                    ((Item)item).price = newValue;
                 }
             }
             else
@@ -231,69 +232,9 @@ namespace Inventory_3._0
             UpdateTotals();
         }
 
-        private void btnChangeCredit_Click(object sender, RoutedEventArgs e)
-        {
-            decimal newValue;
-            // verify textbox value
-            if (decimal.TryParse(txtEdit.Text, out newValue))
-            {
-                foreach (var item in lvCart.SelectedItems)
-                {
-                    ((Item)item).tradeCredit = newValue;
-                }
-            }
-            else
-            {
-                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-            UpdateTotals();
-        }        
-
-        private void btnRoundUp_Click(object sender, RoutedEventArgs e)
-        {
-            decimal cashup, creditup;
-            decimal remainder = cashTotal % 5;
-            if (remainder == 0) 
-                cashup = 5;
-            else 
-                cashup = 5 - remainder;
-            remainder = creditTotal % 5;
-            if (remainder == 0)
-                creditup = 5;
-            else
-                creditup = 5 - remainder;
-            cart.Add(new Item("Round Up", "Adjust Cart", 0, 1, cashup, creditup,"-1"));
-        }
-
-        private void btnRoundDown_Click(object sender, RoutedEventArgs e)
-        {
-            decimal cashdown, creditdown;
-            decimal remainder = cashTotal % 5;
-            if (remainder == 0)
-                cashdown = -5;
-            else
-                cashdown = -remainder;
-            remainder = creditTotal % 5;
-            if (remainder == 0)
-                creditdown = -5;
-            else
-                creditdown = -remainder;
-            cart.Add(new Item("Round Down", "Adjust Cart", 0, 1, cashdown, creditdown, "-1"));
-        }
-
-        private void btnAddValue_Click(object sender, RoutedEventArgs e)
-        {
-            decimal newValue;
-            // verify textbox value
-            if (decimal.TryParse(txtEdit.Text, out newValue))
-            {
-                cart.Add(new Item("Add Value", "Adjust Cart", 0, 1, newValue, newValue, "-1"));
-            }
-            else
-            {
-                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-        }
+        
         #endregion
+
+        
     }
 }

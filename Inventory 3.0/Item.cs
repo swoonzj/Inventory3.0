@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Inventory_3._0
@@ -56,6 +57,7 @@ namespace Inventory_3._0
                 NotifyPropertyChanged("quantity");
             }
         }
+
         private decimal TradeCash;
         public decimal tradeCash
         {
@@ -107,7 +109,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new List<int> { 0, 0, 0 };
+            this.quantity = new List<int> { quantity, 0, 0 };
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs.Add(upc);
@@ -120,7 +122,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new List<int> { 0, 0, 0 }; 
+            this.quantity = new List<int> { quantity, 0, 0 }; 
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs = upcs;
@@ -144,7 +146,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = new List<int>();
+            this.quantity = new List<int> { quantity, 0, 0 };
             this.quantity.Add(quantity);
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);

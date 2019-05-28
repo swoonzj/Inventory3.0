@@ -38,7 +38,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView Margin="5" Name="lvCart" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" SelectionMode="Multiple" KeyUp="lvCart_PreviewKeyDown" MouseDown="lvCart_MouseDown">
+        <ListView Margin="5,2,5,8" Name="lvCart" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" SelectionMode="Multiple" KeyUp="lvCart_PreviewKeyDown" MouseDown="lvCart_MouseDown">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>

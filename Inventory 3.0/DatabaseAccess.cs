@@ -431,6 +431,32 @@ namespace Inventory_3._0
             return quantities;
         }
 
+        /// <summary>
+        /// Adds passed "amount" to current value in passed quantity "column".
+        /// </summary>
+        /// <param name="ID">SQL ID of item requiring change.</param>
+        /// <param name="amount">Integer to be added.</param>
+        /// <param name="column"></param>
+        public static void IncrementQuantities(int ID, int amount, string column)
+        {
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {1} + {2} WHERE id = {7}", TableNames.INVENTORY, column, amount, ID);
+            SqlCommand cmd = new SqlCommand(inventoryUpdate, connect);
+
+            try
+            {
+                connect.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in IncrementQuantities():\n" + ex.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+        }
+
         public static void DeleteItem(int ID)
         {
             string deleteCommand = String.Format("DELETE FROM {0} WHERE ID = {1}; DELETE FROM {2} WHERE ID = {1}; DELETE FROM {3} WHERE ID = {1}; DELETE FROM {4} WHERE ID = {1};", TableNames.UPC, ID, TableNames.PRICES, TableNames.INVENTORY, TableNames.ITEMS);

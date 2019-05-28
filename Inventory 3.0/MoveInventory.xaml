@@ -36,10 +36,13 @@
             </ListView.View>
         </ListView>
         <StackPanel Grid.Column="1" Grid.Row="1">
-            <Button Name="btnEdit" Height="30" Margin="5,5,5,50">Edit</Button>
             <Button Name="btnAdd" Height="30" Margin="5,5,5,50" Click="btnAdd_Click">Add --></Button>
+            <Button Name="btnRemove" Height="30" Margin="5,5,5,5" Click="btnRemove_Click">Remove</Button>
+            <Button Name="btnClearSelection" Height="30" Margin="5,5,5,5" Click="btnClearSelection_Click">Clear</Button>
+            <TextBox Name="txtChangeQuantity" Margin="5"/>
+            <Button Name="btnChangeQuantity" Height="30" Margin="5,5,5,50" Click="btnChangeQuantity_Click">Change Quantity</Button>
             <Label FontWeight="Bold" HorizontalAlignment="Center">FROM:</Label>
-            <RadioButton Name="radioFromTrade" GroupName="From" Margin="5">New Item</RadioButton>
+            <RadioButton Name="radioNewItem" GroupName="From" Margin="5">New Item</RadioButton>
             <RadioButton Name="radioFromOutBack" GroupName="From" Margin="5">Out Back</RadioButton>
             <RadioButton Name="radioFromStorage" GroupName="From" Margin="5">Storage</RadioButton>
             <RadioButton Name="radioFromSalesFloor" GroupName="From" Margin="5,5,5,50">Sales Floor</RadioButton>
@@ -48,7 +51,8 @@
             <RadioButton Name="radioToStorage" GroupName="To" Margin="5">Storage</RadioButton>
             <RadioButton Name="radioToSalesFloor" GroupName="To" Margin="5,5,5,50">Sales Floor</RadioButton>
         </StackPanel>
-        <ListView Margin="0,5,10,5" Name="lvMove" Grid.Column="2" Grid.Row="1" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}">
+        <Button Name="btnTransfer" Margin="5" Grid.Column="1" Grid.Row="2" Click="btnTransfer_Click">Transfer</Button>
+        <ListView Margin="0,0,10,10" Name="lvMove" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" SelectionMode="Multiple" KeyUp="lvCart_PreviewKeyDown" MouseDown="lvList_MouseDown" ItemsSource="{Binding searchResults}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>
@@ -58,12 +62,14 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity}"/>
+                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity[0]}"/>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
                     <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
                     <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
                 </GridView>
             </ListView.View>
         </ListView>
+        <Label Grid.Column="2" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40">Total Unique Items:</Label>
+        <Label Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="40" Content="{Binding Count, Mode=OneWay}"/>
     </Grid>
 </Window>

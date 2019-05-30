@@ -36,6 +36,10 @@ namespace Inventory_3._0
                 //Search(String.Empty);
                 lvCart.ItemsSource = cart;
                 cart.CollectionChanged += (e, v) => UpdateTotals();
+
+
+                cart.Add(new Item("Test1", "Test System", 9.99m, 5, 2m, 3m, "12345"));
+                cart.Add(new Item("Test2", "Test System", 19.99m, 2, 2m, 3m, "11111"));
             }
             catch (Exception ex)
             {

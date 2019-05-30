@@ -20,7 +20,7 @@ namespace Inventory_3._0
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class TradeWindow : Window
     {
         decimal cashTotal = 0;
         decimal creditTotal = 0;
@@ -28,7 +28,7 @@ namespace Inventory_3._0
         ObservableCollection<Item> cart = new ObservableCollection<Item>();
         string keyboardInput;
 
-        public MainWindow()
+        public TradeWindow()
         {
             try
             {

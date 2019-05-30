@@ -281,5 +281,11 @@ namespace Inventory_3._0
                 managedItem.tradeCredit = Math.Round(managedItem.price / 3);
             }
         }
+
+        private void menuMoveInventory_Click(object sender, RoutedEventArgs e)
+        {
+            MoveInventory moveInventory = new MoveInventory();
+            moveInventory.Show();
+        }
     }
 }

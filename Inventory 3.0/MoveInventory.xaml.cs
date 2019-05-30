@@ -35,8 +35,8 @@ namespace Inventory_3._0
 
             lvList.ItemsSource = searchResults;
 
-            searchResults.Add(new Item("Test1", "Test System", 9.99m, 5,2m,3m,"12345"));
-            searchResults.Add(new Item("Test2", "Test System", 9.99m, 5, 2m, 3m, "12345"));
+            //searchResults.Add(new Item("Test1", "Test System", 9.99m, 5,2m,3m,"12345"));
+            //searchResults.Add(new Item("Test2", "Test System", 9.99m, 5, 2m, 3m, "12345"));
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -87,8 +87,42 @@ namespace Inventory_3._0
             item.NotifyPropertyChanged("quantity");
         }
 
+        private string CreateVerificationString()
+        {
+            string destination, origin;
+            if (radioFromOutBack.IsChecked == true)
+                origin = "Back Room";
+            else if (radioFromSalesFloor.IsChecked == true)
+                origin = "Sales Floor";
+            else if (radioFromStorage.IsChecked == true)
+                origin = "Storage";
+            else if (radioNewItem.IsChecked == true)
+                origin = "New Item / Trade";
+            else
+                origin = "ORIGIN NOT SELECTED!!!!";
+
+            if (radioToOutBack.IsChecked == true)
+                destination = "Back Room";
+            else if (radioToSalesFloor.IsChecked == true)
+                destination = "Sales Floor";
+            else if (radioToStorage.IsChecked == true)
+                destination = "Storage";
+            else
+                destination = "DESTINATION NOT SELECTED !!!!";
+
+            return string.Format("Move item(s)?\nFrom: {0}\nTo: {1}", origin, destination);
+        }
+
         private void btnTransfer_Click(object sender, RoutedEventArgs e)
         {
+            // Verify
+            MessageBoxResult verify = MessageBox.Show(CreateVerificationString(), "Are You Sure?", MessageBoxButton.YesNo);
+            if (verify != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            // User verified, continue.
             foreach (Item item in movingItems)
             {
                 // Remove FROM inventory
@@ -100,8 +134,10 @@ namespace Inventory_3._0
                     DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.STORAGE);
                 else if (radioNewItem.IsChecked == true) { } // If New Item is checked, don't do anything.
                 else
+                {
                     MessageBox.Show("Please choose a source under the \"FROM:\".", "You didn't choose an option.", MessageBoxButton.OK, MessageBoxImage.Hand);
-
+                    return;
+                }
                 // Add TO inventory
                 if (radioToOutBack.IsChecked == true)
                     DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.OUTBACK);
@@ -110,14 +146,19 @@ namespace Inventory_3._0
                 else if (radioToStorage.IsChecked == true)
                     DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORAGE);
                 else
+                {
                     MessageBox.Show("Please choose a destination under the \"TO:\".", "You didn't choose an option.", MessageBoxButton.OK, MessageBoxImage.Hand);
+                    return;
+                }
             }
+
+            MessageBox.Show("Success!", "Success.");
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             ObservableCollection<Item> itemsToRemove = new ObservableCollection<Item>();
-            foreach (Item item in lvList.SelectedItems)
+            foreach (Item item in lvMove.SelectedItems)
             {
                 itemsToRemove.Add(item);
             }
@@ -171,7 +212,7 @@ namespace Inventory_3._0
                 // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
                 if (items.Count != 0)
                 {
-                    movingItems.Add(items[0]);
+                    AddItem(items[0]);
                 }
                 else
                     MessageBox.Show("Unknown UPC");
@@ -210,10 +251,10 @@ namespace Inventory_3._0
             }
         }
 
-        private void lvList_MouseDown(object sender, MouseButtonEventArgs e)
+        private void lvMove_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            // Give focus to lvCart, so that the KeyDown Event actually works. (Only works if you click on the column headers, otherwise)
-            lvList.Focus();
+            // Give focus to lvList, so that the KeyDown Event actually works. (Only works if you click on the column headers, otherwise)
+            lvMove.Focus();
         }
 
         #endregion

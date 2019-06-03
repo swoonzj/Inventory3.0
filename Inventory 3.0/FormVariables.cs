@@ -56,8 +56,16 @@ namespace Inventory_3._0
     public static class TransactionTypes
     {
         public const string SALE = "Sale";
+        public const string PAYMENT = "Payment";
         public const string TRADE_CASH = "Trade-Cash";
         public const string TRADE_CREDIT = "Trade-Credit";
+        public const string PAYMENT_CASH = "Payment - Cash";
+        public const string PAYMENT_CREDITCARD = "Payment - Credit Card";
+        public const string PAYMENT_STORECREDIT = "Payment - Store Credit";
+        public const string PAYMENT_REWARDS = "Payment - Loyalty Rewards";
+
+
+
     }
 
     public static class POSTableIndex

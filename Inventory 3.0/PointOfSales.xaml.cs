@@ -212,7 +212,7 @@ namespace Inventory_3._0
 
         private void btnCheckout_Click(object sender, RoutedEventArgs e)
         {
-
+            Checkout checkout = new Checkout(total);
         }
 
 

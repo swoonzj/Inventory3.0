@@ -39,12 +39,13 @@ namespace Inventory_3._0
                 total += item.price;
             }
 
-            lblTotal.Content = "$" + total.ToString("C");
-            if (total == 0) FinalizeTransaction();
+            lblTotal.Content = total.ToString("C");
+            if (total <= 0) FinalizeTransaction();
         }
 
         private void FinalizeTransaction()
         {
+            if (total < 0) MessageBox.Show("Change Due: " + (0-total).ToString("C"));
             MessageBox.Show("Finalize?");
         }
 

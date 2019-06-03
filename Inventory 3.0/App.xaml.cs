@@ -13,5 +13,10 @@ namespace Inventory_3._0
     /// </summary>
     public partial class App : Application
     {
+        void App_Startup(object sender, StartupEventArgs e)
+        {
+            Checkout checkout = new Checkout(100m);
+            checkout.Show();
+        }
     }
 }

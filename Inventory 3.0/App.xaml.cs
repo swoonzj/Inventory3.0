@@ -15,8 +15,11 @@ namespace Inventory_3._0
     {
         void App_Startup(object sender, StartupEventArgs e)
         {
-            Checkout checkout = new Checkout(100m);
-            checkout.Show();
+            PointOfSales sales = new PointOfSales();
+            sales.Show();
+
+            //Checkout checkout = new Checkout(100m);
+            //checkout.ShowDialog();
         }
     }
 }

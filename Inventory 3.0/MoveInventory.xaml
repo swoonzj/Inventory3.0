@@ -18,7 +18,7 @@
             <Button  Name="btnClear" Margin="5" Width="20" DockPanel.Dock="Left" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
             <TextBox Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center"/>
         </DockPanel>
-        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}">
+        <ListView Margin="0,3,10,7" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>

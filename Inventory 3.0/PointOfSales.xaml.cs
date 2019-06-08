@@ -213,6 +213,19 @@ namespace Inventory_3._0
         private void btnCheckout_Click(object sender, RoutedEventArgs e)
         {
             Checkout checkout = new Checkout(total);
+            if (checkout.ShowDialog() == true)
+            {
+                MessageBox.Show("Great.");
+                // Log transaction
+                
+                string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
+                foreach (Item item in cart)
+                {
+                    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
+                }
+                DBAccess.IncrementTransactionNumber();
+            }
         }
 
 

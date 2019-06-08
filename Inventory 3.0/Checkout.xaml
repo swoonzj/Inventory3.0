@@ -1,19 +1,30 @@
 ﻿<Window x:Class="Inventory_3._0.Checkout"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Checkout" Height="600" Width="300">
+        Title="Checkout" Height="600" Width="300" Closing="Window_Closing">
+    <Window.Resources>
+        <DataTemplate x:Key="listBoxTemplate">
+            <StackPanel Margin="3">
+                <DockPanel>
+                    <TextBlock Text="{Binding name}" Foreground="Green" FontWeight="Bold" FontSize="20" />
+                    <TextBlock Text=":  $" FontSize="20" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding price}" FontSize="20" HorizontalAlignment="Right"/>
+                </DockPanel>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <StackPanel>
-            <ListBox Name="lbCheckout" Height="300" Margin="5"/>
+            <ListBox x:Name="lbCheckout" Height="300" Margin="5" ItemTemplate="{StaticResource listBoxTemplate}" />
             <StackPanel Orientation="Horizontal">
-                <Label FontSize="30" FontWeight="Bold">Total:</Label>
-                <Label Name="lblTotal" HorizontalAlignment="Right" FontSize="30"/>
+                <Label FontSize="30" FontWeight="Bold" Content="Total:"/>
+                <Label x:Name="lblTotal" HorizontalAlignment="Right" FontSize="30"/>
             </StackPanel>
-            <TextBox Name="txtCheckout" FontSize="25"/>
-            <Button Name="btnCash" Margin="5" FontSize="20" Click="btnCash_Click">Cash</Button>
-            <Button Name="btnCredit" Margin="5" FontSize="20" Click="btnCredit_Click">Credit Card</Button>
-            <Button Name="btnStoreCredit" Margin="5" FontSize="20" Click="btnStoreCredit_Click">Store Credit</Button>
-            <Button Name="btnRewards" Margin="5" FontSize="20" Click="btnRewards_Click">Rewards Points</Button>
+            <TextBox x:Name="txtCheckout" FontSize="25"/>
+            <Button x:Name="btnCash" Margin="5" FontSize="20" Click="btnCash_Click" Content="Cash"/>
+            <Button x:Name="btnCredit" Margin="5" FontSize="20" Click="btnCredit_Click" Content="Credit Card"/>
+            <Button x:Name="btnStoreCredit" Margin="5" FontSize="20" Click="btnStoreCredit_Click" Content="Store Credit"/>
+            <Button x:Name="btnRewards" Margin="5" FontSize="20" Click="btnRewards_Click" Content="Rewards Points"/>
         </StackPanel>
     </Grid>
 </Window>

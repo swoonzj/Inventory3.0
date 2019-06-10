@@ -1033,7 +1033,31 @@ namespace Inventory_3._0
             connect.Close();
         }
 
-        public static void AddTransaction(Item item, string type, int transactionNumber, string date) // Should only be used for Table of Transactions
+        public static void AddPayment(Item item, int transactionNumber) // Should only be used for Table of Transactions
+        {
+            SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.PAYMENT + " VALUES(@TRANSACTIONNUMBER, @PAYMENTTYPE, @AMOUNT)", connect);
+            cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
+            cmd.Parameters.Add("@PAYMENTTYPE", SqlDbType.NVarChar).Value = item.name;
+            cmd.Parameters.Add("@AMOUNT", SqlDbType.Money).Value = item.price;                 
+
+            // execute command  & close connection
+            try
+            {
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN AddPayment:\n" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+        }
+
+        public static void AddTransaction(Item item, string type, int transactionNumber, string date) // Should only be used for Table of Payment
         {
             SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.TRANSACTION + " VALUES(@TRANSACTIONNUMBER, @ID, @NAME, @SYSTEM, @PRICE, @TYPE, @DATE)", connect);
             cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
@@ -1065,7 +1089,7 @@ namespace Inventory_3._0
             }
             catch (Exception e)
             {
-                MessageBox.Show("ERROR IN AddToTransactionTable:\n" + e.Message);
+                MessageBox.Show("ERROR IN AddTransaction:\n" + e.Message);
             }
             finally
             {

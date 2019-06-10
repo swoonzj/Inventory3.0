@@ -8,7 +8,7 @@
                 <DockPanel>
                     <TextBlock Text="{Binding name}" Foreground="Green" FontWeight="Bold" FontSize="20" />
                     <TextBlock Text=":  $" FontSize="20" HorizontalAlignment="Right"/>
-                    <TextBlock Text="{Binding price}" FontSize="20" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding price, StringFormat = N2}" FontSize="20" HorizontalAlignment="Right"/>
                 </DockPanel>
             </StackPanel>
         </DataTemplate>

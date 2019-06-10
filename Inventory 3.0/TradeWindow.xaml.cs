@@ -122,7 +122,7 @@ namespace Inventory_3._0
                 // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
                 if (items.Count != 0)
                 {
-                    cart.Add(items[0]);
+                    cart.Insert(0, items[0]);
                     UpdateTotals();
                 }
                 else
@@ -180,10 +180,25 @@ namespace Inventory_3._0
             lvCart.Focus();
         }
 
+        private void lvList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = ((FrameworkElement)e.OriginalSource).DataContext as Item;
+            if (item != null)
+            {
+                cart.Insert(0, item);
+            }
+        }
+
         private void ManagementMenu_Click(object sender, RoutedEventArgs e)
         {
             Window management = new Management();
             management.Show();
+        }
+
+        private void SalesMenu_Click(object sender, RoutedEventArgs e)
+        {
+            Window sales = new PointOfSales();
+            sales.Show();
         }
 
         private void btnClearCart_Click(object sender, RoutedEventArgs e)
@@ -259,9 +274,7 @@ namespace Inventory_3._0
             }
             UpdateTotals();
         }
-
-        #endregion
-
+        
         private void btnRoundUp_Click(object sender, RoutedEventArgs e)
         {
             decimal cashup, creditup;
@@ -275,7 +288,7 @@ namespace Inventory_3._0
                 creditup = 5;
             else
                 creditup = 5 - remainder;
-            cart.Add(new Item("Round Up", "Adjust Cart", 0, 1, cashup, creditup,"-1"));
+            cart.Insert(0, new Item("Round Up", "Adjust Cart", 0, 1, cashup, creditup,"-1"));
         }
 
         private void btnRoundDown_Click(object sender, RoutedEventArgs e)
@@ -291,7 +304,7 @@ namespace Inventory_3._0
                 creditdown = -5;
             else
                 creditdown = -remainder;
-            cart.Add(new Item("Round Down", "Adjust Cart", 0, 1, cashdown, creditdown, "-1"));
+            cart.Insert(0, new Item("Round Down", "Adjust Cart", 0, 1, cashdown, creditdown, "-1"));
         }
 
         private void btnAddValue_Click(object sender, RoutedEventArgs e)
@@ -300,12 +313,17 @@ namespace Inventory_3._0
             // verify textbox value
             if (decimal.TryParse(txtEdit.Text, out newValue))
             {
-                cart.Add(new Item("Add Value", "Adjust Cart", 0, 1, newValue, newValue, "-1"));
+                cart.Insert(0, new Item("Add Value", "Adjust Cart", 0, 1, newValue, newValue, "-1"));
             }
             else
             {
                 MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
+
+
+        #endregion
+
+        
     }
 }

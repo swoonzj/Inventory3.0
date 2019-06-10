@@ -33,6 +33,7 @@ namespace Inventory_3._0
         public const string PRICES = "tblPrices";
         public const string UPC = "tblUPC";
         public const string TRANSACTION = "tblTransactions";
+        public const string PAYMENT = "tblPayment";
 
         // Currently unused
         public const string VARIABLES = "tblVariables";

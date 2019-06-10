@@ -21,7 +21,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         
-        <ListView  Margin="5" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="6" SelectionMode="Multiple">
+        <ListView  Margin="5" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="6" SelectionMode="Multiple" MouseDoubleClick="lvList_MouseDoubleClick">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>
@@ -72,11 +72,12 @@
                             <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Center"/>
                         </ItemsPanelTemplate>
                     </Menu.ItemsPanel>
-                        <MenuItem Header="_Settings">                            
-                            <MenuItem IsCheckable="True" Header="_Add Trade to Inventory"/>
-                        </MenuItem>
-                        <MenuItem Header="_Manage">
+                    <MenuItem Header="_Settings">                            
+                        <MenuItem IsCheckable="True" Header="_Add Trade to Inventory"/>
+                    </MenuItem>
+                    <MenuItem Header="_Manage">
                         <MenuItem Header="Open _Management Screen" Click="ManagementMenu_Click"/>
+                        <MenuItem Header="Open _Sales Screen" Click="SalesMenu_Click"/>
                     </MenuItem>
                     
                 </Menu>

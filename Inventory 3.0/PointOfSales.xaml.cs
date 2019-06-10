@@ -36,10 +36,6 @@ namespace Inventory_3._0
                 //Search(String.Empty);
                 lvCart.ItemsSource = cart;
                 cart.CollectionChanged += (e, v) => UpdateTotals();
-
-
-                cart.Add(new Item("Test1", "Test System", 9.99m, 5, 2m, 3m, "12345"));
-                cart.Add(new Item("Test2", "Test System", 19.99m, 2, 2m, 3m, "11111"));
             }
             catch (Exception ex)
             {
@@ -122,7 +118,7 @@ namespace Inventory_3._0
                 // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
                 if (items.Count != 0)
                 {
-                    cart.Add(items[0]);
+                    cart.Insert(0, items[0]);
                     UpdateTotals();
                 }
                 else
@@ -180,36 +176,32 @@ namespace Inventory_3._0
             lvCart.Focus();
         }
 
+        private void lvList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = ((FrameworkElement)e.OriginalSource).DataContext as Item;
+            if (item != null)
+            {
+                cart.Insert(0, item);
+            }
+        }
+
         private void ManagementMenu_Click(object sender, RoutedEventArgs e)
         {
             Window management = new Management();
             management.Show();
         }
 
+        private void TradeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            Window trade = new TradeWindow();
+            trade.Show();
+        }
+
         private void btnClearCart_Click(object sender, RoutedEventArgs e)
         {
             cart.Clear();
         }
-
-        private void Checkout(string transactionType)
-        {
-            try
-            {
-                int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
-                string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-                foreach (Item item in cart)
-                {
-                    DBAccess.AddTransaction(item, transactionType, transactionNumber, date);
-                }
-                DBAccess.IncrementTransactionNumber();
-                cart.Clear();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in Checkout:\n" + ex.Message);
-            }
-        }
-
+        
         private void btnCheckout_Click(object sender, RoutedEventArgs e)
         {
             Checkout checkout = new Checkout(total);
@@ -225,6 +217,7 @@ namespace Inventory_3._0
                     DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
                 }
                 DBAccess.IncrementTransactionNumber();
+                cart.Clear();
             }
         }
 

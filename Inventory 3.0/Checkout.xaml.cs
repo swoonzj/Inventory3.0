@@ -59,7 +59,7 @@ namespace Inventory_3._0
             string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             for (int i = 1; i < checkout.Count; i++)
             {
-                DBAccess.AddTransaction(checkout[i], checkout[i].name, transactionNumber, date);
+                DBAccess.AddPayment(checkout[i], transactionNumber);
             }
             this.Close();
         }

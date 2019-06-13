@@ -240,10 +240,29 @@ namespace Inventory_3._0
                 MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             UpdateTotals();
+            txtEdit.Clear();
         }
 
         
         #endregion
+
+        private void btnSixForTen_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Item item in lvCart.SelectedItems)
+            {
+                item.price = 10m / lvCart.SelectedItems.Count;
+            }
+            UpdateTotals();
+        }
+
+        private void btnTenForTwenty_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Item item in lvCart.SelectedItems)
+            {
+                item.price = 20m / lvCart.SelectedItems.Count;
+            }
+            UpdateTotals();
+        }
 
         
     }

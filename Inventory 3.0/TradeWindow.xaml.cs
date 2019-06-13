@@ -255,6 +255,7 @@ namespace Inventory_3._0
                 MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             UpdateTotals();
+            txtEdit.Clear();
         }
 
         private void btnChangeCredit_Click(object sender, RoutedEventArgs e)
@@ -273,6 +274,7 @@ namespace Inventory_3._0
                 MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             UpdateTotals();
+            txtEdit.Clear();
         }
         
         private void btnRoundUp_Click(object sender, RoutedEventArgs e)
@@ -314,6 +316,7 @@ namespace Inventory_3._0
             if (decimal.TryParse(txtEdit.Text, out newValue))
             {
                 cart.Insert(0, new Item("Add Value", "Adjust Cart", 0, 1, newValue, newValue, "-1"));
+                txtEdit.Clear();
             }
             else
             {

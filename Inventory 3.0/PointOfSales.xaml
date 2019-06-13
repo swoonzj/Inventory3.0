@@ -96,6 +96,9 @@
             <StackPanel>
                 <TextBox Name="txtEdit" Margin="5" TextAlignment="Right" Text="{Binding Path=txt, StringFormat=C}"/>
                 <Button Name="btnChangePrice" Margin="0,0,0,5" Click="btnChangePrice_Click">Change Price</Button>
+                <Separator></Separator>
+                <Button Name="btnSixForTen" Margin="5" Click="btnSixForTen_Click">6 for $10</Button>
+                <Button Name="btnTenForTwenty" Margin="5" Click="btnTenForTwenty_Click">10 for $20</Button>
             </StackPanel>
         </Expander>
 

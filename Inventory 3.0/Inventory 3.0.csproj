@@ -64,6 +64,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MultipleUPCHandler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TradeWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -81,6 +85,9 @@
     <Compile Include="DatabaseAccess.cs" />
     <Compile Include="FormVariables.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="MultipleUPCHandler.xaml.cs">
+      <DependentUpon>MultipleUPCHandler.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TradeWindow.xaml.cs">
       <DependentUpon>TradeWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

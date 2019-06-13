@@ -32,9 +32,7 @@ namespace Inventory_3._0
 
             checkout.Add(new Item("Item Total", "Checkout", itemTotal,1,0,0,"0"));
             UpdateTotal();
-        }
-
-        
+        }        
         
         private void UpdateTotal()
         {

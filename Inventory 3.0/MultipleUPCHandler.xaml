@@ -1,0 +1,30 @@
+﻿<Window x:Class="Inventory_3._0.MultipleUPCHandler"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MultipleUPCHandler" Height="300" Width="300">
+    <Grid>
+        <StackPanel>
+            <ListView Margin="5" Height="235" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Single" ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Margin="2" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
+                        <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
+                        <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
+                        <!--<GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity}"/>-->
+                        <GridViewColumn Header="Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
+                        <GridViewColumn Header="Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button Name="btnOK" Margin="5,0" Click="btnOK_Click">OK</Button>
+        </StackPanel>
+        
+    </Grid>
+</Window>

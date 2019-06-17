@@ -119,10 +119,21 @@ namespace Inventory_3._0
 
                 List<Item> items = DBAccess.UPCLookup(keyboardInput); // Returns NULL if UPC does not match an item                
 
-                // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
                 if (items.Count != 0)
                 {
-                    cart.Insert(0, items[0]);
+                    if (items.Count > 1)
+                    {
+                        MultipleUPCHandler handler = new MultipleUPCHandler(items);
+                        if (handler.ShowDialog() == true)
+                        {
+                            cart.Insert(0, handler.selectedItem);
+                            handler.Close();
+                        }
+                    }
+                    else
+                    {
+                        cart.Insert(0, items[0]);
+                    }
                     UpdateTotals();
                 }
                 else

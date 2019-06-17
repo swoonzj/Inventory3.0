@@ -31,9 +31,7 @@ namespace Inventory_3._0
         {
             try
             {
-                //DBAccess.MigrateDatabase();
                 InitializeComponent();
-                //Search(String.Empty);
                 lvCart.ItemsSource = cart;
                 cart.CollectionChanged += (e, v) => UpdateTotals();
             }
@@ -115,10 +113,21 @@ namespace Inventory_3._0
 
                 List<Item> items = DBAccess.UPCLookup(keyboardInput); // Returns NULL if UPC does not match an item                
 
-                // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
                 if (items.Count != 0)
                 {
-                    cart.Insert(0, items[0]);
+                    if (items.Count > 1)
+                    {
+                        MultipleUPCHandler handler = new MultipleUPCHandler(items);
+                        if (handler.ShowDialog() == true)
+                        {
+                            cart.Insert(0, handler.selectedItem);
+                            handler.Close();
+                        }
+                    }
+                    else
+                    {
+                        cart.Insert(0, items[0]);
+                    }
                     UpdateTotals();
                 }
                 else
@@ -241,10 +250,7 @@ namespace Inventory_3._0
             }
             UpdateTotals();
             txtEdit.Clear();
-        }
-
-        
-        #endregion
+        }               
 
         private void btnSixForTen_Click(object sender, RoutedEventArgs e)
         {
@@ -264,6 +270,9 @@ namespace Inventory_3._0
             UpdateTotals();
         }
 
-        
+
+        #endregion
+
+
     }
 }

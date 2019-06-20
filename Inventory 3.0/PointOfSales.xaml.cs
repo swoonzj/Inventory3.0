@@ -218,6 +218,11 @@ namespace Inventory_3._0
         
         private void btnCheckout_Click(object sender, RoutedEventArgs e)
         {
+            if (cart.Count == 0)
+            {
+                MessageBox.Show("There is nothing in the cart.");
+                return;
+            }
             Checkout checkout = new Checkout(total);
             if (checkout.ShowDialog() == true)
             {
@@ -234,7 +239,7 @@ namespace Inventory_3._0
 
                 // Print Receipt!!!!
                 ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>());
-                ReceiptPrinter printer = new ReceiptPrinter(generator.receipt.ToString());
+                ReceiptPrinter printer = new ReceiptPrinter(generator.flowDoc);
                 printer.Print();
                 checkout.Close();
                 cart.Clear();

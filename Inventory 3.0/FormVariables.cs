@@ -13,6 +13,8 @@ namespace Inventory_3._0
 
     public static class PrinterVariables
     {
+
+        public const string PRINTERNAME = "POS-80C";
         public class UPCimage
         {
             public const int locX = 0;
@@ -24,10 +26,6 @@ namespace Inventory_3._0
             public const int nameLocY = 60;
             public const int systemLocY = 85;
         }
-
-        public const string PRINTERNAME = "POS-80C";
-        public const string FONTNAME = "Pokemon GB";
-        public const int FONTSIZE = 8;
     }
 
     public static class TableNames
@@ -121,15 +119,22 @@ namespace Inventory_3._0
     public static class ReceiptVariables
     {
         // Character width of receipt & components
-        public const int receiptWidth = 55, 
+        public const int receiptWidth = 38, 
             name = 30,
-            system = 15,
+            system = 10,
             price = 10,
-            payment = 10;
+            payment = 30;
 
         public const string BorderLeft = "|",
             BorderRight = "|",
             BorderTop = "=",
-            BorderCorner = "+";
+            BorderCorner = "+",
+            RECEIPT_HEADER = "Thank you for visiting!",
+            LOGO = "Resources\\Logo.bmp";
+
+
+
+        public const string FONTNAME = "Courier";
+        public const int FONTSIZE = 10;
     }
 }

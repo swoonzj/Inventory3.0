@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace Inventory_3._0
@@ -155,6 +157,92 @@ namespace Inventory_3._0
             }
 
             return new Item(line[0], line[1], line[2], quantity, line[6], line[7], upcs);
+        }
+    }
+
+    public class ReceiptGenerator
+    {
+        List<Item> cart, payment;
+        public StringBuilder receipt;
+
+        public ReceiptGenerator(List<Item> cart, List<Item> payment)
+        {
+            this.cart = cart;
+            this.payment = payment;
+
+            receipt = new StringBuilder();
+            Generate();
+        }
+
+        private void Generate()
+        {
+            //receipt.AppendLine(LOGO!!!!!!!!) // ADD LOGO!!!
+            // Add Header at top
+            // Separator
+            receipt.AppendLine(Separator());
+            // Name - System           Price
+            foreach (Item item in cart)
+            {
+                string name = Truncate(item.name, ReceiptVariables.name).PadRight(ReceiptVariables.name);
+                string system = Truncate(item.system, ReceiptVariables.system).PadRight(ReceiptVariables.system);
+                string price = item.price.ToString("C").PadLeft(ReceiptVariables.price);
+                receipt.AppendLine(ReceiptVariables.BorderLeft+name+system+price+ReceiptVariables.BorderRight);
+            }
+            receipt.AppendLine(Separator());
+            foreach (Item item in payment)
+            {
+                string name = Truncate(item.name, ReceiptVariables.name).PadRight(ReceiptVariables.name);
+                string system = String.Empty.PadRight(ReceiptVariables.system);
+                string price = item.price.ToString("C").PadLeft(ReceiptVariables.price);
+                receipt.AppendLine(ReceiptVariables.BorderLeft + name + system + price + ReceiptVariables.BorderRight);
+            }
+        }
+
+        private string Separator()
+        {
+            string separator = String.Empty;
+            for (int i = 0; i < ReceiptVariables.receiptWidth; i++)
+            {
+               separator = separator.Insert(0, ReceiptVariables.BorderTop);
+            }
+
+            return separator;
+        }
+        
+        private string Truncate(string s, int length)
+        {
+            if (s.Length > length)
+            {
+                return s.Substring(0, length);
+            }
+            else
+                return s;
+        }
+    }
+
+    public class ReceiptPrinter
+    {
+        string receipt;
+
+        public ReceiptPrinter(string receipt)
+        {
+            this.receipt = receipt;
+        }
+
+        public void Print()
+        {
+            PrintDialog printDialog = new PrintDialog(); 
+            LocalPrintServer printServer = new LocalPrintServer();
+            PrintQueue pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
+            printDialog.PrintQueue = pq;
+            FlowDocument flowDoc = new FlowDocument(new Paragraph(new Run(receipt)));
+            flowDoc.Name = "Receipt";
+            flowDoc.FontFamily =  new System.Windows.Media.FontFamily(PrinterVariables.FONTNAME);
+            flowDoc.FontSize = PrinterVariables.FONTSIZE;
+
+            IDocumentPaginatorSource idpSource = flowDoc;
+            printDialog.PrintDocument(idpSource.DocumentPaginator, "Printing Receipt");
+
         }
     }
 }

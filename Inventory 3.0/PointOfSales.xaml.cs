@@ -41,6 +41,11 @@ namespace Inventory_3._0
             }
         }
 
+        public PointOfSales(List<Item> items) : this()
+        {
+            foreach (Item item in items) cart.Add(item);
+        }
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             Settings.Default.Save();
@@ -219,13 +224,19 @@ namespace Inventory_3._0
                 MessageBox.Show("Great.");
                 // Log transaction
                 
-                string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-                int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
-                foreach (Item item in cart)
-                {
-                    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
-                }
-                DBAccess.IncrementTransactionNumber();
+                //string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                //int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
+                //foreach (Item item in cart)
+                //{
+                //    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
+                //}
+                //DBAccess.IncrementTransactionNumber();
+
+                // Print Receipt!!!!
+                ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>());
+                ReceiptPrinter printer = new ReceiptPrinter(generator.receipt.ToString());
+                printer.Print();
+                checkout.Close();
                 cart.Clear();
             }
         }

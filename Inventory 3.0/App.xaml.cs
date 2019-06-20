@@ -15,9 +15,11 @@ namespace Inventory_3._0
     {
         void App_Startup(object sender, StartupEventArgs e)
         {
-            //List<Item> list = new List<Item>();
-            //list.Add(new Item("Test1","System",10m,0,0,0,0.ToString()));            
-            //list.Add(new Item("Test2","System",10m,0,0,0,0.ToString()));
+            List<Item> list = new List<Item>();
+            list.Add(new Item("Test1", "System", 10m, 0, 0, 0, 0.ToString()));
+            list.Add(new Item("Test2", "System", 10m, 0, 0, 0, 0.ToString()));
+
+
             //MultipleUPCHandler handler = new MultipleUPCHandler(list);
             //if (handler.ShowDialog() == true)
             //{
@@ -25,14 +27,16 @@ namespace Inventory_3._0
             //    handler.Close();
             //}
 
-            TradeWindow trade = new TradeWindow();
-            trade.Show();
+            //TradeWindow trade = new TradeWindow();
+            //trade.Show();
 
-            //PointOfSales sales = new PointOfSales();
-            //sales.Show();
+            PointOfSales sales = new PointOfSales(list);
+            sales.Show();
 
             //Checkout checkout = new Checkout(100m);
             //checkout.ShowDialog();
+            //MessageBox.Show(checkout.checkout[1].ToString());
+            //checkout.Close();
         }
     }
 }

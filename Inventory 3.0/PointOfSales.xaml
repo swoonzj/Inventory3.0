@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Inventory_3._0.PointOfSales"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Icon="shaq.ico"
+        Icon="Resources/shaq.ico"
         Title="Register" Height="500" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>

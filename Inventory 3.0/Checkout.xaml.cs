@@ -21,7 +21,7 @@ namespace Inventory_3._0
     public partial class Checkout : Window
     {
         public bool success = false;
-        private ObservableCollection<Item> checkout = new ObservableCollection<Item>();
+        public ObservableCollection<Item> checkout = new ObservableCollection<Item>();
         private decimal total = 0;
         public Checkout(decimal itemTotal)
         {
@@ -53,13 +53,12 @@ namespace Inventory_3._0
             success = true;
 
             //log payment
-            int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
-            string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-            for (int i = 1; i < checkout.Count; i++)
-            {
-                DBAccess.AddPayment(checkout[i], transactionNumber);
-            }
-            this.Close();
+            //int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
+            //for (int i = 1; i < checkout.Count; i++)
+            //{
+            //    DBAccess.AddPayment(checkout[i], transactionNumber);
+            //}
+            DialogResult = success;
         }
 
         private void Pay(string paymentType)

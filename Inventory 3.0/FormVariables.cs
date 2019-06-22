@@ -130,6 +130,8 @@ namespace Inventory_3._0
             BorderTop = "=",
             BorderCorner = "+",
             RECEIPT_HEADER = "Thank you for visiting!",
+            RECEIPT_HEADER2 = "221 N. Broadway, Salem, NH \t(603)224-3393",
+            RECEIPT_FOOTER = "RETURN POLICY:\n2 Weeks for defective items, 2 Days otherwise",
             LOGO = "Resources\\Logo.bmp";
 
 

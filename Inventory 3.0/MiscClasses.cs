@@ -186,6 +186,8 @@ namespace Inventory_3._0
             //receipt.AppendLine(Separator());
             // Name - System           Price
 
+
+            // Logo
             Image img = new Image();
             BitmapImage bimg = new BitmapImage();
             bimg.BeginInit();
@@ -193,6 +195,9 @@ namespace Inventory_3._0
             bimg.EndInit();
             img.Source = bimg;
             flowDoc.Blocks.Add(new BlockUIContainer(img));
+
+            // Headers
+            flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.RECEIPT_HEADER2 + "\n")) { TextAlignment = System.Windows.TextAlignment.Center, FontWeight = System.Windows.FontWeights.Bold });
 
             flowDoc.FontSize = ReceiptVariables.FONTSIZE;
             flowDoc.FontFamily = new System.Windows.Media.FontFamily(ReceiptVariables.FONTNAME);
@@ -226,6 +231,9 @@ namespace Inventory_3._0
                 flowDoc.Blocks.Add(p);
             }
 
+            // Headers
+            flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.RECEIPT_FOOTER)));
+
             flowDoc.PageWidth = 300.0;
             return flowDoc;
         }
@@ -251,6 +259,13 @@ namespace Inventory_3._0
             }
             else
                 return s;
+        }
+
+        public void ViewFlowDoc()
+        {
+            FlowDocumentReader reader = new FlowDocumentReader();
+            reader.Document = flowDoc;
+
         }
     }
 

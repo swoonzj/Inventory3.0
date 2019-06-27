@@ -250,9 +250,52 @@ namespace Inventory_3._0
 
         #region EditCart Methods
 
+        private bool TestForMultipleValues(string s)
+        {
+            string[] newS = s.Split();
+            if (newS.Length == 2)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void HandleMultipleValues(Item item)
+        {
+            string[] values = txtEdit.Text.Split();
+
+            decimal newCredit, newCash;
+            // verify textbox value
+            if (decimal.TryParse(values[0], out newCash))
+            {                
+                ((Item)item).tradeCash = newCash;                            
+            }
+            if (decimal.TryParse(values[1], out newCredit))
+            {                
+                ((Item)item).tradeCredit = newCredit;
+            }
+            else
+            {
+                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number combo. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }            
+        }
+
         private void btnChangeCash_Click(object sender, RoutedEventArgs e)
         {
             decimal newValue;
+            
+            // Test for multiple values
+            if (TestForMultipleValues(txtEdit.Text))
+            {
+                foreach (Item item in lvCart.SelectedItems)
+                {
+                    HandleMultipleValues(item);
+                }
+                UpdateTotals();
+                txtEdit.Clear();
+                return;
+            }
             // verify textbox value
             if (decimal.TryParse(txtEdit.Text, out newValue))
             {
@@ -264,6 +307,7 @@ namespace Inventory_3._0
             else
             {
                 MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
             }
             UpdateTotals();
             txtEdit.Clear();
@@ -283,6 +327,7 @@ namespace Inventory_3._0
             else
             {
                 MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
             }
             UpdateTotals();
             txtEdit.Clear();
@@ -322,8 +367,17 @@ namespace Inventory_3._0
 
         private void btnAddValue_Click(object sender, RoutedEventArgs e)
         {
-            decimal newValue;
+            decimal newValue = 0;
             // verify textbox value
+            if (TestForMultipleValues(txtEdit.Text))
+            {
+                Item item = new Item("Add Value", "Adjust Cart", 0, 1, newValue, newValue, "-1");
+                HandleMultipleValues(item);
+                cart.Insert(0, item);
+                UpdateTotals();
+                txtEdit.Clear();
+                return;
+            }
             if (decimal.TryParse(txtEdit.Text, out newValue))
             {
                 cart.Insert(0, new Item("Add Value", "Adjust Cart", 0, 1, newValue, newValue, "-1"));

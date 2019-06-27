@@ -27,11 +27,11 @@ namespace Inventory_3._0
             //    handler.Close();
             //}
 
-            //TradeWindow trade = new TradeWindow();
-            //trade.Show();
+            TradeWindow trade = new TradeWindow();
+            trade.Show();
 
-            PointOfSales sales = new PointOfSales();
-            sales.Show();
+            //PointOfSales sales = new PointOfSales();
+            //sales.Show();
 
             //Checkout checkout = new Checkout(100m);
             //checkout.ShowDialog();

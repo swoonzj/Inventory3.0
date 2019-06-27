@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Inventory_3._0"
         Title="Management"
-        Icon="shaq.ico"
+        Icon="Resources\shaq.ico"
         Height="500" Width="1000">
     <Window.Resources>
         <local:IntConverter x:Key="IntConverter" />

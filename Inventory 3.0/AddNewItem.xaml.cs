@@ -77,5 +77,19 @@ namespace Inventory_3._0
 
             CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
         }
+
+        private void btnAutoTradeValue_Click(object sender, RoutedEventArgs e)
+        {
+            if (item.price < 5 && item.price > 3)
+            {
+                item.tradeCash = .5m;
+                item.tradeCredit = 1m;
+            }
+            if (item.price > 5)
+            {
+                item.tradeCash = Math.Round(item.price / 4);
+                item.tradeCredit = Math.Round(item.price / 3);
+            }
+        }
     }
 }

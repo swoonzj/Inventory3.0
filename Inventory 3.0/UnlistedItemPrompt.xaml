@@ -1,0 +1,19 @@
+﻿<Window x:Class="Inventory_3._0.UnlistedItemPrompt"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Unlisted Item" Height="137" Width="300"
+        Icon="Resources/Shaq.ico">
+    <Grid>
+        <StackPanel>
+            <DockPanel Margin ="5" LastChildFill="True">
+                <Label>Item Description:</Label>
+                <TextBox TextAlignment="Right" Name="txtDescription"/>
+            </DockPanel>
+            <DockPanel Margin ="5" LastChildFill="True">
+                <Label>Price:</Label>
+                <TextBox TextAlignment="Right" Name="txtPrice"/>
+            </DockPanel>
+            <Button Margin="5" Click="Button_Click">OK</Button>
+        </StackPanel>
+    </Grid>
+</Window>

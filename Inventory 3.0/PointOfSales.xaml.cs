@@ -109,7 +109,9 @@ namespace Inventory_3._0
             // Keep accepting input until "RETURN" is hit
             if (e.Key != Key.Return)
             {
-                keyboardInput += processScannerInput(e.Key);
+                System.Windows.Forms.KeysConverter kc = new System.Windows.Forms.KeysConverter();
+                keyboardInput += kc.ConvertToString(e.Key);
+                //keyboardInput += processScannerInput(e.Key);
             }
             // When "RETURN" is hit, look up UPC & add item to currently focused cart
             else
@@ -288,6 +290,18 @@ namespace Inventory_3._0
 
 
         #endregion
+
+        private void btnAddUnlistedItem_Click(object sender, RoutedEventArgs e)
+        {
+            // Prompt Unlisted Item Form !!!!!!!!!!!!!
+            MessageBox.Show("Placeholder.");
+            UnlistedItemPrompt prompt = new UnlistedItemPrompt();
+            if (prompt.ShowDialog() == true)
+            {
+                cart.Add(prompt.item);
+                prompt.Close();
+            }
+        }
 
 
     }

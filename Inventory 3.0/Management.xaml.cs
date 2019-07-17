@@ -20,7 +20,7 @@ namespace Inventory_3._0
     /// Interaction logic for Management.xaml
     /// </summary>
     /// 
-    public partial class Management : Window
+    public partial class Management : SortableListViews
     {
         public List<string> UPCsToDelete;
 
@@ -252,7 +252,7 @@ namespace Inventory_3._0
                     var result = MessageBox.Show("First Line of File: \n\t" + firstLine +
                                                     "\nExample Item:\n" + ImportCSV.CreateItemFromCSVLine(firstLine) +
                                                     "\n\nClick 'Yes' to import (Make sure everything looks good. This could be a pain to undo.)\n" +
-                                                    "Click 'No' to do nothing, effectively wasting everyone's time\n", "Oh God!", MessageBoxButton.YesNoCancel);
+                                                    "Click 'No' to do nothing, and go double-check!\n", "Oh God!", MessageBoxButton.YesNoCancel);
 
                     if (result == MessageBoxResult.Yes) // Click Yes, import only 1st column
                     {

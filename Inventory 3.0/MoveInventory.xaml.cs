@@ -18,7 +18,7 @@ namespace Inventory_3._0
     /// <summary>
     /// Interaction logic for MoveInventory.xaml
     /// </summary>
-    public partial class MoveInventory : Window
+    public partial class MoveInventory : SortableListViews
     {
         ObservableCollection<Item> searchResults = new ObservableCollection<Item>();
         ObservableCollection<Item> movingItems = new ObservableCollection<Item>();

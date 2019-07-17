@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,13 +21,14 @@ namespace Inventory_3._0
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class TradeWindow : Window
+    public partial class TradeWindow : SortableListViews
     {
         decimal cashTotal = 0;
         decimal creditTotal = 0;
 
         ObservableCollection<Item> cart = new ObservableCollection<Item>();
-        string keyboardInput;
+        string keyboardInput;       
+        
 
         public TradeWindow()
         {
@@ -199,6 +201,8 @@ namespace Inventory_3._0
                 cart.Insert(0, item);
             }
         }
+
+        
 
         private void ManagementMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -391,7 +395,6 @@ namespace Inventory_3._0
 
 
         #endregion
-
         
     }
 }

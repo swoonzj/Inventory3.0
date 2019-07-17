@@ -20,7 +20,7 @@ namespace Inventory_3._0
     /// <summary>
     /// Interaction logic for PointOfSales.xaml
     /// </summary>
-    public partial class PointOfSales : Window
+    public partial class PointOfSales : SortableListViews
     {
         decimal total = 0;
 

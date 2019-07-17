@@ -18,7 +18,7 @@ namespace Inventory_3._0
     /// <summary>
     /// Interaction logic for MultipleUPCHandler.xaml
     /// </summary>
-    public partial class MultipleUPCHandler : Window
+    public partial class MultipleUPCHandler : SortableListViews
     {
         public Item selectedItem;
         public MultipleUPCHandler(List<Item> items)

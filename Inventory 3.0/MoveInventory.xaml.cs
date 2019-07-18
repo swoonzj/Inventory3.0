@@ -175,7 +175,7 @@ namespace Inventory_3._0
 
         private void btnChangeQuantity_Click(object sender, RoutedEventArgs e)
         {
-            foreach (Item item in lvList.SelectedItems)
+            foreach (Item item in lvMove.SelectedItems)
             {
                 try
                 {
@@ -253,7 +253,7 @@ namespace Inventory_3._0
 
         private void lvMove_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            // Give focus to lvList, so that the KeyDown Event actually works. (Only works if you click on the column headers, otherwise)
+            // Give focus to lvMove, so that the KeyDown Event actually works. (Only works if you click on the column headers, otherwise)
             lvMove.Focus();
         }
 

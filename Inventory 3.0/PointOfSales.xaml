@@ -75,6 +75,7 @@
                         </Menu.ItemsPanel>
                         <MenuItem Header="_Settings">
                             <MenuItem IsCheckable="True" Header="_Add Trade to Inventory"/>
+                            <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="True"/>
                         </MenuItem>
                         <MenuItem Header="_Manage">
                             <MenuItem Header="Open _Management Screen" Click="ManagementMenu_Click"/>

@@ -53,7 +53,7 @@ namespace Inventory_3._0
         {
             try
             {
-                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(searchtext: txtSearch.Text));                
+                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: menuLimitSearchResults.IsChecked));                
             }
             catch (Exception ex)
             {

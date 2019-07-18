@@ -86,7 +86,7 @@ namespace Inventory_3._0
         /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
         /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
         /// <returns>A List of Items</returns>
-        public static List<Item> SQLTableToList(string sortBy = "System", bool ascending = true, string searchtext = "")
+        public static List<Item> SQLTableToList(string sortBy = "System", bool ascending = true, string searchtext = "", bool limitResults=true)
         {
             List<Item> collection = new List<Item>();
             Item item;
@@ -99,6 +99,13 @@ namespace Inventory_3._0
                 order = "ASC";
             else
                 order = "DESC";
+            
+            // Limit number of results?
+            string limit = "";
+            if (limitResults)
+            {
+                limit = " TOP 200";
+            }
 
             // parameters cannot be null
             if (searchtext == null) searchtext = "";
@@ -110,17 +117,17 @@ namespace Inventory_3._0
 
             if (sortBy != "Name")
             {
-                cmd = new SqlCommand("SELECT TOP 200 Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+                cmd = new SqlCommand("SELECT"+ limit +" Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
                     "WHERE " + searchTerms.GenerateSQLSearchString() +
-                    " ORDER BY " + sortBy + " " + order + ", Name;", connect);
+                    " ORDER BY " + sortBy + " " + order + ", Name", connect);
             }
             else
             {
-                cmd = new SqlCommand("SELECT TOP 200 Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+                cmd = new SqlCommand("SELECT" + limit + " Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
                     "WHERE " + searchTerms.GenerateSQLSearchString() +
-                    " ORDER BY " + sortBy + " " + order + ";", connect);
+                    " ORDER BY " + sortBy + " " + order, connect);
             }
 
             try

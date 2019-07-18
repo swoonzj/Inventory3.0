@@ -57,7 +57,7 @@ namespace Inventory_3._0
             try
             {
                 List<Item> items = new List<Item>();
-                items = DBAccess.SQLTableToList(searchtext: searchString);
+                items = DBAccess.SQLTableToList(searchtext: searchString, limitResults:menuLimitSearchResults.IsChecked);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)

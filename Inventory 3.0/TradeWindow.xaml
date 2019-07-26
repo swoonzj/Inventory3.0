@@ -39,7 +39,8 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView Margin="5,2,5,8" Name="lvCart" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" SelectionMode="Multiple" KeyUp="lvCart_PreviewKeyDown" MouseDown="lvCart_MouseDown" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+        <TextBox Grid.Column="1" Grid.Row="4" Name="txtUPCInput" Opacity="0" KeyDown="DetectUPCEnterKey"/>
+        <ListView Margin="5,2,5,8" Name="lvCart" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" SelectionMode="Multiple" MouseDown="lvCart_MouseDown" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" IsKeyboardFocusWithinChanged="lvCart_IsKeyboardFocusWithinChanged" FocusManager.FocusedElement="{Binding ElementName=txtUPCInput}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>

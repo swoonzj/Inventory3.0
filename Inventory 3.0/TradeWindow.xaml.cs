@@ -26,9 +26,7 @@ namespace Inventory_3._0
         decimal cashTotal = 0;
         decimal creditTotal = 0;
 
-        ObservableCollection<Item> cart = new ObservableCollection<Item>();
-        string keyboardInput;       
-        
+        ObservableCollection<Item> cart = new ObservableCollection<Item>();        
 
         public TradeWindow()
         {
@@ -104,22 +102,14 @@ namespace Inventory_3._0
         {
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(((ListView)sender).ItemsSource);
         }
-
-        // Handle input from Price Scanner
-        private void lvCart_PreviewKeyDown(object sender, KeyEventArgs e)
+        
+        private void DetectUPCEnterKey(object sender, KeyEventArgs e)
         {
-            //MessageBox.Show(e.InputSource.ToString());
-            // Keep accepting input until "RETURN" is hit
-            if (e.Key != Key.Return)
+            if (e.Key == Key.Enter)
             {
-                keyboardInput += processScannerInput(e.Key);
-            }
-            // When "RETURN" is hit, look up UPC & add item to currently focused cart
-            else
-            {
-                if (keyboardInput == "") return; // Return if the input is empty. Prevents a SQL error.
+                if (txtUPCInput.Text == "") return; // Return if the input is empty. Prevents a SQL error.
 
-                List<Item> items = DBAccess.UPCLookup(keyboardInput); // Returns NULL if UPC does not match an item                
+                List<Item> items = DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
 
                 if (items.Count != 0)
                 {
@@ -141,37 +131,13 @@ namespace Inventory_3._0
                 else
                     MessageBox.Show("Unknown UPC");
 
-                keyboardInput = "";
+                txtUPCInput.Text = "";
             }
         }
 
-        // UPC Scanner registers Digits differently from the normal keyboard digits
-        private string processScannerInput(Key key)
+        private void lvCart_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            switch (key){
-                case Key.D0:
-                    return "0";
-                case Key.D1:
-                    return "1";
-                case Key.D2:
-                    return "2";
-                case Key.D3:
-                    return "3";
-                case Key.D4:
-                    return "4";
-                case Key.D5:
-                    return "5";
-                case Key.D6:
-                    return "6";
-                case Key.D7:
-                    return "7";
-                case Key.D8:
-                    return "8";
-                case Key.D9:
-                    return "9";
-                default:
-                    return key.ToString();
-            }
+            txtUPCInput.Focus();
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -190,7 +156,7 @@ namespace Inventory_3._0
         private void lvCart_MouseDown(object sender, MouseButtonEventArgs e)
         {
             // Give focus to lvCart, so that the KeyDown Event actually works. (Only works if you click on the column headers, otherwise)
-            lvCart.Focus();
+            txtUPCInput.Focus();    
         }
 
         private void lvList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -200,9 +166,7 @@ namespace Inventory_3._0
             {
                 cart.Insert(0, item);
             }
-        }
-
-        
+        }        
 
         private void ManagementMenu_Click(object sender, RoutedEventArgs e)
         {

@@ -7,13 +7,11 @@
         <StackPanel>
             <DockPanel Margin ="5" LastChildFill="True">
                 <Label>Item Description:</Label>
-                <TextBox TextAlignment="Right" Name="txtDescription"/>
+                <TextBox TextAlignment="Right" VerticalAlignment="Center" Name="txtDescription"/>
             </DockPanel>
-            <DockPanel Margin ="5" LastChildFill="True">
-                <Label>Price:</Label>
-                <TextBox TextAlignment="Right" Name="txtPrice"/>
+            <DockPanel Name="PriceDockPanel" Margin ="5" LastChildFill="True">
             </DockPanel>
-            <Button Margin="5" Click="Button_Click">OK</Button>
+            <Button Margin="5" Click="Button_Click" IsDefault="True">OK</Button>
         </StackPanel>
     </Grid>
 </Window>

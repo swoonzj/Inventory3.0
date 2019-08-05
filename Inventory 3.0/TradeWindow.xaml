@@ -89,8 +89,11 @@
             <Button  Name="btnClear" Grid.Column="0" Grid.Row="0" Margin="5" Width="20" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
             <TextBox Name="txtSearch" Grid.Column="0" Grid.Row="0" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center"/>
         </DockPanel>
-        
-        <Button Name="btnAdd" Margin="20" Grid.Column="1" Grid.RowSpan="2" Click="btnAdd_Click">Add</Button>
+
+        <DockPanel Margin="5" Grid.Column="1" Grid.RowSpan="2" LastChildFill="True">
+            <Button Name="btnAddUnlistedItem" Margin ="0,5,0,0" Grid.Column="1" Grid.Row="1" DockPanel.Dock="Bottom" Click="btnAddUnlistedItem_Click">Add Unlisted Item</Button>
+            <Button Name="btnAdd" Click="btnAdd_Click" DockPanel.Dock="Top">Add</Button>
+        </DockPanel>
         <StackPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Center">
             <Button Name="btnRemove" Margin="5" Click="btnRemove_Click" Height="Auto">Remove</Button>
             <Button Name="btnClearCart" Margin="5" Click="btnClearCart_Click" Height="Auto" Width="Auto">Clear Cart</Button>

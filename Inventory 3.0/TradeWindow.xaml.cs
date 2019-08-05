@@ -190,6 +190,17 @@ namespace Inventory_3._0
             Checkout(TransactionTypes.TRADE_CASH);
         }
 
+        private void btnAddUnlistedItem_Click(object sender, RoutedEventArgs e)
+        {
+            // Prompt Unlisted Item Form !!!!!!!!!!!!!
+            
+            UnlistedItemPrompt prompt = new UnlistedItemPrompt(true);
+            if (prompt.ShowDialog() == true)
+            {
+                cart.Add(prompt.item);
+                prompt.Close();
+            }
+        }
 
         private void btnCredit_Click(object sender, RoutedEventArgs e)
         {

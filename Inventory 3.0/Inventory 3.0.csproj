@@ -56,6 +56,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+<<<<<<< Updated upstream
+=======
+    <Compile Include="ManageTransactions.xaml.cs">
+      <DependentUpon>ManageTransactions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UnlistedItemPrompt.xaml.cs">
+      <DependentUpon>UnlistedItemPrompt.xaml</DependentUpon>
+    </Compile>
+>>>>>>> Stashed changes
     <Page Include="AddNewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -64,6 +73,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+<<<<<<< Updated upstream
+=======
+    <Page Include="ManageTransactions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MultipleUPCHandler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+>>>>>>> Stashed changes
     <Page Include="TradeWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

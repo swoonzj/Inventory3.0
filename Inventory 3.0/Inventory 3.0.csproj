@@ -58,6 +58,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ManageTransactions.xaml.cs">
+      <DependentUpon>ManageTransactions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UnlistedItemPrompt.xaml.cs">
       <DependentUpon>UnlistedItemPrompt.xaml</DependentUpon>
     </Compile>
@@ -68,6 +71,10 @@
     <Page Include="Checkout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ManageTransactions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MultipleUPCHandler.xaml">
       <SubType>Designer</SubType>

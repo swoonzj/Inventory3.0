@@ -31,7 +31,7 @@ namespace Inventory_3._0
             lbCheckout.ItemsSource = checkout;
 
             checkout.Add(new Item("Item Total", "Checkout", itemTotal,1,0,0,"0"));
-            UpdateTotal();
+            if (itemTotal > 0) UpdateTotal();
         }        
         
         private void UpdateTotal()
@@ -48,16 +48,21 @@ namespace Inventory_3._0
 
         private void FinalizeTransaction()
         {
-            if (total < 0) MessageBox.Show("Change Due: " + (0-total).ToString("C"));
-            MessageBox.Show("Finalize?");
+            if (total < 0)
+            {
+                decimal change = 0 - total;
+                checkout.Add(new Item("Change Due:", "Checkout", change, 1, 0, 0, "0"));
+                MessageBox.Show("Change Due: " + change.ToString("C"));
+                
+            }
             success = true;
 
             //log payment
-            //int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
-            //for (int i = 1; i < checkout.Count; i++)
-            //{
-            //    DBAccess.AddPayment(checkout[i], transactionNumber);
-            //}
+            int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
+            for (int i = 1; i < checkout.Count; i++)
+            {
+                DBAccess.AddPayment(checkout[i], transactionNumber);
+            }
             DialogResult = success;
         }
 
@@ -117,6 +122,12 @@ namespace Inventory_3._0
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this.DialogResult = success;
+        }
+
+        private void lbCheckout_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ContextMenu rightClickMenu = new ContextMenu();
+
         }
     }
 }

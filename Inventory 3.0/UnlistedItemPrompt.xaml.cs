@@ -31,6 +31,7 @@ namespace Inventory_3._0
             if (trade) SetupForTrade();
             else SetupForPOS();
             this.trade = trade;
+            txtDescription.Focus();
         }
 
         private void SetupForPOS()

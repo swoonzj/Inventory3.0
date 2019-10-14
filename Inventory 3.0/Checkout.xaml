@@ -16,7 +16,7 @@
     </Window.Resources>
     <Grid>
         <StackPanel>
-            <ListBox x:Name="lbCheckout" Height="300" Margin="5" ItemTemplate="{StaticResource listBoxTemplate}" />
+            <ListBox x:Name="lbCheckout" Height="300" Margin="5" ItemTemplate="{StaticResource listBoxTemplate}" MouseRightButtonUp="lbCheckout_MouseRightButtonUp" />
             <StackPanel Orientation="Horizontal">
                 <Label FontSize="30" FontWeight="Bold" Content="Total:"/>
                 <Label x:Name="lblTotal" HorizontalAlignment="Right" FontSize="30"/>

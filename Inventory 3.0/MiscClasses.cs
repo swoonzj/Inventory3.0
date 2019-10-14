@@ -255,11 +255,14 @@ namespace Inventory_3._0
         List<Item> cart, payment;
         public StringBuilder receipt;
         public FlowDocument flowDoc;
+        string date, transactionNumber;
 
-        public ReceiptGenerator(List<Item> cart, List<Item> payment)
+        public ReceiptGenerator(List<Item> cart, List<Item> payment, string date, string transactionNumber)
         {
             this.cart = cart;
             this.payment = payment;
+            this.date = date;
+            this.transactionNumber = transactionNumber;
 
             receipt = new StringBuilder();
             flowDoc = Generate();
@@ -287,6 +290,8 @@ namespace Inventory_3._0
 
             // Headers
             flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.RECEIPT_HEADER2 + "\n")) { TextAlignment = System.Windows.TextAlignment.Center, FontWeight = System.Windows.FontWeights.Bold });
+            // Transaction details
+            flowDoc.Blocks.Add(new Paragraph(new Run("Transaction Number: " + transactionNumber + "\n" + date + "\n")) { TextAlignment = System.Windows.TextAlignment.Left, FontWeight = System.Windows.FontWeights.DemiBold });
 
             flowDoc.FontSize = ReceiptVariables.FONTSIZE;
             flowDoc.FontFamily = new System.Windows.Media.FontFamily(ReceiptVariables.FONTNAME);

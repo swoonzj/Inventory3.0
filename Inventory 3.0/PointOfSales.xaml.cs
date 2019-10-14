@@ -93,7 +93,7 @@ namespace Inventory_3._0
             {
                 total += item.price;
             }
-            txtTotal.Text = "Cash:\t\t$" + total.ToString("0.00");
+            txtTotal.Text = "Total:\t\t$" + total.ToString("0.00");
         }
 
         private void ColumnHeader_Click(object sender, RoutedEventArgs e)
@@ -194,17 +194,17 @@ namespace Inventory_3._0
             {
                 MessageBox.Show("Great.");
                 // Log transaction
-                
-                //string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-                //int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
-                //foreach (Item item in cart)
-                //{
-                //    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
-                //}
-                //DBAccess.IncrementTransactionNumber();
+
+                string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
+                foreach (Item item in cart)
+                {
+                    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
+                }
+                DBAccess.IncrementTransactionNumber();
 
                 // Print Receipt!!!!
-                ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>());
+                ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>(), date, transactionNumber.ToString());
                 ReceiptPrinter printer = new ReceiptPrinter(generator.flowDoc);
                 printer.Print();
                 checkout.Close();
@@ -257,8 +257,6 @@ namespace Inventory_3._0
 
         private void btnAddUnlistedItem_Click(object sender, RoutedEventArgs e)
         {
-            // Prompt Unlisted Item Form !!!!!!!!!!!!!
-            MessageBox.Show("Placeholder.");
             UnlistedItemPrompt prompt = new UnlistedItemPrompt();
             if (prompt.ShowDialog() == true)
             {

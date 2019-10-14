@@ -14,7 +14,7 @@ namespace Inventory_3._0
     public static class PrinterVariables
     {
 
-        public const string PRINTERNAME = "POS-80C";
+        public const string PRINTERNAME = "POS";
         public class UPCimage
         {
             public const int locX = 0;

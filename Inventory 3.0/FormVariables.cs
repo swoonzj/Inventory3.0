@@ -113,7 +113,8 @@ namespace Inventory_3._0
             TRADE_CASH = "TradeCash",
             TRADE_CREDIT = "TradeCredit",
             UPC = "UPC",
-            DATE = "Date";
+            DATE = "Date",
+            TYPE = "Type";
     }
 
     public static class ReceiptVariables

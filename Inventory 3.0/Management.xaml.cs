@@ -287,5 +287,19 @@ namespace Inventory_3._0
             MoveInventory moveInventory = new MoveInventory();
             moveInventory.Show();
         }
+
+        private void menuGetTotalsClick(object sender, RoutedEventArgs e)
+        {
+            DateTime today = DateTime.Today;
+            DateTime tomorrow = today.AddDays(1);
+            
+            DatePicker picker = new DatePicker();
+
+            decimal tradeCash = DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), TransactionTypes.TRADE_CASH);
+            decimal tradeCredit = DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), TransactionTypes.TRADE_CREDIT);
+            decimal sales = DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), TransactionTypes.SALE);
+
+            MessageBox.Show(String.Format("Cash: ${0}\nCredit: ${1}\nSales: ${2}", tradeCash.ToString("0.00"), tradeCredit.ToString("0.00"), sales.ToString("0.00")));
+        }
     }
 }

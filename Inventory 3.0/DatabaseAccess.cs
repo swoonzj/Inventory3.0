@@ -1141,39 +1141,69 @@ namespace Inventory_3._0
         //    return collection;
         //}
 
-        /// <summary>
-        /// Gets the monetary total of the given transaction type starting from (and including) the DateTime "from" up to the DateTime "to"
-        /// </summary>
-        /// <param name="type">Transaction Type</param>
-        /// <param name="from">Starting date. Search includes this date in the results.</param>
-        /// <param name="to">Endind date. Search includes everything UP TO, but NOT INCLUDING this date.</param>
-        /// <returns>The monetary total as a decimal.</returns>
-        public static decimal GetTransactionMonetaryTotal(string type, DateTime from, DateTime to)
-        {
-            object result = null;
-            string command = "SELECT SUM(Price * Quantity) FROM " + TableNames.TRANSACTION + " WHERE Type = '" + type + "' AND Date >= '" + from + "' AND Date < '" + to + "'";
-            SqlCommand cmd = new SqlCommand(command, connect);
+        ///// <summary>
+        ///// Gets the monetary total of the given transaction type starting from (and including) the DateTime "from" up to the DateTime "to"
+        ///// </summary>
+        ///// <param name="type">Transaction Type</param>
+        ///// <param name="from">Starting date. Search includes this date in the results.</param>
+        ///// <param name="to">Endind date. Search includes everything UP TO, but NOT INCLUDING this date.</param>
+        ///// <returns>The monetary total as a decimal.</returns>
+        //public static decimal GetTransactionMonetaryTotal(string type, DateTime from, DateTime to)
+        //{
+        //    object result = null;
+        //    string command = "SELECT SUM(Price * Quantity) FROM " + TableNames.TRANSACTION + " WHERE Type = '" + type + "' AND Date >= '" + from + "' AND Date < '" + to + "'";
+        //    SqlCommand cmd = new SqlCommand(command, connect);
                 
+        //    try
+        //    {
+        //        connect.Open();
+        //        result = cmd.ExecuteScalar();
+        //        connect.Close();
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //        connect.Close();
+        //    }
+
+        //    try
+        //    {
+        //        return (Convert.ToDecimal(result));
+        //    }
+        //    catch
+        //    {
+        //        return 0M;
+        //    }
+        //}
+
+        public static decimal GetDailyTotal(string startDate, string endDate, string transactionType)
+        {
+            // SELECT SUM(Price)
+            //FROM tblTransactions
+            //WHERE (Date between '2019-10-14 00:00:00.000' AND '2019-10-15 00:00:00.000') AND Type = 'Trade-Cash'
+
+            decimal total;
+            string command = String.Format("SELECT SUM({0}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.PRICE, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, transactionType, TableNames.TRANSACTION);
+
             try
             {
+                SqlCommand cmd = new SqlCommand(command, connect);
                 connect.Open();
-                result = cmd.ExecuteScalar();
+                var result = cmd.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    total = Convert.ToDecimal(result);
+                }
+                else total = 0M;
                 connect.Close();
+                return total;
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 connect.Close();
             }
-
-            try
-            {
-                return (Convert.ToDecimal(result));
-            }
-            catch
-            {
-                return 0M;
-            }
+            return -1M; // Something went wrong. (Although, -1 could be a legitimate return value if there are an abundance of negative quantity of items in inventory.)
         }
 
         #endregion
@@ -1201,8 +1231,8 @@ namespace Inventory_3._0
                 MessageBox.Show(ex.Message);
                 connect.Close();
             }
-
             return -1M; // Something went wrong. (Although, -1 could be a legitimate return value if there are an abundance of negative quantity of items in inventory.)
+
         }
 
         /// <summary>

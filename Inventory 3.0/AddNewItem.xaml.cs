@@ -91,5 +91,10 @@ namespace Inventory_3._0
                 item.tradeCredit = Math.Round(item.price / 3);
             }
         }
+
+        private void textbox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
     }
 }

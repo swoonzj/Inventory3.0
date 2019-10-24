@@ -32,17 +32,17 @@
         <DockPanel Grid.Column="1" Grid.Row="0">
             <!--Name-->
             <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
-                     Text="{Binding name, Mode=TwoWay}"/>
+                     Text="{Binding name, Mode=TwoWay}" GotKeyboardFocus="textbox_GotKeyboardFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="1">
             <!--System-->
             <TextBox Name="txtSystem" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
-                     Text="{Binding system, Mode=TwoWay}"/>
+                     Text="{Binding system, Mode=TwoWay}" GotKeyboardFocus="textbox_GotKeyboardFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="2">
             <!--Price-->
             <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
-                     Text="{Binding price, Mode=TwoWay, StringFormat='0.00'}"/>
+                     Text="{Binding price, Mode=TwoWay, StringFormat='0.00'}" GotKeyboardFocus="textbox_GotKeyboardFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="3">
             <!--Quantity-->
@@ -57,12 +57,12 @@
         <DockPanel Grid.Column="1" Grid.Row="4">
             <!--Trade: Cash-->
             <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
-                     Text="{Binding tradeCash, Mode=TwoWay, StringFormat='0.00'}"/>
+                     Text="{Binding tradeCash, Mode=TwoWay, StringFormat='0.00'}" GotKeyboardFocus="textbox_GotKeyboardFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="5">
             <!--Trade: Cash-->
             <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
-                     Text="{Binding tradeCredit, Mode=TwoWay, StringFormat='0.00'}"/>
+                     Text="{Binding tradeCredit, Mode=TwoWay, StringFormat='0.00'}" GotKeyboardFocus="textbox_GotKeyboardFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="6">
             <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="300" ItemsSource="{Binding UPCs, Mode=TwoWay}">

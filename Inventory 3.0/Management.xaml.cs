@@ -226,7 +226,7 @@ namespace Inventory_3._0
             Search();
         }
 
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        private void TextBox_GotFocus(object sender, object e)
         {
             ((TextBox)sender).SelectAll();
         }
@@ -300,6 +300,6 @@ namespace Inventory_3._0
             decimal sales = DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), TransactionTypes.SALE);
 
             MessageBox.Show(String.Format("Cash: ${0}\nCredit: ${1}\nSales: ${2}", tradeCash.ToString("0.00"), tradeCredit.ToString("0.00"), sales.ToString("0.00")));
-        }
+        }        
     }
 }

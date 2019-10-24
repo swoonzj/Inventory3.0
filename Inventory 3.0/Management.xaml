@@ -74,37 +74,37 @@
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="1" > <!--Name-->
             <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                     Text="{Binding name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="TextBox_GotFocus"/>
+                     Text="{Binding name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="2"> <!--System-->
             <TextBox Name="txtSystem" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                     Text="{Binding system, Mode=TwoWay}" GotFocus="TextBox_GotFocus"/>
+                     Text="{Binding system, Mode=TwoWay}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="3"> <!--Price-->
             <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                     Text="{Binding price, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotFocus="TextBox_GotFocus"/>
+                     Text="{Binding price, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
         </DockPanel>
         <UniformGrid Grid.Column="2" Grid.Row="4" Columns="3"> <!--Quantity-->
             <StackPanel Margin="5">
                 <Label HorizontalAlignment="Center">Store</Label>
-                <TextBox Name="txtStore" Text="{Binding quantity[0], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotFocus="TextBox_GotFocus"/>
+                <TextBox Name="txtStore" Text="{Binding quantity[0], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
             </StackPanel>
             <StackPanel Margin="5">
                 <Label HorizontalAlignment="Center">Back Room</Label>
-                <TextBox Name="txtOutBack" Text="{Binding quantity[1], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotFocus="TextBox_GotFocus"/>
+                <TextBox Name="txtOutBack" Text="{Binding quantity[1], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
             </StackPanel>
             <StackPanel Margin="5">
                 <Label HorizontalAlignment="Center">Storage</Label>
-                <TextBox Name="txtStorage" Text="{Binding quantity[2], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotFocus="TextBox_GotFocus"/>
+                <TextBox Name="txtStorage" Text="{Binding quantity[2], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
             </StackPanel>
         </UniformGrid>
         <DockPanel Grid.Column="2" Grid.Row="5"> <!--Trade: Cash-->
             <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                     Text="{Binding tradeCash, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotFocus="TextBox_GotFocus"/>
+                     Text="{Binding tradeCash, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="6"> <!--Trade: Cash-->
             <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                     Text="{Binding tradeCredit, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotFocus="TextBox_GotFocus"/>
+                     Text="{Binding tradeCredit, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="7">
             <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="200" ItemsSource="{Binding UPCs, Mode=TwoWay}">
@@ -122,7 +122,7 @@
                 </ListView.View>
             </ListView>
             <StackPanel VerticalAlignment="Center">
-                <TextBox Name="txtUPC" Margin="5" GotFocus="TextBox_GotFocus"/>
+                <TextBox Name="txtUPC" Margin="5" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
                 <Button Name="btnAdd" Margin="5" Click="btnAdd_Click">Add</Button>
                 <Button Name="btnRemove" Margin="5" Click="btnRemove_Click">Remove</Button>
             </StackPanel>

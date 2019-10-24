@@ -96,5 +96,10 @@ namespace Inventory_3._0
         {
             ((TextBox)sender).SelectAll();
         }
+
+        private void textbox_GotMouseCapture(object sender, MouseEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
     }
 }

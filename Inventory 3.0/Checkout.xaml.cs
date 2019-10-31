@@ -27,7 +27,7 @@ namespace Inventory_3._0
         {
             InitializeComponent();
             txtCheckout.Focus();
-            txtCheckout.LostKeyboardFocus += (s,e) => txtCheckout.Focus();
+            //txtCheckout.LostKeyboardFocus += (s,e) => txtCheckout.Focus();
             lbCheckout.ItemsSource = checkout;
 
             checkout.Add(new Item("Item Total", "Checkout", itemTotal,1,0,0,"0"));
@@ -124,10 +124,18 @@ namespace Inventory_3._0
             this.DialogResult = success;
         }
 
-        private void lbCheckout_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        private void menuDelete_Click(object sender, RoutedEventArgs e)
         {
-            ContextMenu rightClickMenu = new ContextMenu();
+            if (lbCheckout.SelectedIndex == -1) 
+                return;
 
+            Item deletedItem = (Item)lbCheckout.Items.GetItemAt(lbCheckout.SelectedIndex);
+            // Can't delete Item total
+            if (deletedItem.name.Contains("Item Total")) 
+                return;
+            
+            checkout.Remove(deletedItem);
+            UpdateTotal();
         }
     }
 }

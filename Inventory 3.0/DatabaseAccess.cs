@@ -156,7 +156,7 @@ namespace Inventory_3._0
             {
                 newitem.UPCs = DBAccess.GetUPCsWithID(newitem.SQLid);
                 newitem.quantity = DBAccess.GetQuantities(newitem.SQLid);
-                if (newitem.quantity.Count != 3) newitem.quantity = new List<int> { 0, 0, 0 };
+                if (newitem.quantity.Count != 3) newitem.quantity = new List<int> { 0, 0, 0 }; // Should only be necessary for items with no quantities.
             }
 
             return collection;

@@ -94,6 +94,7 @@ namespace Inventory_3._0
                 total += item.price;
             }
             txtTotal.Text = "Total:\t\t$" + total.ToString("0.00");
+            txtItemCount.Text = "Items: " + lvCart.Items.Count.ToString();
         }
 
         private void ColumnHeader_Click(object sender, RoutedEventArgs e)

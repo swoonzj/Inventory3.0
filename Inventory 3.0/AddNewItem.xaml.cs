@@ -60,6 +60,7 @@ namespace Inventory_3._0
 
             item.UPCs.Add(txtUPC.Text);
             CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
+            txtUPC.Text = "";
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
@@ -100,6 +101,16 @@ namespace Inventory_3._0
         private void textbox_GotMouseCapture(object sender, MouseEventArgs e)
         {
             ((TextBox)sender).SelectAll();
+        }
+
+        private void txtUPC_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnAdd.IsDefault = true;
+        }
+
+        private void txtUPC_LostFocus(object sender, RoutedEventArgs e)
+        {
+            btnAdd.IsDefault = false;
         }
     }
 }

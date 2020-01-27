@@ -80,7 +80,7 @@
                 </ListView.View>
             </ListView>
             <StackPanel VerticalAlignment="Center">
-                <TextBox Name="txtUPC" Margin="5"/>
+                <TextBox Name="txtUPC" Margin="5" GotFocus="txtUPC_GotFocus" LostFocus="txtUPC_LostFocus"/>
                 <Button Name="btnAdd" Margin="5" Click="btnAdd_Click">Add</Button>
                 <Button Name="btnRemove" Margin="5" Click="btnRemove_Click">Remove</Button>
             </StackPanel>

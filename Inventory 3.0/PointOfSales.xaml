@@ -39,7 +39,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <TextBox Grid.Column="1" Grid.Row="4" Name="txtUPCInput" Opacity="0"  KeyDown="DetectUPCEnterKey"/>
+        <TextBox VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="4" Name="txtUPCInput" Opacity="0"  KeyDown="DetectUPCEnterKey"/>
         <ListView Margin="5" Name="lvCart" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" SelectionMode="Multiple" IsKeyboardFocusWithinChanged="lvCart_IsKeyboardFocusWithinChanged"  MouseDown="GiveFocusTo_txtUPCInput" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" FocusManager.FocusedElement="{Binding ElementName=txtUPCInput}">
             <ListView.View>
                 <GridView>
@@ -54,8 +54,7 @@
                     <GridViewColumn Header="System" Width="Auto" DisplayMemberBinding="{Binding Path=system}"/>
                     <GridViewColumn Header="Quantity" Width="Auto" DisplayMemberBinding="{Binding Path=quantity}"/>
                     <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
-                    <GridViewColumn Header="Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
-                    <GridViewColumn Header="Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
+                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -108,7 +107,8 @@
             </StackPanel>
         </Expander>
 
-        <TextBlock Name="txtTotal" FontSize="15" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="5" />
+        <TextBlock Name="txtTotal" FontSize="20" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="5" />
+        <TextBlock Name="txtItemCount" FontSize="15" Grid.Column="2" Grid.Row="6"/>
         <Button Name="btnCheckout" FontSize="20" Margin ="5" Padding="5" Grid.Column="3" Grid.Row="6" VerticalContentAlignment="Center" Click="btnCheckout_Click">Checkout</Button>
     </Grid>
 </local:SortableListViews>

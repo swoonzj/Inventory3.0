@@ -24,8 +24,7 @@ namespace Inventory_3._0
     {
         public List<string> UPCsToDelete;
 
-        ObservableCollection<TransactionItem> managedTransaction = new ObservableCollection<TransactionItem>();
-        ObservableCollection<Item> Transactions = new ObservableCollection<Item>();
+        ObservableCollection<Transaction> Transactions = new ObservableCollection<Transaction>();
         ObservableCollection<Item> searchResults = new ObservableCollection<Item>();
 
         public ManageTransactions()

@@ -102,6 +102,19 @@ namespace Inventory_3._0
 
         }
 
+        public Item(string name, string system)
+        {
+            UPCs = new List<string>();
+            this.SQLid = 0;
+            this.name = name;
+            this.system = system;
+            this.price = 0;
+            this.quantity = new List<int> { 0, 0, 0 };
+            this.tradeCash = 0;
+            this.tradeCredit = 0;
+
+        }
+
         public Item(string name, string system, decimal price, int quantity, decimal cash, decimal credit, string upc)
         {
             UPCs = new List<string>();

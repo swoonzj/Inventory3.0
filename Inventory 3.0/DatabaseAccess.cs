@@ -1040,7 +1040,7 @@ namespace Inventory_3._0
             connect.Close();
         }
 
-        public static void AddPayment(Item item, int transactionNumber) // Should only be used for Table of Transactions
+        public static void AddPayment(Item item, int transactionNumber) // Should only be used for Table of Payment
         {
             SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.PAYMENT + " VALUES(@TRANSACTIONNUMBER, @PAYMENTTYPE, @AMOUNT)", connect);
             cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
@@ -1066,27 +1066,18 @@ namespace Inventory_3._0
 
         public static void AddTransaction(Item item, string type, int transactionNumber, string date) // Should only be used for Table of Payment
         {
-            SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.TRANSACTION + " VALUES(@TRANSACTIONNUMBER, @ID, @NAME, @SYSTEM, @PRICE, @TYPE, @DATE)", connect);
+            SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.TRANSACTION + " VALUES(@TRANSACTIONNUMBER, @ID, @NAME, @SYSTEM, @PRICE, @QUANTITY, @CASH, @CREDIT, @TYPE, @DATE)", connect);
             cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
             cmd.Parameters.Add("@ID", SqlDbType.Int).Value = item.SQLid;
             cmd.Parameters.Add("@NAME", SqlDbType.VarChar).Value = item.name;
             cmd.Parameters.Add("@SYSTEM", SqlDbType.NVarChar).Value = item.system;
+            cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.price;
+            cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = item.quantity[0];
+            cmd.Parameters.Add("@CASH", SqlDbType.Money).Value = item.tradeCash;
+            cmd.Parameters.Add("@CREDIT", SqlDbType.Money).Value = item.tradeCredit;
             cmd.Parameters.Add("@TYPE", SqlDbType.NVarChar).Value = type;
             cmd.Parameters.Add("@DATE", SqlDbType.DateTime).Value = date;
-
-            switch (type)
-            {
-                case TransactionTypes.SALE:
-                    cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.price;
-                    break;
-                case TransactionTypes.TRADE_CASH:
-                    cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.tradeCash;
-                    break;
-                case TransactionTypes.TRADE_CREDIT:
-                    cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.tradeCredit;
-                    break;
-            }
-
+            
             // execute command  & close connection
             try
             {

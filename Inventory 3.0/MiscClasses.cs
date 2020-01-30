@@ -235,18 +235,30 @@ namespace Inventory_3._0
         public static Item CreateItemFromCSVLine(string CSVline)
         {
             List<string> line = ParseCSV(CSVline);
-            List<int> quantity = new List<int>();
-            quantity.Add(Convert.ToInt32(line[3]));
-            quantity.Add(Convert.ToInt32(line[4]));
-            quantity.Add(Convert.ToInt32(line[5]));
 
-            List<string> upcs = new List<string>();
-            for (int i = 8; i < line.Count; i++) // Index of first UPC)
+            if (line.Count > 7)
             {
-                upcs.Add(line[i]);
-            }
+                List<int> quantity = new List<int>();
+                quantity.Add(Convert.ToInt32(line[3]));
+                quantity.Add(Convert.ToInt32(line[4]));
+                quantity.Add(Convert.ToInt32(line[5]));
 
-            return new Item(line[0], line[1], line[2], quantity, line[6], line[7], upcs);
+                List<string> upcs = new List<string>();
+                if (line.Count > 8)
+                {
+                    for (int i = 8; i < line.Count; i++) // Index of first UPC)
+                    {
+                        upcs.Add(line[i]);
+                    }
+                }
+
+                return new Item(line[0], line[1], line[2], quantity, line[6], line[7], upcs);
+            }
+            else if (line.Count >= 2)
+            {
+                return new Item(line[0], line[1]);
+            }
+            else return new Item();
         }
     }
 
@@ -403,7 +415,6 @@ namespace Inventory_3._0
 
             IDocumentPaginatorSource idpSource = flowDoc;
             printDialog.PrintDocument(idpSource.DocumentPaginator, "Printing Receipt");
-
         }
     }    
 }

@@ -12,8 +12,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height=".5*" />
@@ -33,17 +32,24 @@
                 <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="True"/>
             </MenuItem>
         </Menu>
-        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
-            <ListView.View>
-                <GridView>                    
+        <ListView Name="lvList" Margin="5" Grid.Column="0" Grid.Row="3" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+            <ListView.Resources>
+                <GridView x:Key="all">                    
                     <GridViewColumn Header="#" DisplayMemberBinding="{Binding transactionNumber}"/>
                     <GridViewColumn Header="Date"  DisplayMemberBinding="{Binding Path=date}"/>
                     <GridViewColumn Header="Type"  DisplayMemberBinding="{Binding Path=transactionType}"/>
                     <GridViewColumn Header="Number of Items" DisplayMemberBinding="{Binding Path=quantity, StringFormat=C}"/>
                     <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=total, StringFormat=C}"/>
                 </GridView>
-            </ListView.View>
+                <GridView x:Key="single">
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding transactionNumber}"/>
+                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=date}"/>
+                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=transactionType}"/>
+                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=total, StringFormat=C}"/>
+                </GridView>
+            </ListView.Resources>
         </ListView>
+        
         <!--Labels-->
 
 
@@ -53,6 +59,10 @@
             <Button  Name="btnClear" Margin="5" Width="20" DockPanel.Dock="Left" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
             <Button Name="btnDelete" Margin="5" Width="150" DockPanel.Dock="Right" Click="btnDelete_Click">Delete Selected Items</Button>
             <TextBox Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center"/>
+        </DockPanel>
+        <DockPanel Grid.Column="0" Grid.Row="2">
+            <DatePicker SelectedDateChanged="DatePicker_SelectedDateChanged"></DatePicker>
+            
         </DockPanel>
 
     </Grid>

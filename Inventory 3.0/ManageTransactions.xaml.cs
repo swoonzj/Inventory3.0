@@ -24,19 +24,17 @@ namespace Inventory_3._0
     {
         public List<string> UPCsToDelete;
 
-        Item managedItem = new Item();
-        ObservableCollection<Item> managedItems = new ObservableCollection<Item>();
+        ObservableCollection<TransactionItem> managedTransaction = new ObservableCollection<TransactionItem>();
+        ObservableCollection<Item> Transactions = new ObservableCollection<Item>();
         ObservableCollection<Item> searchResults = new ObservableCollection<Item>();
 
         public ManageTransactions()
         {
             UPCsToDelete = new List<string>();
-            managedItems.Add(managedItem);
             //dgQuantities.ItemsSource = managedItems;
             InitializeComponent();
 
             //lvList.ItemsSource = searchResults;
-            DataContext = managedItem;
             
             //Search();
         }
@@ -99,6 +97,11 @@ namespace Inventory_3._0
         {
             MoveInventory moveInventory = new MoveInventory();
             moveInventory.Show();
+        }
+        
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime? date = (sender as DatePicker).SelectedDate;
         }
     }
 }

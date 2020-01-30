@@ -183,9 +183,106 @@ namespace Inventory_3._0
             return String.Format("Name: {0}\nSystem:{1}\nPrice:{2}\nInventory:\n\tSales Floor:{3}\n\tOut Back:{4}\n\tStorage:{5}\nTrade, Cash:{6}\nTrade, Store Credit:{7}\nUPCS:{8}", name, system, price, quantity[0], quantity[1], quantity[2], tradeCash, tradeCredit, String.Join(", ", UPCs));
         }
     }
-
-    public class TransactionItem : Item
+    
+    public class Transaction : INotifyPropertyChanged
     {
-        
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private ObservableCollection<Item> Items;
+        public ObservableCollection<Item> items
+        {
+            get { return Items; }
+            set
+            {
+                Items = value;
+                NotifyPropertyChanged("items");
+            }
+        }
+
+        private DateTime Date;
+        public DateTime date
+        {
+            get { return Date; }
+            set
+            {
+                Date = value;
+                NotifyPropertyChanged("date");
+            }
+        }
+
+        private int TransactionNumber;
+        public int transactionNumber
+        {
+            get { return TransactionNumber; }
+            set 
+            {
+                TransactionNumber = value;
+                NotifyPropertyChanged("transactionNumber");
+            }
+        }
+
+        private string TransactionType;
+        public string transactionType
+        {
+            get { return TransactionType; }
+            set
+            {
+                TransactionType = value;
+                NotifyPropertyChanged("transactionType");
+            }
+        }
+
+        private decimal Total;
+        public decimal total
+        {
+            get { return Total; }
+            set
+            {
+                Total = value;
+                NotifyPropertyChanged("total");
+            }
+        }
+
+        private void CalculateTotal()
+        {
+            switch (transactionType)
+            {
+                case TransactionTypes.SALE:
+                    {
+                        decimal sum = 0;
+                        foreach (Item item in Items)
+                        {
+                            sum += item.price;
+                        }
+                        total = sum;
+                        break;
+                    }
+                case TransactionTypes.TRADE_CASH:
+                    {
+                        decimal sum = 0;
+                        foreach (Item item in Items)
+                        {
+                            sum += item.tradeCash;
+                        }
+                        total = sum;
+                        break;
+                    }
+                case TransactionTypes.TRADE_CREDIT:
+                    {
+                        decimal sum = 0;
+                        foreach (Item item in Items)
+                        {
+                            sum += item.tradeCredit;
+                        }
+                        total = sum;
+                        break;
+                    }
+            }
+        }
     }
 }

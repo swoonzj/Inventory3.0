@@ -27,8 +27,11 @@ namespace Inventory_3._0
             //    handler.Close();
             //}
 
-            TradeWindow trade = new TradeWindow();
-            trade.Show();
+            //TradeWindow trade = new TradeWindow();
+            //trade.Show();
+
+            ManageTransactions manage = new ManageTransactions();
+            manage.Show();
 
             //PointOfSales sales = new PointOfSales();
             //sales.Show();

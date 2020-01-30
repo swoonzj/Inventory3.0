@@ -1095,6 +1095,60 @@ namespace Inventory_3._0
             }
         }
 
+        // SELECT TRANSACTIONS BETWEEN DATES:
+  //      SELECT *
+  //FROM [StoreInventory].[dbo].[tblTransactions]
+  //where Date between '2020-01-30' and '2020-01-31'
+
+        // FINISH THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        public static List<Transaction> GetTransactions(DateTime startRange, DateTime endRange, int number = 0)
+        {
+            List<Transaction> transactions = new List<Transaction>();
+
+            SqlCommand cmd;
+            if (number != 0)
+            {
+                // SEARCH FOR SPECIFIC TRANSACTION NUMBER!!!!!!!!!!!!!!
+            }
+
+            else
+            {
+                cmd = new SqlCommand("SELECT * FROM" + TableNames.TRANSACTION + 
+                    "WHERE DATE BETWEEN " + startRange + " AND " + endRange +
+                    " ORDER BY TransactionNumber DESC", connect);
+            }
+
+            try
+            {
+                connect.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read() == true)
+                {
+                    //item = SQLReaderToItem(reader);
+                    //if (item != null)
+                    //{
+                    //    collection.Add(item);
+                    //}
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN GetTransactions():\n" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+
+            return transactions;
+        }
+
+
+
+
+
+
+
         //public static List<Item> GetBestSellingItems(string type, bool ascending = false)
         //{
         //    List<Item> collection = new List<Item>();
@@ -1199,100 +1253,6 @@ namespace Inventory_3._0
 
         #endregion
         
-        /// <summary>
-        /// Returns the monetary value of the entire inventory (each item's price * quantity)
-        /// </summary>
-        /// <returns>Monetary value of all in-stock items in inventory as a Decimal</returns>
-        public static decimal GetInventoryValue()
-        {
-            decimal total;
-
-            string command = "SELECT SUM(Price * Quantity) FROM " + TableNames.INVENTORY ;
-
-            try
-            {
-                SqlCommand cmd = new SqlCommand(command, connect);
-                connect.Open();
-                total = Convert.ToDecimal(cmd.ExecuteScalar());
-                connect.Close();
-                return total; //return the total
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                connect.Close();
-            }
-            return -1M; // Something went wrong. (Although, -1 could be a legitimate return value if there are an abundance of negative quantity of items in inventory.)
-
-        }
-
-        /// <summary>
-        /// Returns the total quantity of items currently in stock
-        /// </summary>
-        /// <returns>An int representing the total quantity of items currently in stock</returns>
-        public static int GetItemTotal()
-        {
-            object result = null;
-            string command = "SELECT SUM(Quantity) FROM " + TableNames.INVENTORY;
-            SqlCommand cmd = new SqlCommand(command, connect);
-
-            try
-            {
-                connect.Open();
-                result = cmd.ExecuteScalar();
-                connect.Close();
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-                connect.Close();
-            }
-
-            try
-            {
-                return Convert.ToInt32(result);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether or not the passed item is currently in stock, based on UPC and item Name
-        /// </summary>
-        /// <param name="item">Item to check</param>
-        /// <returns>True if item is currently in stock, false otherwise</returns>
-        public static bool IsItemInStock(Item item)
-        {
-            object result = null; // Result of SQL query
-            string command;
-                        
-            command = "SELECT QUANTITY FROM " + TableNames.INVENTORY + " WHERE NAME = '" + item.name + "' AND SYSTEM = '" + item.system + "'";
-            
-            SqlCommand cmd = new SqlCommand(command, connect);
-
-            try
-            {
-                connect.Open();
-                result = cmd.ExecuteScalar();
-                connect.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in IsItemInStock():\n\n" + ex.Message);
-                connect.Close();
-            }
-
-            // If item is in stock, return true. Else, return false
-            if ((int)result > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        
     }
 }

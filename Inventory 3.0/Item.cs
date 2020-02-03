@@ -250,18 +250,20 @@ namespace Inventory_3._0
             }
         }
 
-        private decimal Total;
         public decimal total
         {
-            get { return Total; }
-            set
-            {
-                Total = value;
-                NotifyPropertyChanged("total");
-            }
+            get { return CalculateTotal(); }
         }
 
-        private void CalculateTotal()
+        public Transaction(int transactionNumber, string transactionType, DateTime date)
+        {
+            this.transactionNumber = transactionNumber;
+            this.transactionType = transactionType;
+            this.date = date;
+            items = new ObservableCollection<Item>();
+        }
+
+        private decimal CalculateTotal()
         {
             switch (transactionType)
             {
@@ -272,7 +274,7 @@ namespace Inventory_3._0
                         {
                             sum += item.price;
                         }
-                        total = sum;
+                        return sum;
                         break;
                     }
                 case TransactionTypes.TRADE_CASH:
@@ -282,7 +284,7 @@ namespace Inventory_3._0
                         {
                             sum += item.tradeCash;
                         }
-                        total = sum;
+                        return sum;
                         break;
                     }
                 case TransactionTypes.TRADE_CREDIT:
@@ -292,9 +294,11 @@ namespace Inventory_3._0
                         {
                             sum += item.tradeCredit;
                         }
-                        total = sum;
+                        return sum;
                         break;
                     }
+                default:
+                    return -1;
             }
         }
     }

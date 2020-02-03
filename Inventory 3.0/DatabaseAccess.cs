@@ -1104,11 +1104,14 @@ namespace Inventory_3._0
         public static List<Transaction> GetTransactions(DateTime startRange, DateTime endRange, int number = 0)
         {
             List<Transaction> transactions = new List<Transaction>();
+            Transaction transaction = null;
 
             SqlCommand cmd;
             if (number != 0)
             {
                 // SEARCH FOR SPECIFIC TRANSACTION NUMBER!!!!!!!!!!!!!!
+                cmd = new SqlCommand("SELECT * FROM" + TableNames.TRANSACTION + 
+                    "WHERE TransactionNumber = " + number.ToString(), connect);
             }
 
             else
@@ -1124,11 +1127,20 @@ namespace Inventory_3._0
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read() == true)
                 {
-                    //item = SQLReaderToItem(reader);
-                    //if (item != null)
-                    //{
-                    //    collection.Add(item);
-                    //}
+                    // If new transaction number, create a new transaction
+                    if ((int)reader[0] != transaction.transactionNumber )
+                    {
+                        if (transaction != null)
+                        {
+                            transactions.Add(transaction); // Store previous
+                        }
+                        transaction = new Transaction((int)reader[0], reader[8].ToString(), (DateTime)reader[9]);
+                    }
+                    Item item = SQLReaderToTransaction(reader);
+                    if (item != null)
+                    {
+                        transaction.items.Add(item);
+                    }
                 }
             }
             catch (Exception e)
@@ -1143,7 +1155,31 @@ namespace Inventory_3._0
             return transactions;
         }
 
+        public static Item SQLReaderToTransaction(SqlDataReader reader)
+        {
+            Item item = null;
 
+            item = new Item();
+            item.name = reader[0].ToString(); // Name
+            item.system = reader[1].ToString();   // System
+            item.price = (decimal)reader[2];   // Price
+            item.tradeCash = (decimal)reader[3];   // Cash
+            item.tradeCredit = (decimal)reader[4];   // Credit
+            item.SQLid = (int)reader[5];   // SQL ID
+
+            //0 cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
+            //1 cmd.Parameters.Add("@ID", SqlDbType.Int).Value = item.SQLid;
+            //2 cmd.Parameters.Add("@NAME", SqlDbType.VarChar).Value = item.name;
+            //3 cmd.Parameters.Add("@SYSTEM", SqlDbType.NVarChar).Value = item.system;
+            //4 cmd.Parameters.Add("@PRICE", SqlDbType.Money).Value = item.price;
+            //5 cmd.Parameters.Add("@QUANTITY", SqlDbType.Int).Value = item.quantity[0];
+            //6 cmd.Parameters.Add("@CASH", SqlDbType.Money).Value = item.tradeCash;
+            //7 cmd.Parameters.Add("@CREDIT", SqlDbType.Money).Value = item.tradeCredit;
+            //8 cmd.Parameters.Add("@TYPE", SqlDbType.NVarChar).Value = type;
+            //9 cmd.Parameters.Add("@DATE", SqlDbType.DateTime).Value = date;
+
+            return item;
+        }
 
 
 

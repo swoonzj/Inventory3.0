@@ -22,33 +22,18 @@ namespace Inventory_3._0
     /// 
     public partial class ManageTransactions : SortableListViews
     {
-        public List<string> UPCsToDelete;
-
-        ObservableCollection<Transaction> Transactions = new ObservableCollection<Transaction>();
-        ObservableCollection<Item> searchResults = new ObservableCollection<Item>();
+        ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
+        DateTime startDate = DateTime.Today, endDate = DateTime.Today.AddDays(1);
 
         public ManageTransactions()
         {
-            UPCsToDelete = new List<string>();
-            //dgQuantities.ItemsSource = managedItems;
             InitializeComponent();
-
-            //lvList.ItemsSource = searchResults;
-            
-            //Search();
+            transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate));
         }
 
         private void Search()
         {
-            try
-            {
-                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: menuLimitSearchResults.IsChecked));                
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.InnerException.ToString());
-            }
-            lvList.ItemsSource = searchResults;
+            // Do a search
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)

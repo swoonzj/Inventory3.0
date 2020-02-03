@@ -1110,15 +1110,15 @@ namespace Inventory_3._0
             if (number != 0)
             {
                 // SEARCH FOR SPECIFIC TRANSACTION NUMBER!!!!!!!!!!!!!!
-                cmd = new SqlCommand("SELECT * FROM" + TableNames.TRANSACTION + 
-                    "WHERE TransactionNumber = " + number.ToString(), connect);
+                cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION + 
+                    " WHERE TransactionNumber = " + number.ToString(), connect);
             }
 
             else
             {
-                cmd = new SqlCommand("SELECT * FROM" + TableNames.TRANSACTION + 
-                    "WHERE DATE BETWEEN " + startRange + " AND " + endRange +
-                    " ORDER BY TransactionNumber DESC", connect);
+                cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION +
+                    " WHERE DATE BETWEEN \'" + startRange.ToString("MM/dd/yyyy hh:mm") + "\' AND \'" + endRange.ToString("MM/dd/yyyy hh:mm") +
+                    "\' ORDER BY TransactionNumber DESC", connect);
             }
 
             try
@@ -1128,13 +1128,18 @@ namespace Inventory_3._0
                 while (reader.Read() == true)
                 {
                     // If new transaction number, create a new transaction
+
+                    if (transaction == null)
+                    {
+                        transaction = new Transaction((int)reader[0], reader[8].ToString(), (DateTime)reader[9]);
+                    }
                     if ((int)reader[0] != transaction.transactionNumber )
                     {
                         if (transaction != null)
                         {
                             transactions.Add(transaction); // Store previous
                         }
-                        transaction = new Transaction((int)reader[0], reader[8].ToString(), (DateTime)reader[9]);
+                        transaction = new Transaction((int)reader[0], reader[8].ToString(), (DateTime)reader[9]); // create new transaction
                     }
                     Item item = SQLReaderToTransaction(reader);
                     if (item != null)
@@ -1160,12 +1165,13 @@ namespace Inventory_3._0
             Item item = null;
 
             item = new Item();
-            item.name = reader[0].ToString(); // Name
-            item.system = reader[1].ToString();   // System
-            item.price = (decimal)reader[2];   // Price
-            item.tradeCash = (decimal)reader[3];   // Cash
-            item.tradeCredit = (decimal)reader[4];   // Credit
-            item.SQLid = (int)reader[5];   // SQL ID
+            item.name = reader[2].ToString(); // Name
+            item.system = reader[3].ToString();   // System
+            item.price = (decimal)reader[4];   // Price
+            item.quantity[0] = (int)reader[5]; // Quantity
+            item.tradeCash = (decimal)reader[6];   // Cash
+            item.tradeCredit = (decimal)reader[7];   // Credit
+            item.SQLid = (int)reader[1];   // SQL ID
 
             //0 cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
             //1 cmd.Parameters.Add("@ID", SqlDbType.Int).Value = item.SQLid;

@@ -32,22 +32,22 @@
                 <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="True"/>
             </MenuItem>
         </Menu>
-        <ListView Name="lvList" Margin="5" Grid.Column="0" Grid.Row="3" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
-            <ListView.Resources>
-                <GridView x:Key="all">                    
+        <ListView Name="lvList" Margin="5" Grid.Column="0" Grid.Row="3" Grid.RowSpan="7"  SelectionMode="Multiple"  ItemsSource="{Binding transactions}" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+            <ListView.View>
+                <GridView>                    
                     <GridViewColumn Header="#" DisplayMemberBinding="{Binding transactionNumber}"/>
                     <GridViewColumn Header="Date"  DisplayMemberBinding="{Binding Path=date}"/>
                     <GridViewColumn Header="Type"  DisplayMemberBinding="{Binding Path=transactionType}"/>
                     <GridViewColumn Header="Number of Items" DisplayMemberBinding="{Binding Path=quantity, StringFormat=C}"/>
                     <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=total, StringFormat=C}"/>
                 </GridView>
-                <GridView x:Key="single">
+                <!--<GridView x:Key="single">
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding transactionNumber}"/>
                     <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=date}"/>
                     <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=transactionType}"/>
                     <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=total, StringFormat=C}"/>
-                </GridView>
-            </ListView.Resources>
+                </GridView>-->
+            </ListView.View>
         </ListView>
         
         <!--Labels-->

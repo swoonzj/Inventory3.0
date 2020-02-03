@@ -144,6 +144,7 @@ namespace Inventory_3._0
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {              
             // Save item information
+            btnSave.Focus();
             MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {                
@@ -305,11 +306,23 @@ namespace Inventory_3._0
         private void txtUPC_GotFocus(object sender, RoutedEventArgs e)
         {
             btnAdd.IsDefault = true;
+            btnSave.IsDefault = false;
         }
 
         private void txtUPC_LostFocus(object sender, RoutedEventArgs e)
         {
             btnAdd.IsDefault = false;
+            btnSave.IsDefault = true;
+        }
+
+        private void txtSearch_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnSave.IsDefault = false;
+        }
+
+        private void txtSearch_LostFocus(object sender, RoutedEventArgs e)
+        {
+            btnSave.IsDefault = true;
         }        
     }
 }

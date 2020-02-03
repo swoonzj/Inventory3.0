@@ -70,7 +70,7 @@
         <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1"> <!--Search Bar-->
             <Button  Name="btnClear" Margin="5" Width="20" DockPanel.Dock="Left" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
             <Button Name="btnDelete" Margin="5" Width="150" DockPanel.Dock="Right" Click="btnDelete_Click">Delete Selected Items</Button>
-            <TextBox Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center" GotFocus="txtSearch_GotFocus" LostFocus="txtSearch_LostFocus"/>
         </DockPanel>
         <DockPanel Grid.Column="2" Grid.Row="1" > <!--Name-->
             <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
@@ -127,7 +127,7 @@
                 <Button Name="btnRemove" Margin="5" Click="btnRemove_Click">Remove</Button>
             </StackPanel>
         </DockPanel>
-        <Button Name="btnSave" Margin="5" Grid.Column="2" Grid.Row="8" Click="btnSave_Click">Save</Button>       
+        <Button Name="btnSave" Margin="5" Grid.Column="2" Grid.Row="8" Click="btnSave_Click" IsDefault="True">Save</Button>       
 
     </Grid>
 </local:SortableListViews>

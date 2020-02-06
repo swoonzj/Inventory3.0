@@ -1095,12 +1095,6 @@ namespace Inventory_3._0
             }
         }
 
-        // SELECT TRANSACTIONS BETWEEN DATES:
-  //      SELECT *
-  //FROM [StoreInventory].[dbo].[tblTransactions]
-  //where Date between '2020-01-30' and '2020-01-31'
-
-        // FINISH THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         public static List<Transaction> GetTransactions(DateTime startRange, DateTime endRange, int number = 0)
         {
             List<Transaction> transactions = new List<Transaction>();

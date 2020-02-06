@@ -22,18 +22,27 @@ namespace Inventory_3._0
     /// 
     public partial class ManageTransactions : SortableListViews
     {
+
         ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
         DateTime startDate = DateTime.Today, endDate = DateTime.Today.AddDays(1);
 
         public ManageTransactions()
         {
+            ObservableCollection<Item> list = new ObservableCollection<Item>();
+            list.Add(new Item("Test1", "System", 10m, 0, 0, 0, 0.ToString()));
+            list.Add(new Item("Test2", "System", 10m, 0, 0, 0, 0.ToString()));
+            Transaction testTransaction = new Transaction(55, "Sale", DateTime.Today);
+            testTransaction.items = list;
+
+            transactions.Add(testTransaction);
+
             InitializeComponent();
-            transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate));
+            lvList.ItemsSource = transactions;
         }
 
         private void Search()
         {
-            // Do a search
+            transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate));
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -45,13 +54,21 @@ namespace Inventory_3._0
         {
             if (e.Key == Key.Enter)
             {
-                Search();
+                int n;
+                if (int.TryParse(txtSearch.Text, out n))
+                {
+                    transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate, n));
+                }
+                else
+                {
+                    MessageBox.Show("\"" + txtSearch.Text + "\" is not a valid number. Try again.");
+                }
             }
         }
 
         private void lvList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+            MessageBox.Show("SELECTED");
         }        
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -85,7 +102,19 @@ namespace Inventory_3._0
         
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            DateTime? date = (sender as DatePicker).SelectedDate;
+            startDate = (DateTime)(sender as Calendar).SelectedDate;
+            endDate = (DateTime)(sender as Calendar).SelectedDate;
+            endDate = endDate.AddDays((sender as Calendar).SelectedDates.Count);
+
+            Search();
+            MessageBox.Show(startDate.ToString() + "\n" + endDate.ToString());
+            calPopup.IsOpen = false;
+
+        }
+
+        private void btnSelectDate_Click(object sender, RoutedEventArgs e)
+        {
+            calPopup.IsOpen = true;
         }
     }
 }

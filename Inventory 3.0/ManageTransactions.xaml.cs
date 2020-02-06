@@ -28,13 +28,12 @@ namespace Inventory_3._0
 
         public ManageTransactions()
         {
-            ObservableCollection<Item> list = new ObservableCollection<Item>();
-            list.Add(new Item("Test1", "System", 10m, 0, 0, 0, 0.ToString()));
-            list.Add(new Item("Test2", "System", 10m, 0, 0, 0, 0.ToString()));
-            Transaction testTransaction = new Transaction(55, "Sale", DateTime.Today);
-            testTransaction.items = list;
-
-            transactions.Add(testTransaction);
+            //ObservableCollection<Item> list = new ObservableCollection<Item>();
+            //list.Add(new Item("Test1", "System", 10m, 0, 0, 0, 0.ToString()));
+            //list.Add(new Item("Test2", "System", 10m, 0, 0, 0, 0.ToString()));
+            //Transaction testTransaction = new Transaction(55, "Sale", DateTime.Today);
+            //testTransaction.items = list;
+            //transactions.Add(testTransaction);
 
             InitializeComponent();
             lvList.ItemsSource = transactions;
@@ -43,6 +42,7 @@ namespace Inventory_3._0
         private void Search()
         {
             transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate));
+            lvList.ItemsSource = transactions;
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -68,7 +68,14 @@ namespace Inventory_3._0
 
         private void lvList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MessageBox.Show("SELECTED");
+            string contents = "";
+            ListView selection = sender as ListView;
+            if (selection.SelectedItem == null) return;
+            foreach (Item item in (selection.SelectedItem as Transaction).items)
+            {
+                contents += item.ToString() + "\n";
+            }
+            MessageBox.Show(contents);
         }        
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -102,14 +109,21 @@ namespace Inventory_3._0
         
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            startDate = (DateTime)(sender as Calendar).SelectedDate;
-            endDate = (DateTime)(sender as Calendar).SelectedDate;
-            endDate = endDate.AddDays((sender as Calendar).SelectedDates.Count);
+            Calendar cal = (sender as Calendar);
+            startDate = (DateTime)cal.SelectedDates[0];
+            endDate = (DateTime)cal.SelectedDates[cal.SelectedDates.Count - 1];
+
+            if (startDate > endDate)
+            {
+                DateTime temp = startDate;
+                startDate = endDate;
+                endDate = temp;
+            }
+            endDate = endDate.AddDays(1); // Add 1 day to end date, to include the selected end date in search
 
             Search();
-            MessageBox.Show(startDate.ToString() + "\n" + endDate.ToString());
+            // MessageBox.Show(startDate.ToString() + "\n" + endDate.ToString()); // For debugging date selection
             calPopup.IsOpen = false;
-
         }
 
         private void btnSelectDate_Click(object sender, RoutedEventArgs e)

@@ -250,6 +250,11 @@ namespace Inventory_3._0
             }
         }
 
+        public int quantity
+        {
+            get { return CalculateQuantity(); }
+        }
+
         public decimal total
         {
             get { return CalculateTotal(); }
@@ -300,6 +305,17 @@ namespace Inventory_3._0
                 default:
                     return -1;
             }
+        }
+
+        private int CalculateQuantity()
+        {
+            int quant = 0;
+            foreach (Item item in items)
+            {
+                quant += item.quantity[0];
+            }
+
+            return quant;
         }
     }
 }

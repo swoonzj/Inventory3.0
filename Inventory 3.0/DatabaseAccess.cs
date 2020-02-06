@@ -1111,7 +1111,7 @@ namespace Inventory_3._0
             else
             {
                 cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION +
-                    " WHERE DATE BETWEEN \'" + startRange.ToString("MM/dd/yyyy hh:mm") + "\' AND \'" + endRange.ToString("MM/dd/yyyy hh:mm") +
+                    " WHERE DATE BETWEEN \'" + startRange.ToString("MM/dd/yyyy hh:mm tt") + "\' AND \'" + endRange.ToString("MM/dd/yyyy hh:mm tt") +
                     "\' ORDER BY TransactionNumber DESC", connect);
             }
 
@@ -1141,10 +1141,11 @@ namespace Inventory_3._0
                         transaction.items.Add(item);
                     }
                 }
+                if (transaction != null) transactions.Add(transaction);
             }
             catch (Exception e)
             {
-                MessageBox.Show("ERROR IN GetTransactions():\n" + e.Message);
+                MessageBox.Show("ERROR IN GetTransactions():\n" + e.Message + e.StackTrace.ToString());
             }
             finally
             {
@@ -1162,9 +1163,12 @@ namespace Inventory_3._0
             item.name = reader[2].ToString(); // Name
             item.system = reader[3].ToString();   // System
             item.price = (decimal)reader[4];   // Price
-            item.quantity[0] = (int)reader[5]; // Quantity
-            item.tradeCash = (decimal)reader[6];   // Cash
-            item.tradeCredit = (decimal)reader[7];   // Credit
+            int quant;
+            if (int.TryParse(reader[5].ToString() ,out quant)) item.quantity[0] = quant; // Quantity
+            decimal cash;
+            if (decimal.TryParse(reader[6].ToString(), out cash)) item.tradeCash = cash; // Cash
+            decimal credit;
+            if (decimal.TryParse(reader[7].ToString() ,out credit)) item.tradeCredit = credit;   // Credit
             item.SQLid = (int)reader[1];   // SQL ID
 
             //0 cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;

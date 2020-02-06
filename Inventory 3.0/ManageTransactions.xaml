@@ -32,13 +32,13 @@
                 <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="True"/>
             </MenuItem>
         </Menu>
-        <ListView Name="lvList" Margin="5" Grid.Column="0" Grid.Row="3" Grid.RowSpan="7"  SelectionMode="Multiple" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+        <ListView Name="lvList" Margin="5" Grid.Column="0" Grid.Row="3" Grid.RowSpan="7"  SelectionMode="Single" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
             <ListView.View>
                 <GridView>                    
                     <GridViewColumn Header="#" DisplayMemberBinding="{Binding transactionNumber}"/>
                     <GridViewColumn Header="Date"  DisplayMemberBinding="{Binding date}"/>
                     <GridViewColumn Header="Type"  DisplayMemberBinding="{Binding transactionType}"/>
-                    <GridViewColumn Header="Number of Items" DisplayMemberBinding="{Binding quantity, StringFormat=C}"/>
+                    <GridViewColumn Header="Number of Items" DisplayMemberBinding="{Binding quantity}"/>
                     <GridViewColumn Header="Total" DisplayMemberBinding="{Binding total, StringFormat=C}"/>
                 </GridView>
                 <!--<GridView x:Key="single">

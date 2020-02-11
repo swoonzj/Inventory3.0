@@ -123,12 +123,14 @@ namespace Inventory_3._0
                         MultipleUPCHandler handler = new MultipleUPCHandler(items);
                         if (handler.ShowDialog() == true)
                         {
+                            handler.selectedItem.quantity[0] = 1;
                             cart.Insert(0, handler.selectedItem);
                             handler.Close();
                         }
                     }
                     else
                     {
+                        items[0].quantity[0] = 1;
                         cart.Insert(0, items[0]);
                     }
                     UpdateTotals();
@@ -235,7 +237,27 @@ namespace Inventory_3._0
             }
             UpdateTotals();
             txtEdit.Clear();
-        }               
+        }
+
+
+        private void btnChangeQuantity_Click(object sender, RoutedEventArgs e)
+        {
+            int newValue;
+            // verify textbox value
+            if (int.TryParse(txtEdit.Text, out newValue))
+            {
+                foreach (var item in lvCart.SelectedItems)
+                {
+                    ((Item)item).quantity[0] = newValue;
+                }
+            }
+            else
+            {
+                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            UpdateTotals();
+            txtEdit.Clear();
+        }
 
         private void btnSixForTen_Click(object sender, RoutedEventArgs e)
         {

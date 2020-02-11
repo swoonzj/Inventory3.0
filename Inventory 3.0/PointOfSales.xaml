@@ -54,7 +54,7 @@
                     <GridViewColumn Header="System" Width="Auto" DisplayMemberBinding="{Binding Path=system}"/>
                     <GridViewColumn Header="Quantity" Width="Auto" DisplayMemberBinding="{Binding Path=quantity[0]}"/>
                     <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
-                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
+                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=priceTotal, StringFormat=C}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -100,8 +100,9 @@
         <Expander Name="expanderEditCart" Margin="10,10,0,0" Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" IsExpanded="False" Header="Edit Cart">
             <StackPanel>
                 <TextBox Name="txtEdit" Margin="5" TextAlignment="Right" Text="{Binding Path=txt, StringFormat=C}"/>
-                <Button Name="btnChangePrice" Margin="0,0,0,5" Click="btnChangePrice_Click">Change Price</Button>
-                <Separator></Separator>
+                <Button Name="btnChangePrice" Margin="5" Click="btnChangePrice_Click">Change Price</Button>
+                <Button Name="btnChangeQuantity" Margin="5" Click="btnChangeQuantity_Click">Change Quantity</Button>
+                <Separator/>
                 <Button Name="btnSixForTen" Margin="5" Click="btnSixForTen_Click">6 for $10</Button>
                 <Button Name="btnTenForTwenty" Margin="5" Click="btnTenForTwenty_Click">15 for $20</Button>
             </StackPanel>

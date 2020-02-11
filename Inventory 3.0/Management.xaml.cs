@@ -323,6 +323,12 @@ namespace Inventory_3._0
         private void txtSearch_LostFocus(object sender, RoutedEventArgs e)
         {
             btnSave.IsDefault = true;
+        }
+
+        private void menuManageTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            ManageTransactions mt = new ManageTransactions();
+            mt.Show();
         }        
     }
 }

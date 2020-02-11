@@ -89,6 +89,21 @@ namespace Inventory_3._0
             }
         }
 
+        public decimal priceTotal
+        {
+            get { return quantity[0] * price; }
+        }
+
+        public decimal cashTotal
+        {
+            get { return quantity[0] * tradeCash; }
+        }
+
+        public decimal creditTotal
+        {
+            get { return quantity[0] * tradeCredit; }
+        }
+
         public Item()        
         {
             UPCs = new List<string>();

@@ -31,6 +31,7 @@
             <MenuItem Name="menuAddNewItem" Header="_Add New Item" Click="menuAddNewItem_Click"/>
             <MenuItem Name="menuImportFromCSV" Header="_Import from .CSV" Click="menuImportFromCSV_Click"/>
             <MenuItem Name="menuMoveInventory" Header="_Move Inventory" Click="menuMoveInventory_Click"/>
+            <MenuItem Name="menuManageTransactions" Header="Manage _Transactions" Click="menuManageTransactions_Click" />
             <MenuItem Header="_Settings">
                 <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="True"/>
                 <MenuItem Name="menuGetTotals" Header="Get _Totals" Click="menuGetTotalsClick"/>

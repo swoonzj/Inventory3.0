@@ -90,12 +90,14 @@ namespace Inventory_3._0
         private void UpdateTotals()
         {
             total = 0;
+            int quant = 0;
             foreach (Item item in lvCart.Items)
             {
-                total += item.price;
+                total += item.priceTotal;
+                quant += item.quantity[0];
             }
             txtTotal.Text = "Total:\t\t$" + total.ToString("0.00");
-            txtItemCount.Text = "Items: " + lvCart.Items.Count.ToString();
+            txtItemCount.Text = "Items: " + quant.ToString();
         }
 
         private void ColumnHeader_Click(object sender, RoutedEventArgs e)
@@ -249,6 +251,8 @@ namespace Inventory_3._0
                 foreach (var item in lvCart.SelectedItems)
                 {
                     ((Item)item).quantity[0] = newValue;
+                    ((Item)item).NotifyPropertyChanged("quantity");
+                    ((Item)item).NotifyPropertyChanged("priceTotal");
                 }
             }
             else
@@ -285,7 +289,7 @@ namespace Inventory_3._0
             UnlistedItemPrompt prompt = new UnlistedItemPrompt();
             if (prompt.ShowDialog() == true)
             {
-                cart.Add(prompt.item);
+                cart.Insert(0, prompt.item);
                 prompt.Close();
             }
         }

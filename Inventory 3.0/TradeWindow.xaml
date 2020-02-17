@@ -52,7 +52,7 @@
                     </GridViewColumn>
                     <GridViewColumn Header="Name" Width ="Auto" DisplayMemberBinding="{Binding Path=name}"/>
                     <GridViewColumn Header="System" Width="Auto" DisplayMemberBinding="{Binding Path=system}"/>
-                    <GridViewColumn Header="Quantity" Width="Auto" DisplayMemberBinding="{Binding Path=quantity}"/>
+                    <GridViewColumn Header="Quantity" Width="Auto" DisplayMemberBinding="{Binding Path=quantity[0]}"/>
                     <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
                     <GridViewColumn Header="Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
                     <GridViewColumn Header="Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>

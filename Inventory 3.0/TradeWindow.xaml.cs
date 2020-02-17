@@ -68,6 +68,7 @@ namespace Inventory_3._0
         {
             foreach (Item item in lvList.SelectedItems)
             {
+                item.quantity[0] = 1;
                 cart.Insert(0, item);
             }
         }
@@ -118,12 +119,14 @@ namespace Inventory_3._0
                         MultipleUPCHandler handler = new MultipleUPCHandler(items);
                         if (handler.ShowDialog() == true)
                         {
+                            handler.selectedItem.quantity[0] = 1;
                             cart.Insert(0, handler.selectedItem);
                             handler.Close();
                         }
                     }
                     else
                     {
+                        items[0].quantity[0] = 1;
                         cart.Insert(0, items[0]);
                     }
                     UpdateTotals();
@@ -197,7 +200,7 @@ namespace Inventory_3._0
             UnlistedItemPrompt prompt = new UnlistedItemPrompt(true);
             if (prompt.ShowDialog() == true)
             {
-                cart.Add(prompt.item);
+                cart.Insert(0, prompt.item);
                 prompt.Close();
             }
         }

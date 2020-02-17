@@ -45,6 +45,7 @@ namespace Inventory_3._0
             {
                 Price = value;
                 NotifyPropertyChanged("price");
+                NotifyPropertyChanged("priceTotal");
             }
         }
         private List<int> Quantity;
@@ -55,6 +56,9 @@ namespace Inventory_3._0
             {
                 Quantity = value;
                 NotifyPropertyChanged("quantity");
+                NotifyPropertyChanged("priceTotal");
+                NotifyPropertyChanged("cashTotal");
+                NotifyPropertyChanged("tradeTotal");
             }
         }
 
@@ -66,6 +70,7 @@ namespace Inventory_3._0
             {
                 TradeCash = value;
                 NotifyPropertyChanged("tradeCash");
+                NotifyPropertyChanged("cashTotal");
             }
         }
         private decimal TradeCredit;
@@ -76,6 +81,7 @@ namespace Inventory_3._0
             {
                 TradeCredit = value;
                 NotifyPropertyChanged("tradeCredit");
+                NotifyPropertyChanged("tradeTotal");
             }
         }
         private List<string> upcs;

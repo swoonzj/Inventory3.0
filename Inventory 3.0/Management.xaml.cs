@@ -271,15 +271,9 @@ namespace Inventory_3._0
 
         private void btnAutoTradeValue_Click(object sender, RoutedEventArgs e)
         {
-            if (managedItem.price < 5 && managedItem.price > 3)
+            foreach (Item item in managedItems)
             {
-                managedItem.tradeCash = .5m;
-                managedItem.tradeCredit = 1m;
-            }
-            if (managedItem.price > 5)
-            {
-                managedItem.tradeCash = Math.Round(managedItem.price/4);
-                managedItem.tradeCredit = Math.Round(managedItem.price / 3);
+                item.AutoTradeValues();
             }
         }
 

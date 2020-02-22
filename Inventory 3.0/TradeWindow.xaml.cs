@@ -373,6 +373,25 @@ namespace Inventory_3._0
 
 
         #endregion
+
+        private void btnAutoTrade_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Item item in lvCart.SelectedItems)
+            {
+                item.AutoTradeValues();
+            }
+            UpdateTotals();
+        }
+
+        private void txtEdit_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnChangeCash.IsDefault = true;
+        }
+
+        private void txtEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            btnChangeCash.IsDefault = false;
+        }
         
     }
 }

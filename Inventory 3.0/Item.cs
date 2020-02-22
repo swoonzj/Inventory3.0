@@ -216,6 +216,21 @@ namespace Inventory_3._0
         {
             return String.Format("Name: {0}\nSystem:{1}\nPrice:{2}\nInventory:\n\tSales Floor:{3}\n\tOut Back:{4}\n\tStorage:{5}\nTrade, Cash:{6}\nTrade, Store Credit:{7}\nUPCS:{8}", name, system, price, quantity[0], quantity[1], quantity[2], tradeCash, tradeCredit, String.Join(", ", UPCs));
         }
+
+        public void AutoTradeValues()
+        {
+
+            if (this.price < 5 && this.price > 3)
+            {
+                this.tradeCash = .5m;
+                this.tradeCredit = 1m;
+            }
+            if (this.price > 5)
+            {
+                this.tradeCash = Math.Truncate(this.price / 4);
+                this.tradeCredit = Decimal.Round(this.price / 3);
+            }
+        }
     }
     
     public class Transaction : INotifyPropertyChanged
@@ -338,5 +353,7 @@ namespace Inventory_3._0
 
             return quant;
         }
+
+        
     }
 }

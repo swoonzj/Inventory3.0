@@ -16,11 +16,6 @@ using System.Windows.Media.Imaging;
 namespace Inventory_3._0
 {
     /// <summary>
-    /// Contains search terms
-    /// </summary>
-    /// 
-
-    /// <summary>
     /// Inherited from Window, but allows the sorting of ListViews (to eliminate boilerplate code)
     /// Taken and slightly modified from https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/how-to-sort-a-gridview-column-when-a-header-is-clicked
     /// </summary>

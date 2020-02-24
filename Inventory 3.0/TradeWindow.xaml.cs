@@ -165,6 +165,7 @@ namespace Inventory_3._0
         private void lvList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = ((FrameworkElement)e.OriginalSource).DataContext as Item;
+            item.quantity[0] = 1;
             if (item != null)
             {
                 cart.Insert(0, item);

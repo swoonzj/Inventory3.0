@@ -11,8 +11,8 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*" />
             <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height=".5*" />
@@ -49,7 +49,18 @@
                 </GridView>-->
             </ListView.View>
         </ListView>
-        
+        <ListView Name="lvDetails" Margin="5" Grid.Column="1" Grid.Row="1" Grid.RowSpan="7"  SelectionMode="Single" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+            <ListView.View>
+                <GridView >
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=name}"/>
+                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
+                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
+                    <GridViewColumn Header="Trade: Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
+                    <GridViewColumn Header="Trade: Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
         <!--Labels-->
 
 

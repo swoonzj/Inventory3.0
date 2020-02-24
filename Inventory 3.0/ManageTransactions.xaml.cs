@@ -29,8 +29,8 @@ namespace Inventory_3._0
         public ManageTransactions()
         {
             //ObservableCollection<Item> list = new ObservableCollection<Item>();
-            //list.Add(new Item("Test1", "System", 10m, 0, 0, 0, 0.ToString()));
-            //list.Add(new Item("Test2", "System", 10m, 0, 0, 0, 0.ToString()));
+            //list.Add(new Item("Test1", "System", 10m, 1, 2, 3, 0.ToString()));
+            //list.Add(new Item("Test2", "System", 100m, 1, 20, 30, 0.ToString()));
             //Transaction testTransaction = new Transaction(55, "Sale", DateTime.Today);
             //testTransaction.items = list;
             //transactions.Add(testTransaction);
@@ -68,14 +68,17 @@ namespace Inventory_3._0
 
         private void lvList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string contents = "";
+            //string contents = "";
+            //ListView selection = sender as ListView;
+            //if (selection.SelectedItem == null) return;
+            //foreach (Item item in (selection.SelectedItem as Transaction).items)
+            //{
+            //    contents += item.ToString() + "\n";
+            //}
+            //MessageBox.Show(contents);
+
             ListView selection = sender as ListView;
-            if (selection.SelectedItem == null) return;
-            foreach (Item item in (selection.SelectedItem as Transaction).items)
-            {
-                contents += item.ToString() + "\n";
-            }
-            MessageBox.Show(contents);
+            lvDetail.ItemsSource = (selection.SelectedItem as Transaction).items;
         }        
 
         private void btnSave_Click(object sender, RoutedEventArgs e)

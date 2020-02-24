@@ -316,7 +316,6 @@ namespace Inventory_3._0
                             sum += item.price;
                         }
                         return sum;
-                        break;
                     }
                 case TransactionTypes.TRADE_CASH:
                     {
@@ -326,7 +325,6 @@ namespace Inventory_3._0
                             sum += item.tradeCash;
                         }
                         return sum;
-                        break;
                     }
                 case TransactionTypes.TRADE_CREDIT:
                     {
@@ -336,7 +334,6 @@ namespace Inventory_3._0
                             sum += item.tradeCredit;
                         }
                         return sum;
-                        break;
                     }
                 default:
                     return -1;

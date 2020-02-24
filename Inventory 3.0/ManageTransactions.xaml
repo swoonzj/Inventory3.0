@@ -38,7 +38,7 @@
                     <GridViewColumn Header="#" DisplayMemberBinding="{Binding transactionNumber}"/>
                     <GridViewColumn Header="Date"  DisplayMemberBinding="{Binding date}"/>
                     <GridViewColumn Header="Type"  DisplayMemberBinding="{Binding transactionType}"/>
-                    <GridViewColumn Header="Number of Items" DisplayMemberBinding="{Binding quantity}"/>
+                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding quantity}"/>
                     <GridViewColumn Header="Total" DisplayMemberBinding="{Binding total, StringFormat=C}"/>
                 </GridView>
                 <!--<GridView x:Key="single">

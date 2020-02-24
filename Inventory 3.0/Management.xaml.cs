@@ -271,10 +271,9 @@ namespace Inventory_3._0
 
         private void btnAutoTradeValue_Click(object sender, RoutedEventArgs e)
         {
-            foreach (Item item in managedItems)
-            {
-                item.AutoTradeValues();
-            }
+            
+            managedItem.AutoTradeValues();
+            
         }
 
         private void menuMoveInventory_Click(object sender, RoutedEventArgs e)

@@ -1261,34 +1261,58 @@ namespace Inventory_3._0
         //    }
         //}
 
-        public static decimal GetDailyTotal(string startDate, string endDate, string transactionType)
+        public static void GetDailyTotal(string startDate, string endDate, out decimal cash, out decimal credit, out decimal sales)
         {
             // SELECT SUM(Price)
             //FROM tblTransactions
             //WHERE (Date between '2019-10-14 00:00:00.000' AND '2019-10-15 00:00:00.000') AND Type = 'Trade-Cash'
 
-            decimal total;
-            string command = String.Format("SELECT SUM({0}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.PRICE, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, transactionType, TableNames.TRANSACTION);
+            sales = cash = credit = 0m;
+
+            string salesCommand = String.Format("SELECT SUM({0}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.PRICE, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.SALE, TableNames.TRANSACTION);
+            string cashCommand = String.Format("SELECT SUM({0}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CASH, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CASH, TableNames.TRANSACTION);
+            string creditCommand = String.Format("SELECT SUM({0}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CREDIT, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CREDIT, TableNames.TRANSACTION);
 
             try
             {
-                SqlCommand cmd = new SqlCommand(command, connect);
+                // Sales
+                SqlCommand cmd = new SqlCommand(salesCommand, connect);
                 connect.Open();
                 var result = cmd.ExecuteScalar();
                 if (result != DBNull.Value)
                 {
-                    total = Convert.ToDecimal(result);
+                    sales = Convert.ToDecimal(result);
                 }
-                else total = 0M;
+                else sales = 0M;
                 connect.Close();
-                return total;
+
+                // Trade-Cash
+                cmd = new SqlCommand(cashCommand, connect);
+                connect.Open();
+                result = cmd.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    cash = Convert.ToDecimal(result);
+                }
+                else cash = 0M;
+                connect.Close();
+
+                // Trade-Credit
+                cmd = new SqlCommand(creditCommand, connect);
+                connect.Open();
+                result = cmd.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    credit = Convert.ToDecimal(result);
+                }
+                else credit = 0M;
+                connect.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 connect.Close();
             }
-            return -1M; // Something went wrong. (Although, -1 could be a legitimate return value if there are an abundance of negative quantity of items in inventory.)
         }
 
         #endregion

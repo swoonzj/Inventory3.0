@@ -305,9 +305,15 @@ namespace Inventory_3._0
             
             foreach (Item item in cart)
             {
+                string price;
                 string name = Truncate(item.name, ReceiptVariables.name) + "\t-\t";
                 string system = Truncate(item.system, ReceiptVariables.system).PadRight(ReceiptVariables.system);
-                string price = item.price.ToString("C").PadLeft(ReceiptVariables.price);
+                if (item.quantity[0] > 1)
+                {
+                    price = item.quantity[0].ToString() + " @ " + item.price.ToString("C") + " =    " + item.priceTotal.ToString("C");
+                }
+                else price = item.price.ToString("C");
+                price.PadLeft(ReceiptVariables.price);
                 //receipt.AppendLine(ReceiptVariables.BorderLeft+name+system+price+ReceiptVariables.BorderRight);
 
                 Paragraph p = new Paragraph(new Run(name + system));

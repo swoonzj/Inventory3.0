@@ -1269,9 +1269,9 @@ namespace Inventory_3._0
 
             sales = cash = credit = 0m;
 
-            string salesCommand = String.Format("SELECT SUM({0}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.PRICE, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.SALE, TableNames.TRANSACTION);
-            string cashCommand = String.Format("SELECT SUM({0}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CASH, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CASH, TableNames.TRANSACTION);
-            string creditCommand = String.Format("SELECT SUM({0}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CREDIT, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CREDIT, TableNames.TRANSACTION);
+            string salesCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.PRICE, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.SALE, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
+            string cashCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CASH, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CASH, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
+            string creditCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CREDIT, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CREDIT, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
 
             try
             {

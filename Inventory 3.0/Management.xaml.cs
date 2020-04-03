@@ -271,10 +271,9 @@ namespace Inventory_3._0
 
         private void btnAutoTradeValue_Click(object sender, RoutedEventArgs e)
         {
-            foreach (Item item in managedItems)
-            {
-                item.AutoTradeValues();
-            }
+            
+            managedItem.AutoTradeValues();
+            
         }
 
         private void menuMoveInventory_Click(object sender, RoutedEventArgs e)
@@ -290,9 +289,8 @@ namespace Inventory_3._0
             
             DatePicker picker = new DatePicker();
 
-            decimal tradeCash = DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), TransactionTypes.TRADE_CASH);
-            decimal tradeCredit = DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), TransactionTypes.TRADE_CREDIT);
-            decimal sales = DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), TransactionTypes.SALE);
+            decimal sales, tradeCash, tradeCredit;
+            DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), out tradeCash, out tradeCredit, out sales);
 
             MessageBox.Show(String.Format("Cash: ${0}\nCredit: ${1}\nSales: ${2}", tradeCash.ToString("0.00"), tradeCredit.ToString("0.00"), sales.ToString("0.00")));
         }

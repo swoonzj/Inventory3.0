@@ -68,16 +68,13 @@ namespace Inventory_3._0
 
         private void lvList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //string contents = "";
-            //ListView selection = sender as ListView;
-            //if (selection.SelectedItem == null) return;
+            ListView selection = sender as ListView;
+            if (selection.SelectedItem == null) return;
             //foreach (Item item in (selection.SelectedItem as Transaction).items)
             //{
             //    contents += item.ToString() + "\n";
             //}
             //MessageBox.Show(contents);
-
-            ListView selection = sender as ListView;
             lvDetail.ItemsSource = (selection.SelectedItem as Transaction).items;
         }        
 

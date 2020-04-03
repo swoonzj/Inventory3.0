@@ -122,7 +122,7 @@ namespace Inventory_3._0
         // Character width of receipt & components
         public const int receiptWidth = 38, 
             name = 30,
-            system = 10,
+            system = 20,
             price = 10,
             payment = 30;
 

@@ -27,8 +27,11 @@ namespace Inventory_3._0
             //    handler.Close();
             //}
 
-            TradeWindow trade = new TradeWindow();
-            trade.Show();
+            //MoveInventory move = new MoveInventory();
+            //move.Show();
+
+            //TradeWindow trade = new TradeWindow();
+            //trade.Show();
 
             //ManageTransactions manage = new ManageTransactions();
             //manage.Show();
@@ -36,8 +39,8 @@ namespace Inventory_3._0
             //Management manage = new Management();
             //manage.Show();
 
-            //PointOfSales sales = new PointOfSales();
-            //sales.Show();
+            PointOfSales sales = new PointOfSales();
+            sales.Show();
 
             //Checkout checkout = new Checkout(100m);
             //checkout.ShowDialog();

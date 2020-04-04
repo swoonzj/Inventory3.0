@@ -196,6 +196,11 @@ namespace Inventory_3._0
             txtUPCInput.Focus();
         }
 
+        private void lvMove_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            txtUPCInput.Focus();
+        }
+
         private void DetectUPCEnterKey(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)

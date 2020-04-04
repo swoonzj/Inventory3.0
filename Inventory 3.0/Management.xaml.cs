@@ -151,7 +151,7 @@ namespace Inventory_3._0
                 foreach (Item item in lvList.SelectedItems)
                 {
                     Item newItem = item.Clone();
-                    if (newItem.quantity.Count != 3) newItem.quantity = new List<int> { 0, 0, 0 };
+                    if (newItem.quantity.Count != 3) newItem.quantity = new ObservableCollection<int> { 0, 0, 0 };
 
                     if (txtName.IsEnabled == true && !String.IsNullOrWhiteSpace(txtName.Text))
                         newItem.name = managedItem.name;

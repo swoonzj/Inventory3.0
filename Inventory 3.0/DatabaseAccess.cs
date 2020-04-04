@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -155,8 +156,8 @@ namespace Inventory_3._0
             foreach (Item newitem in collection)
             {
                 newitem.UPCs = DBAccess.GetUPCsWithID(newitem.SQLid);
-                newitem.quantity = DBAccess.GetQuantities(newitem.SQLid);
-                if (newitem.quantity.Count != 3) newitem.quantity = new List<int> { 0, 0, 0 }; // Should only be necessary for items with no quantities.
+                newitem.quantity = new ObservableCollection<int>(DBAccess.GetQuantities(newitem.SQLid));
+                if (newitem.quantity.Count != 3) newitem.quantity = new ObservableCollection<int> { 0, 0, 0 }; // Should only be necessary for items with no quantities.
             }
 
             return collection;
@@ -167,7 +168,7 @@ namespace Inventory_3._0
             return AddNewItem(item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);
         }
 
-        public static bool AddNewItem(string name, string system, decimal price, List<int> inventory, decimal cash, decimal credit, List<string> upcs)
+        public static bool AddNewItem(string name, string system, decimal price, ObservableCollection<int> inventory, decimal cash, decimal credit, List<string> upcs)
         {
             bool success = false;
             //name = CheckForSpecialCharacters(name);
@@ -407,10 +408,9 @@ namespace Inventory_3._0
             }
         }
 
-        public static List<int> GetQuantities(int ID)
+        public static ObservableCollection<int> GetQuantities(int ID)
         {
-            
-            List<int> quantities = new List<int>();
+            ObservableCollection<int> quantities = new ObservableCollection<int>();
             SqlCommand cmd = new SqlCommand("SELECT * FROM " + TableNames.INVENTORY + " WHERE id = " + ID, connect);
 
             try
@@ -433,8 +433,7 @@ namespace Inventory_3._0
             {
                 connect.Close();
             }
-
-
+        
             return quantities;
         }
 

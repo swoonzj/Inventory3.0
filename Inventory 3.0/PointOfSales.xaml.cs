@@ -65,12 +65,25 @@ namespace Inventory_3._0
             }
         }
 
+        private void addItemToCart(Item item) 
+        {
+            int index = cart.IndexOf(item);
+            if (index >= 0)
+            {
+                cart[index].quantity[0]++;
+            }
+            else
+            {
+                item.quantity[0] = 1;
+                cart.Insert(0, item);
+            }
+        }
+
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             foreach (Item item in lvList.SelectedItems)
             {
-                item.quantity[0] = 1;
-                cart.Insert(0, item);
+                addItemToCart(item);
             }
         }
 
@@ -125,15 +138,13 @@ namespace Inventory_3._0
                         MultipleUPCHandler handler = new MultipleUPCHandler(items);
                         if (handler.ShowDialog() == true)
                         {
-                            handler.selectedItem.quantity[0] = 1;
-                            cart.Insert(0, handler.selectedItem);
+                            addItemToCart(handler.selectedItem);
                             handler.Close();
                         }
                     }
                     else
                     {
-                        items[0].quantity[0] = 1;
-                        cart.Insert(0, items[0]);
+                        addItemToCart(items[0]);
                     }
                     UpdateTotals();
                 }

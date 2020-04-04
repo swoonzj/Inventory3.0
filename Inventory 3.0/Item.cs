@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Inventory_3._0
 {
-    public class Item : INotifyPropertyChanged
+    public class Item : INotifyPropertyChanged, IEquatable<Item>
     {
         private int sqlid;
         public int SQLid
@@ -48,8 +48,9 @@ namespace Inventory_3._0
                 NotifyPropertyChanged("priceTotal");
             }
         }
-        private List<int> Quantity;
-        public List<int> quantity
+
+        private ObservableCollection<int> Quantity;
+        public ObservableCollection<int> quantity
         {
             get { return Quantity; }
             set
@@ -117,7 +118,7 @@ namespace Inventory_3._0
             this.name = "";
             this.system = "";
             this.price = 0;
-            this.quantity = new List<int>{0,0,0};
+            this.quantity = new ObservableCollection<int> { 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
 
@@ -130,7 +131,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = 0;
-            this.quantity = new List<int> { 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
 
@@ -143,7 +144,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new List<int> { quantity, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0 };
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs.Add(upc);
@@ -156,7 +157,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new List<int> { quantity, 0, 0 }; 
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0 }; 
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs = upcs;
@@ -168,7 +169,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = quantity; 
+            this.quantity = new ObservableCollection<int>(quantity); 
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
             this.upcs = upcs;
@@ -180,7 +181,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = new List<int> { quantity, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0 };
             this.quantity.Add(quantity);
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
@@ -190,6 +191,18 @@ namespace Inventory_3._0
 
         public Item(string name, string system, decimal price, List<int> quantity, decimal cash, decimal credit, List<string> upcs, int SQLid = 0)
         {            
+            this.SQLid = SQLid;
+            this.name = name;
+            this.system = system;
+            this.price = price;
+            this.quantity = new ObservableCollection<int>(quantity);
+            this.tradeCash = cash;
+            this.tradeCredit = credit;
+            this.upcs = upcs;
+        }
+
+        public Item(string name, string system, decimal price, ObservableCollection<int> quantity, decimal cash, decimal credit, List<string> upcs, int SQLid = 0)
+        {
             this.SQLid = SQLid;
             this.name = name;
             this.system = system;
@@ -230,6 +243,22 @@ namespace Inventory_3._0
                 this.tradeCash = Math.Truncate(this.price / 4);
                 this.tradeCredit = Decimal.Round(this.price / 3);
             }
+        }
+
+        public void incrementQuantity()
+        {
+            this.quantity[0]++;
+        }
+
+        bool IEquatable<Item>.Equals(Item other)
+        {
+            if (this.name != other.name) return false;
+            if (this.system != other.system) return false;
+            if (this.price != other.price) return false;
+            if (this.tradeCash != other.tradeCash) return false;
+            if (this.tradeCredit != other.tradeCredit) return false;
+
+            return true;
         }
     }
     

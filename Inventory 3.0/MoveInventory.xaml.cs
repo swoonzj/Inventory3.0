@@ -73,16 +73,16 @@ namespace Inventory_3._0
 
         private void AddItem(Item item)
         {
-            if (movingItems.Contains(item))
+            int index = movingItems.IndexOf(item);
+            if (index >= 0)
             {
-                movingItems[movingItems.IndexOf(item)].quantity[0] += 1;
+                movingItems[index].quantity[0]++;
             }
             else
             {
                 item.quantity[0] = 1;
-                movingItems.Add(item);
+                movingItems.Insert(0, item);
             }
-            item.NotifyPropertyChanged("quantity");
         }
 
         private string CreateVerificationString()

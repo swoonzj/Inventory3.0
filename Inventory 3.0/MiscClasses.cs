@@ -218,12 +218,12 @@ namespace Inventory_3._0
             return strarray;
         }
 
-        public static void LoadCSV(string filepath) // Add items from a Comma Separated Value file to the inventory
+        public async static void LoadCSV(string filepath) // Add items from a Comma Separated Value file to the inventory
         {
             foreach (string s in File.ReadLines(filepath))
             {
                 // Add item to collection
-                DBAccess.AddNewItem(CreateItemFromCSVLine(s));
+                await DBAccess.AddNewItem(CreateItemFromCSVLine(s));
             }
         }
 

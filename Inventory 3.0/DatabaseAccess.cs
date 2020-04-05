@@ -54,16 +54,8 @@ namespace Inventory_3._0
         //id
 
 
-
-
         static SqlConnection connectOldDatabase = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
         static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2);
-
-
-
-        #region Updated Methods (for new SQL table structure)
-
-
 
         // Check a string for characters that would throw off SQL formatting
         private static string CheckForSpecialCharacters(string input)
@@ -87,7 +79,7 @@ namespace Inventory_3._0
         /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
         /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
         /// <returns>A List of Items</returns>
-        public static List<Item> SQLTableToList(string sortBy = "System", bool ascending = true, string searchtext = "", bool limitResults=true)
+        public static async Task<List<Item>> SQLTableToList(string sortBy = "System", bool ascending = true, string searchtext = "", bool limitResults=true)
         {
             List<Item> collection = new List<Item>();
             Item item;
@@ -133,16 +125,19 @@ namespace Inventory_3._0
 
             try
             {
-                connect.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read() == true)
-                {
-                    item = SQLReaderToItem(reader);
-                    if (item != null)
+                await Task.Run(() =>
                     {
-                        collection.Add(item);                        
-                    }
-                }
+                        connect.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read() == true)
+                        {
+                            item = SQLReaderToItem(reader);
+                            if (item != null)
+                            {
+                                collection.Add(item);
+                            }
+                        }
+                    });
             }
             catch (Exception e)
             {
@@ -155,20 +150,20 @@ namespace Inventory_3._0
 
             foreach (Item newitem in collection)
             {
-                newitem.UPCs = DBAccess.GetUPCsWithID(newitem.SQLid);
-                newitem.quantity = new ObservableCollection<int>(DBAccess.GetQuantities(newitem.SQLid));
+                newitem.UPCs = await DBAccess.GetUPCsWithID(newitem.SQLid);
+                newitem.quantity = new ObservableCollection<int>(await DBAccess.GetQuantities(newitem.SQLid));
                 if (newitem.quantity.Count != 3) newitem.quantity = new ObservableCollection<int> { 0, 0, 0 }; // Should only be necessary for items with no quantities.
             }
 
             return collection;
         }
 
-        public static bool AddNewItem(Item item)
+        public async static Task<bool> AddNewItem(Item item)
         {
-            return AddNewItem(item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);
+            return await AddNewItem(item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);
         }
 
-        public static bool AddNewItem(string name, string system, decimal price, ObservableCollection<int> inventory, decimal cash, decimal credit, List<string> upcs)
+        public async static Task<bool> AddNewItem(string name, string system, decimal price, ObservableCollection<int> inventory, decimal cash, decimal credit, List<string> upcs)
         {
             bool success = false;
             //name = CheckForSpecialCharacters(name);
@@ -190,30 +185,32 @@ namespace Inventory_3._0
             cmdInventory.Parameters.Add("@QUANTITY3", SqlDbType.Int).Value = inventory[2];
             
             // execute command  & close connection
-            try
+            await Task.Run(() =>
             {
-                connect.Open();
-                int ID = (int)cmdItem.ExecuteScalar(); // Get the unique, auto-incremented ID for the item.
+                try
+                {
+                    connect.Open();
+                    int ID = (int)cmdItem.ExecuteScalar(); // Get the unique, auto-incremented ID for the item.
 
-                cmdPrice.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
-                cmdPrice.ExecuteNonQuery();
+                    cmdPrice.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
+                    cmdPrice.ExecuteNonQuery();
 
-                cmdInventory.Parameters.Add("@ID", SqlDbType.Int).Value =  ID;
-                cmdInventory.ExecuteNonQuery();
-                connect.Close();
-                AddUPCs(upcs, ID);
-                success = true;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN AddNewItemToTable:\n" + e.Message);
-                success = false;
-            }
-            finally
-            {
-                connect.Close();
-            }
-
+                    cmdInventory.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
+                    cmdInventory.ExecuteNonQuery();
+                    connect.Close();
+                    AddUPCs(upcs, ID);
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("ERROR IN AddNewItemToTable:\n" + e.Message);
+                    success = false;
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
             return success;
         }
 
@@ -241,32 +238,35 @@ namespace Inventory_3._0
         /// </summary>
         /// <param name="item">Item to check for duplicates</param>
         /// <returns>List of duplicate items. If empty, there are no duplicates</returns>
-        public List<Item> GetItemDuplicates(Item item)
+        public async Task<List<Item>> GetItemDuplicates(Item item)
         {
             List<Item> items = new List<Item>();
 
             string sqlcommand = String.Format("SELECT Name, System FROM {0} WHERE Name like \'{1}\' AND System like\'{2}\'", TableNames.ITEMS, item.name, item.system); // Might need to select more !!!!!!
             SqlCommand cmd = new SqlCommand(sqlcommand);
 
-            try
+            await Task.Run(() =>
             {
-                connect.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read() == true)
+                try
                 {
-                    item = SQLReaderToItem(reader);
-                    if (item != null)
-                        items.Add(item);
+                    connect.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read() == true)
+                    {
+                        item = SQLReaderToItem(reader);
+                        if (item != null)
+                            items.Add(item);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in GetItemDuplicates:\n" + ex.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in GetItemDuplicates:\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
             
             return items;
         }
@@ -276,12 +276,12 @@ namespace Inventory_3._0
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static List<string> GetDuplicateUPCs(Item item)
+        public async static Task<List<string>> GetDuplicateUPCs(Item item)
         {
-            return GetDuplicateUPCs(item.UPCs, item.SQLid);
+            return await GetDuplicateUPCs(item.UPCs, item.SQLid);
         }
 
-        public static List<string> GetDuplicateUPCs(List<string> upcs, int SQLid)
+        public async static Task<List<string>> GetDuplicateUPCs(List<string> upcs, int SQLid)
         {
             List<string> duplicateUPCs = new List<string>();
 
@@ -290,56 +290,62 @@ namespace Inventory_3._0
                 string sqlcommand = String.Format("SELECT UPC FROM {0} WHERE id={1} AND UPC='{2}'", TableNames.UPC, SQLid, upcs[i]);
                 SqlCommand cmd = new SqlCommand(sqlcommand, connect);
 
-                try
+                await Task.Run(() =>
                 {
-                    connect.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read() == true)
+                    try
                     {
-                        duplicateUPCs.Add(reader[0].ToString());
+                        connect.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read() == true)
+                        {
+                            duplicateUPCs.Add(reader[0].ToString());
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error in GetDuplicateUPCs:\n" + ex.Message);
-                }
-                finally
-                {
-                    connect.Close();
-                }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error in GetDuplicateUPCs:\n" + ex.Message);
+                    }
+                    finally
+                    {
+                        connect.Close();
+                    }
+                });
             }
             return duplicateUPCs;
         }
 
-        public static void SaveItemChanges(Item item)
+        public async static Task SaveItemChanges(Item item)
         {
             string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
             string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6} WHERE id = {7}", TableNames.INVENTORY, ColumnNames.STORE, item.quantity[0], ColumnNames.OUTBACK, item.quantity[1], ColumnNames.STORAGE, item.quantity[2], item.SQLid);
             string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
 
             SqlCommand cmd = new SqlCommand(itemUpdate, connect);
-            
-            try
+
+            await Task.Run(() =>
             {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-                connect.Close();
-                cmd = new SqlCommand(inventoryUpdate, connect);
-                connect.Open();
-                cmd.ExecuteNonQuery();
-                connect.Close();
-                cmd = new SqlCommand(priceUpdate, connect);
-                connect.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in SaveItemChanges:\n" + ex.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
+                try
+                {
+                    connect.Open();
+                    cmd.ExecuteNonQuery();
+                    connect.Close();
+                    cmd = new SqlCommand(inventoryUpdate, connect);
+                    connect.Open();
+                    cmd.ExecuteNonQuery();
+                    connect.Close();
+                    cmd = new SqlCommand(priceUpdate, connect);
+                    connect.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in SaveItemChanges:\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
         }
 
         /// <summary>
@@ -347,9 +353,9 @@ namespace Inventory_3._0
         /// </summary>
         /// <param name="upcs"></param>
         /// <param name="SQLid"></param>
-        public static void AddUPCs(List<string> upcs, int SQLid)
+        public async static Task AddUPCs(List<string> upcs, int SQLid)
         {
-            List<string> duplicates = GetDuplicateUPCs(upcs, SQLid);
+            List<string> duplicates = await GetDuplicateUPCs(upcs, SQLid);
             foreach (string dup in duplicates)
             {
                 upcs.Remove(dup);
@@ -360,23 +366,25 @@ namespace Inventory_3._0
 
             SqlCommand cmdUPC = new SqlCommand("INSERT INTO " + TableNames.UPC + " (ID, UPC) VALUES @VALUE", connect);
             cmdUPC.CommandText = cmdUPC.CommandText.Replace("@VALUE", CreateUPCInsertString(upcs, SQLid));
-
-            try
+            await Task.Run(() =>
             {
-                connect.Open();
-                cmdUPC.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in AddUPCs():\n" + ex.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
+                try
+                {
+                    connect.Open();
+                    cmdUPC.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in AddUPCs():\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
         }
 
-        public static void RemoveUPCs(List<string> upcs, int SQLid)
+        public async static void RemoveUPCs(List<string> upcs, int SQLid)
         {
             string upcValues = "(";
             if (upcs.Count == 0) // Return if no changes made to upcs
@@ -392,47 +400,53 @@ namespace Inventory_3._0
             upcValues = upcValues.Remove(upcValues.Length-1); // remove last ","
             upcValues += ")" ;
             cmdUPC.CommandText = cmdUPC.CommandText.Replace("@VALUE", upcValues);
-            
-            try
+
+            await Task.Run(() =>
             {
-                connect.Open();
-                cmdUPC.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in RemoveUPCs():\n" + ex.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
+                try
+                {
+                    connect.Open();
+                    cmdUPC.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in RemoveUPCs():\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
         }
 
-        public static ObservableCollection<int> GetQuantities(int ID)
+        public async static Task<ObservableCollection<int>> GetQuantities(int ID)
         {
             ObservableCollection<int> quantities = new ObservableCollection<int>();
             SqlCommand cmd = new SqlCommand("SELECT * FROM " + TableNames.INVENTORY + " WHERE id = " + ID, connect);
 
-            try
+            await Task.Run(() =>
             {
-                connect.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                try
                 {
-                    quantities.Add((int)reader[QuantityColumns.Store]);
-                    quantities.Add((int)reader[QuantityColumns.OutBack]);
-                    quantities.Add((int)reader[QuantityColumns.Storage]);
+                    connect.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        quantities.Add((int)reader[QuantityColumns.Store]);
+                        quantities.Add((int)reader[QuantityColumns.OutBack]);
+                        quantities.Add((int)reader[QuantityColumns.Storage]);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in GetQuantities():\n" + ex.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in GetQuantities():\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
         
             return quantities;
         }
@@ -443,287 +457,50 @@ namespace Inventory_3._0
         /// <param name="ID">SQL ID of item requiring change.</param>
         /// <param name="amount">Integer to be added.</param>
         /// <param name="column"></param>
-        public static void IncrementQuantities(int ID, int amount, string column)
+        public async static Task IncrementQuantities(int ID, int amount, string column)
         {
             string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {1} + {2} WHERE id = {3}", TableNames.INVENTORY, column, amount, ID);
             SqlCommand cmd = new SqlCommand(inventoryUpdate, connect);
 
-            try
+            await Task.Run(() =>
             {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in IncrementQuantities():\n" + ex.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
+                try
+                {
+                    connect.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in IncrementQuantities():\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
         }
 
-        public static void DeleteItem(int ID)
+        public async static Task DeleteItem(int ID)
         {
             string deleteCommand = String.Format("DELETE FROM {0} WHERE ID = {1}; DELETE FROM {2} WHERE ID = {1}; DELETE FROM {3} WHERE ID = {1}; DELETE FROM {4} WHERE ID = {1};", TableNames.UPC, ID, TableNames.PRICES, TableNames.INVENTORY, TableNames.ITEMS);
             SqlCommand cmd = new SqlCommand(deleteCommand, connect);
 
-            try
+            await Task.Run(() =>
             {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error in DeleteItem():\n" + ex.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-        }
-
-        #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public static void MigrateDatabase()
-        {
-            List<Item> itemCollection = new List<Item>();
-            // Fetch entire database as new Items
-            // Add each item as "new item" to new database
-            SqlCommand cmd = new SqlCommand("SELECT * FROM tblInventory;", connectOldDatabase);
-            try
-            {
-                connectOldDatabase.Open();
-                List<int> quant = new List<int>();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read() == true)
+                try
                 {
-                    Item newItem = new Item(
-                        reader[0].ToString(),
-                        reader[1].ToString(),
-                        reader[2].ToString(),
-                        new List<int>{0,0,0},
-                        reader[4].ToString(),
-                        reader[5].ToString(),
-                        new List<string>{reader[6].ToString()});
-                    itemCollection.Add(newItem);
+                    connect.Open();
+                    cmd.ExecuteNonQuery();
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                connectOldDatabase.Close();
-            }
-
-            foreach (Item item in itemCollection)
-            {
-                DBAccess.AddNewItem(item);
-            }
-        }
-
-        // Export table to Comma Separated Values file (.csv)
-        public static void ExportCSV(string filepath, string tblname)
-        {
-            string temp = string.Empty;
-
-            SqlCommand cmd = new SqlCommand("SELECT * FROM " + tblname, connect);
-            connect.Open();
-            SqlDataReader reader = cmd.ExecuteReader();     // set up SQL connection to table
-
-            System.IO.StreamWriter file = new System.IO.StreamWriter(filepath); // prepare file to be written to.
-
-            while (reader.Read() == true)
-            {
-                temp += reader[0].ToString() + ","; // Name
-                temp += reader[1].ToString() + ","; // System
-                temp += reader[2].ToString() + ","; // Price
-                temp += reader[3].ToString() + ","; // # In stock
-                temp += reader[4].ToString() + ","; // Cash Val.
-                temp += reader[5].ToString() + ","; // Trade/Credit Val.
-
-                file.WriteLine(temp);
-                temp = string.Empty;
-            }
-
-            file.Close();
-            connect.Close();
-
-        }
-        
-
-        // Decrease an item's inventory by subtracting the passed "Item.quantity" value
-        public static void DecrementInventory(string tablename, Item item)
-        {
-            SqlCommand cmd = new SqlCommand("UPDATE " + tablename +
-                                            " SET Quantity = Quantity - " + item.quantity +
-                                            " WHERE Name = '" + CheckForSpecialCharacters(item.name) +
-                                            "' AND System = '" + CheckForSpecialCharacters(item.system) + "' " +
-                                            "AND PRICE = '" + item.price + "' " +
-                                            "AND TRADECASH = '" + item.tradeCash + "' " +
-                                            "AND TRADECREDIT = '" + item.tradeCredit + "' " +
-                                            //"AND UPC = '" + item.UPC + "'",
-                                            connect); // Find an exact match for the passed string, increase inventory
-
-            try
-            {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN DecrementInventory:\n" + e.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-
-        }
-
-        // Increase an item's inventory by adding the passed "Item.quantity" value
-        public static void IncrementInventory(string tablename, Item item)
-        {
-            SqlCommand cmd = new SqlCommand("UPDATE " + tablename +
-                                            " SET Quantity = Quantity + " + item.quantity +
-                                            " WHERE Name = '" + CheckForSpecialCharacters(item.name) +
-                                            "' AND System = '" + CheckForSpecialCharacters(item.system) + "' " + 
-                                            "AND PRICE = '" + item.price + "' " +
-                                            "AND TRADECASH = '" + item.tradeCash + "' " +
-                                            "AND TRADECREDIT = '" + item.tradeCredit + "' " +
-                                            //"AND UPC = '" + item.UPC + "'",
-                                            connect); // Find an exact match for the passed string, increase inventory
-
-            try
-            {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN IncrementInventory:\n" + e.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-
-        }
-
-        // Change an existing item's information
-        public static void EditInventory(string tablename, Item oldItem, Item newItem)
-        {
-            SqlCommand cmd = new SqlCommand("UPDATE " + tablename +
-                                            " SET Name = '" + CheckForSpecialCharacters(newItem.name) + "', " +
-                                            "System = '" + CheckForSpecialCharacters(newItem.system) + "', " +
-                                            "Price = " + newItem.price + ", " +
-                                            "Quantity = " + newItem.quantity + ", " +
-                                            "TradeCash = " + newItem.tradeCash + ", " +
-                                            "TradeCredit = " + newItem.tradeCredit + ", " +
-                                           // "UPC = '" + newItem.UPC +
-                                            "' WHERE Name = '" + CheckForSpecialCharacters(oldItem.name) +
-                                            "' AND System = '" + CheckForSpecialCharacters(oldItem.system) + "' " + 
-                                            "AND PRICE = '" + oldItem.price + "' " +
-                                            "AND TRADECASH = '" + oldItem.tradeCash + "' " +
-                                            "AND TRADECREDIT = '" + oldItem.tradeCredit + "' " +
-                                           // "AND UPC = '" + oldItem.UPC + "'"
-                                            connect); // Find an exact match for the passed string, increase inventory
-
-            try
-            {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN EditInventory:\n" + e.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-
-        }
-
-        // Remove an item from a SQL table based on item's Name and System
-        public static void DeleteTableItem(string tablename, Item item)
-        {
-            SqlCommand cmd = new SqlCommand("DELETE FROM " + tablename +
-                                            " WHERE Name = '" + CheckForSpecialCharacters(item.name) +
-                                            "' AND System = '" + CheckForSpecialCharacters(item.system) + "' " +
-                                            "AND PRICE = '" + item.price + "' " +
-                                            "AND TRADECASH = '" + item.tradeCash + "' " +
-                                            "AND TRADECREDIT = '" + item.tradeCredit + "' "                                   
-                                            , connect); // Find an exact match for the passed string, increase inventory
-
-            try
-            {
-                connect.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN DeleteTableItem:\n" + e.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-
-        }
-        
-        /// <summary>
-        /// Checks if an Item is already present in an inventory table
-        /// </summary>
-        /// <param name="tablename">Name of an Inventory table</param>
-        /// <param name="item">Item to check</param>
-        /// <returns>True if the item is present, false otherwise</returns>
-        public static bool IsItemInTable(string tablename, Item item)
-        {
-            object result = null;
-            string command = "SELECT * FROM " + tablename +
-                " WHERE NAME = '" + CheckForSpecialCharacters(item.name) + "' " +
-                "AND SYSTEM = '" + CheckForSpecialCharacters(item.system) + "' " +
-                "AND PRICE = '" + item.price + "' " +
-                "AND TRADECASH = '" + item.tradeCash + "' " +
-                "AND TRADECREDIT = '" + item.tradeCredit + "' ";
-            SqlCommand cmd = new SqlCommand(command, connect);
-
-            // Execute command
-            try
-            {
-                connect.Open();
-                result = cmd.ExecuteScalar();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR IN IsItemInTable:\n" + e.Message);
-            }
-            finally
-            {
-                connect.Close();
-            }
-
-            // If the result is still null, then the item does not exist in the table
-            if (result == null)
-                return false;
-            else
-                return true;
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in DeleteItem():\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
         }
 
         /// <summary>
@@ -733,20 +510,7 @@ namespace Inventory_3._0
         /// <returns>A new Item</returns>
         public static Item SQLReaderToItem(SqlDataReader reader)
         {
-            Item item = null;
-
-            // FOR OLD TABLE:            
-            //item = new Item(reader[0].ToString(),
-            //        reader[1].ToString(),
-            //        reader[2].ToString(),
-            //        reader[3].ToString(),
-            //        reader[4].ToString(),
-            //        reader[5].ToString(),
-            //        reader[6].ToString());
-           
-            // FOR NEW TABLE
-
-            item = new Item();
+            Item item = new Item();
             item.name = reader[0].ToString(); // Name
             item.system = reader[1].ToString();   // System
             item.price = (decimal)reader[2];   // Price
@@ -754,7 +518,6 @@ namespace Inventory_3._0
             item.tradeCredit = (decimal)reader[4];   // Credit
             item.SQLid = (int)reader[5];   // SQL ID
                      
-            
             return item;
         }
 
@@ -766,7 +529,7 @@ namespace Inventory_3._0
         /// <param name="inventoryColumn">Table containing Item information</param>
         /// <param name="UPC">The UPC to search for</param>
         /// <returns></returns>
-        public static List<Item> UPCLookup(string UPC) 
+        public async static Task<List<Item>> UPCLookup(string UPC) 
         {
             List<Item> items = new List<Item>();
 
@@ -777,16 +540,19 @@ namespace Inventory_3._0
 
             try
             {
-                connect.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
+                await Task.Run(() =>
                 {
-                    if (reader.Read())
+                    connect.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
                     {
-                        items.Add(SQLReaderToItem(reader));
+                        if (reader.Read())
+                        {
+                            items.Add(SQLReaderToItem(reader));
+                        }
+                        else break;
                     }
-                    else break;
-                }
+                });
             }
             catch (Exception e)
             {
@@ -799,7 +565,7 @@ namespace Inventory_3._0
 
             foreach (Item item in items)
             {
-                item.quantity = GetQuantities(item.SQLid);
+                item.quantity = await GetQuantities(item.SQLid);
             }
 
             return items;
@@ -809,10 +575,10 @@ namespace Inventory_3._0
         /// Get all UPCs associated with passed item
         /// </summary>
         /// <param name="item">Item to find associated UPCs</param>
-        public static void GetItemUPCs(Item item)
+        public async static void GetItemUPCs(Item item)
         {
             if (item.SQLid != 0)
-                item.UPCs = GetUPCsWithID(item.SQLid);
+                item.UPCs = await GetUPCsWithID(item.SQLid);
             else
                 MessageBox.Show("ITEM DOESN'T HAVE A SQL ID ASSOCIATED WITH IT"); // CHANGE THIS !!!!!!!!!!
         }
@@ -822,7 +588,7 @@ namespace Inventory_3._0
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static List<string> GetUPCsWithID(int id)
+        public async static Task<List<string>> GetUPCsWithID(int id)
         {
             List<string> upcs = new List<string>();
 
@@ -830,16 +596,19 @@ namespace Inventory_3._0
                 " WHERE id =" + id, connect);
             try
             {
-                connect.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
+                await Task.Run(() =>
                 {
-                    if (reader.Read())
+                    connect.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
                     {
-                        upcs.Add(reader[0].ToString());
+                        if (reader.Read())
+                        {
+                            upcs.Add(reader[0].ToString());
+                        }
+                        else break;
                     }
-                    else break;
-                }
+                });
             }
             catch (Exception e)
             {

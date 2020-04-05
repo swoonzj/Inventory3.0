@@ -32,14 +32,14 @@ namespace Inventory_3._0
             this.DataContext = item;
         }
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
             // Save item information
             MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
 
-                if (DBAccess.AddNewItem(item))
+                if (await DBAccess.AddNewItem(item))
                 {
                     MessageBox.Show("Saved.");
                     this.Close();

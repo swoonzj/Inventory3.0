@@ -50,12 +50,12 @@ namespace Inventory_3._0
             base.OnClosing(e);
         }
 
-        private void Search(string searchString)
+        private async void Search(string searchString)
         {
             try
             {
                 List<Item> items = new List<Item>();
-                items = DBAccess.SQLTableToList(searchtext: searchString, limitResults:menuLimitSearchResults.IsChecked);
+                items = await DBAccess.SQLTableToList(searchtext: searchString, limitResults:menuLimitSearchResults.IsChecked);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)
@@ -104,13 +104,13 @@ namespace Inventory_3._0
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(((ListView)sender).ItemsSource);
         }
         
-        private void DetectUPCEnterKey(object sender, KeyEventArgs e)
+        private async void DetectUPCEnterKey(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 if (txtUPCInput.Text == "") return; // Return if the input is empty. Prevents a SQL error.
 
-                List<Item> items = DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
+                List<Item> items = await DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
 
                 if (items.Count != 0)
                 {

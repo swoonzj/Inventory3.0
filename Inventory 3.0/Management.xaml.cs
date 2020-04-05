@@ -49,17 +49,20 @@ namespace Inventory_3._0
             //Search();
         }
 
-        private void Search()
+        private async void Search()
         {
+            Mouse.OverrideCursor = Cursors.Wait;
             try
             {
-                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: menuLimitSearchResults.IsChecked));                
+                searchResults = new ObservableCollection<Item>(await DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: menuLimitSearchResults.IsChecked));                
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.ToString());
             }
             lvList.ItemsSource = searchResults;
+            Mouse.OverrideCursor = Cursors.Arrow;
+
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -141,7 +144,7 @@ namespace Inventory_3._0
             return selection;
         }
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
         {              
             // Save item information
             btnSave.Focus();
@@ -170,10 +173,10 @@ namespace Inventory_3._0
                     if (!String.IsNullOrWhiteSpace(txtCredit.Text))
                         newItem.tradeCredit = managedItem.tradeCredit;
 
-                    DBAccess.SaveItemChanges(newItem);
+                    await DBAccess.SaveItemChanges(newItem);
 
                     // Add new UPCs
-                    DBAccess.AddUPCs(managedItem.UPCs, item.SQLid);
+                    await DBAccess.AddUPCs(managedItem.UPCs, item.SQLid);
 
                     if (UPCsToDelete.Count > 0)
                     {
@@ -214,14 +217,14 @@ namespace Inventory_3._0
             addNewItem.Show();
         }    
     
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Permanently delete selected items?", "This could be a big deal.", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
             if (result != MessageBoxResult.Yes) return;
 
             foreach (Item item in lvList.SelectedItems)
             {
-                DBAccess.DeleteItem(item.SQLid);
+                await DBAccess.DeleteItem(item.SQLid);
             }
 
             Search();

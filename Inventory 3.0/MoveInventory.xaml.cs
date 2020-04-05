@@ -50,11 +50,11 @@ namespace Inventory_3._0
             }
         }
 
-        private void Search()
+        private async void Search()
         {
             try
             {
-                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(searchtext: txtSearch.Text));
+                searchResults = new ObservableCollection<Item>(await DBAccess.SQLTableToList(searchtext: txtSearch.Text));
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace Inventory_3._0
             return string.Format("Move item(s)?\nFrom: {0}\nTo: {1}", origin, destination);
         }
 
-        private void btnTransfer_Click(object sender, RoutedEventArgs e)
+        private async void btnTransfer_Click(object sender, RoutedEventArgs e)
         {
             // Verify
             MessageBoxResult verify = MessageBox.Show(CreateVerificationString(), "Are You Sure?", MessageBoxButton.YesNo);
@@ -125,11 +125,11 @@ namespace Inventory_3._0
             {
                 // Remove FROM inventory
                 if (radioFromOutBack.IsChecked == true)
-                    DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.OUTBACK);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.OUTBACK);
                 else if (radioFromSalesFloor.IsChecked == true)
-                    DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.STORE);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.STORE);
                 else if (radioFromStorage.IsChecked == true)
-                    DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.STORAGE);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.STORAGE);
                 else if (radioNewItem.IsChecked == true) { } // If New Item is checked, don't do anything.
                 else
                 {
@@ -138,11 +138,11 @@ namespace Inventory_3._0
                 }
                 // Add TO inventory
                 if (radioToOutBack.IsChecked == true)
-                    DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.OUTBACK);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.OUTBACK);
                 else if (radioToSalesFloor.IsChecked == true)
-                    DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORE);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORE);
                 else if (radioToStorage.IsChecked == true)
-                    DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORAGE);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORAGE);
                 else
                 {
                     MessageBox.Show("Please choose a destination under the \"TO:\".", "You didn't choose an option.", MessageBoxButton.OK, MessageBoxImage.Hand);
@@ -201,22 +201,30 @@ namespace Inventory_3._0
             txtUPCInput.Focus();
         }
 
-        private void DetectUPCEnterKey(object sender, KeyEventArgs e)
+        private async void DetectUPCEnterKey(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                if (txtUPCInput.Text == "") return; // Return if the input is empty. Prevents a SQL error.
+                List<Item> items = await DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
 
-                List<Item> items = DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
-                // HANDLE MULTIPLE ITEMS !!!!!!!!!!!!!
                 if (items.Count != 0)
                 {
-                    AddItem(items[0]);
+                    if (items.Count > 1)
+                    {
+                        MultipleUPCHandler handler = new MultipleUPCHandler(items);
+                        if (handler.ShowDialog() == true)
+                        {
+                            AddItem(handler.selectedItem);
+                            handler.Close();
+                        }
+                    }
+                    else
+                    {
+                        AddItem(items[0]);
+                    }
                 }
                 else
-                {
                     MessageBox.Show("Unknown UPC");
-                }
 
                 txtUPCInput.Text = "";
             }

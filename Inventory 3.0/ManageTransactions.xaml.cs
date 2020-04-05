@@ -41,8 +41,10 @@ namespace Inventory_3._0
 
         private void Search()
         {
+            Mouse.OverrideCursor = Cursors.Wait;
             transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate));
             lvList.ItemsSource = transactions;
+            Mouse.OverrideCursor = Cursors.Arrow;
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)

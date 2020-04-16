@@ -31,10 +31,9 @@ namespace Inventory_3._0
         public Management()
         {
             //// For testing
-            //List<int> quant = new List<int> { 1, 1, 1 };
             //List<string> upcs = new List<string> { "1111", "1" };
-            //Item item1 = new Item("Item1", "Test", "12.99", quant, "3", "4", upcs);
-            //Item item2 = new Item("Item2", "Test", "15.99", quant, "5", "6", upcs);
+            //Item item1 = new Item("Item1", "Test", "12.99", new List<int> { 1, 2, 3 }, "3", "4", upcs);
+            //Item item2 = new Item("Item2", "Test", "15.99", new List<int> { 10, 20, 30 }, "5", "6", upcs);
             //searchResults.Add(item1);
             //searchResults.Add(item2);
 

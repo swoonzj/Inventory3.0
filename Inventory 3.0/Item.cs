@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Inventory_3._0
 {
-    public class Item : INotifyPropertyChanged
+    public class Item : INotifyPropertyChanged, IEquatable<Item>
     {
         private int sqlid;
         public int SQLid
@@ -45,16 +45,21 @@ namespace Inventory_3._0
             {
                 Price = value;
                 NotifyPropertyChanged("price");
+                NotifyPropertyChanged("priceTotal");
             }
         }
-        private List<int> Quantity;
-        public List<int> quantity
+
+        private ObservableCollection<int> Quantity;
+        public ObservableCollection<int> quantity
         {
             get { return Quantity; }
             set
             {
                 Quantity = value;
                 NotifyPropertyChanged("quantity");
+                NotifyPropertyChanged("priceTotal");
+                NotifyPropertyChanged("cashTotal");
+                NotifyPropertyChanged("tradeTotal");
             }
         }
 
@@ -66,6 +71,7 @@ namespace Inventory_3._0
             {
                 TradeCash = value;
                 NotifyPropertyChanged("tradeCash");
+                NotifyPropertyChanged("cashTotal");
             }
         }
         private decimal TradeCredit;
@@ -76,6 +82,7 @@ namespace Inventory_3._0
             {
                 TradeCredit = value;
                 NotifyPropertyChanged("tradeCredit");
+                NotifyPropertyChanged("tradeTotal");
             }
         }
         private List<string> upcs;
@@ -89,6 +96,21 @@ namespace Inventory_3._0
             }
         }
 
+        public decimal priceTotal
+        {
+            get { return quantity[0] * price; }
+        }
+
+        public decimal cashTotal
+        {
+            get { return quantity[0] * tradeCash; }
+        }
+
+        public decimal creditTotal
+        {
+            get { return quantity[0] * tradeCredit; }
+        }
+
         public Item()        
         {
             UPCs = new List<string>();
@@ -96,7 +118,20 @@ namespace Inventory_3._0
             this.name = "";
             this.system = "";
             this.price = 0;
-            this.quantity = new List<int>{0,0,0};
+            this.quantity = new ObservableCollection<int> { 0, 0, 0 };
+            this.tradeCash = 0;
+            this.tradeCredit = 0;
+
+        }
+
+        public Item(string name, string system)
+        {
+            UPCs = new List<string>();
+            this.SQLid = 0;
+            this.name = name;
+            this.system = system;
+            this.price = 0;
+            this.quantity = new ObservableCollection<int> { 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
 
@@ -109,7 +144,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new List<int> { quantity, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0 };
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs.Add(upc);
@@ -122,7 +157,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new List<int> { quantity, 0, 0 }; 
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0 }; 
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs = upcs;
@@ -134,7 +169,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = quantity; 
+            this.quantity = new ObservableCollection<int>(quantity); 
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
             this.upcs = upcs;
@@ -146,7 +181,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = new List<int> { quantity, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0 };
             this.quantity.Add(quantity);
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
@@ -156,6 +191,18 @@ namespace Inventory_3._0
 
         public Item(string name, string system, decimal price, List<int> quantity, decimal cash, decimal credit, List<string> upcs, int SQLid = 0)
         {            
+            this.SQLid = SQLid;
+            this.name = name;
+            this.system = system;
+            this.price = price;
+            this.quantity = new ObservableCollection<int>(quantity);
+            this.tradeCash = cash;
+            this.tradeCredit = credit;
+            this.upcs = upcs;
+        }
+
+        public Item(string name, string system, decimal price, ObservableCollection<int> quantity, decimal cash, decimal credit, List<string> upcs, int SQLid = 0)
+        {
             this.SQLid = SQLid;
             this.name = name;
             this.system = system;
@@ -182,5 +229,157 @@ namespace Inventory_3._0
         {
             return String.Format("Name: {0}\nSystem:{1}\nPrice:{2}\nInventory:\n\tSales Floor:{3}\n\tOut Back:{4}\n\tStorage:{5}\nTrade, Cash:{6}\nTrade, Store Credit:{7}\nUPCS:{8}", name, system, price, quantity[0], quantity[1], quantity[2], tradeCash, tradeCredit, String.Join(", ", UPCs));
         }
+
+        public void AutoTradeValues()
+        {
+
+            if (this.price < 5 && this.price > 3)
+            {
+                this.tradeCash = .5m;
+                this.tradeCredit = 1m;
+            }
+            if (this.price > 5)
+            {
+                this.tradeCash = Math.Truncate(this.price / 4);
+                this.tradeCredit = Decimal.Round(this.price / 3);
+            }
+        }
+
+        public void incrementQuantity()
+        {
+            this.quantity[0]++;
+        }
+
+        bool IEquatable<Item>.Equals(Item other)
+        {
+            if (this.name != other.name) return false;
+            if (this.system != other.system) return false;
+            if (this.price != other.price) return false;
+            if (this.tradeCash != other.tradeCash) return false;
+            if (this.tradeCredit != other.tradeCredit) return false;
+
+            return true;
+        }
+    }
+    
+    public class Transaction : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private ObservableCollection<Item> Items;
+        public ObservableCollection<Item> items
+        {
+            get { return Items; }
+            set
+            {
+                Items = value;
+                NotifyPropertyChanged("items");
+            }
+        }
+
+        private DateTime Date;
+        public DateTime date
+        {
+            get { return Date; }
+            set
+            {
+                Date = value;
+                NotifyPropertyChanged("date");
+            }
+        }
+
+        private int TransactionNumber;
+        public int transactionNumber
+        {
+            get { return TransactionNumber; }
+            set 
+            {
+                TransactionNumber = value;
+                NotifyPropertyChanged("transactionNumber");
+            }
+        }
+
+        private string TransactionType;
+        public string transactionType
+        {
+            get { return TransactionType; }
+            set
+            {
+                TransactionType = value;
+                NotifyPropertyChanged("transactionType");
+            }
+        }
+
+        public int quantity
+        {
+            get { return CalculateQuantity(); }
+        }
+
+        public decimal total
+        {
+            get { return CalculateTotal(); }
+        }
+
+        public Transaction(int transactionNumber, string transactionType, DateTime date)
+        {
+            this.transactionNumber = transactionNumber;
+            this.transactionType = transactionType;
+            this.date = date;
+            items = new ObservableCollection<Item>();
+        }
+
+        private decimal CalculateTotal()
+        {
+            switch (transactionType)
+            {
+                case TransactionTypes.SALE:
+                    {
+                        decimal sum = 0;
+                        foreach (Item item in Items)
+                        {
+                            sum += item.price;
+                        }
+                        return sum;
+                    }
+                case TransactionTypes.TRADE_CASH:
+                    {
+                        decimal sum = 0;
+                        foreach (Item item in Items)
+                        {
+                            sum += item.tradeCash;
+                        }
+                        return sum;
+                    }
+                case TransactionTypes.TRADE_CREDIT:
+                    {
+                        decimal sum = 0;
+                        foreach (Item item in Items)
+                        {
+                            sum += item.tradeCredit;
+                        }
+                        return sum;
+                    }
+                default:
+                    return -1;
+            }
+        }
+
+        private int CalculateQuantity()
+        {
+            int quant = 0;
+            foreach (Item item in items)
+            {
+                quant += item.quantity[0];
+            }
+
+            return quant;
+        }
+
+        
     }
 }

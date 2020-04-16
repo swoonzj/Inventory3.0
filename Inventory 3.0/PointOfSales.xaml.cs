@@ -51,17 +51,33 @@ namespace Inventory_3._0
             base.OnClosing(e);
         }
 
-        private void Search(string searchString)
+        private async void Search(string searchString)
         {
+            Mouse.OverrideCursor = Cursors.Wait;
             try
             {
                 List<Item> items = new List<Item>();
-                items = DBAccess.SQLTableToList(searchtext: searchString, limitResults: menuLimitSearchResults.IsChecked);
+                items = await DBAccess.SQLTableToList(searchtext: searchString, limitResults: menuLimitSearchResults.IsChecked);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.ToString());
+            }
+            Mouse.OverrideCursor = Cursors.Arrow;
+        }
+
+        private void addItemToCart(Item item) 
+        {
+            int index = cart.IndexOf(item);
+            if (index >= 0)
+            {
+                cart[index].quantity[0]++;
+            }
+            else
+            {
+                item.quantity[0] = 1;
+                cart.Insert(0, item);
             }
         }
 
@@ -69,7 +85,7 @@ namespace Inventory_3._0
         {
             foreach (Item item in lvList.SelectedItems)
             {
-                cart.Insert(0, item);
+                addItemToCart(item);
             }
         }
 
@@ -89,11 +105,14 @@ namespace Inventory_3._0
         private void UpdateTotals()
         {
             total = 0;
+            int quant = 0;
             foreach (Item item in lvCart.Items)
             {
-                total += item.price;
+                total += item.priceTotal;
+                quant += item.quantity[0];
             }
-            txtTotal.Text = "Cash:\t\t$" + total.ToString("0.00");
+            txtTotal.Text = "Total:\t\t$" + total.ToString("0.00");
+            txtItemCount.Text = "Items: " + quant.ToString();
         }
 
         private void ColumnHeader_Click(object sender, RoutedEventArgs e)
@@ -106,13 +125,13 @@ namespace Inventory_3._0
             txtSearch.Text = "";
         }
 
-        private void DetectUPCEnterKey(object sender, KeyEventArgs e)
+        private async void DetectUPCEnterKey(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 if (txtUPCInput.Text == "") return; // Return if the input is empty. Prevents a SQL error.
 
-                List<Item> items = DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
+                List<Item> items = await DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
 
                 if (items.Count != 0)
                 {
@@ -121,13 +140,13 @@ namespace Inventory_3._0
                         MultipleUPCHandler handler = new MultipleUPCHandler(items);
                         if (handler.ShowDialog() == true)
                         {
-                            cart.Insert(0, handler.selectedItem);
+                            addItemToCart(handler.selectedItem);
                             handler.Close();
                         }
                     }
                     else
                     {
-                        cart.Insert(0, items[0]);
+                        addItemToCart(items[0]);
                     }
                     UpdateTotals();
                 }
@@ -161,6 +180,7 @@ namespace Inventory_3._0
             var item = ((FrameworkElement)e.OriginalSource).DataContext as Item;
             if (item != null)
             {
+                item.quantity[0] = 1;
                 cart.Insert(0, item);
             }
         }
@@ -194,17 +214,17 @@ namespace Inventory_3._0
             {
                 MessageBox.Show("Great.");
                 // Log transaction
-                
-                //string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-                //int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
-                //foreach (Item item in cart)
-                //{
-                //    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
-                //}
-                //DBAccess.IncrementTransactionNumber();
+
+                string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
+                foreach (Item item in cart)
+                {
+                    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
+                }
+                DBAccess.IncrementTransactionNumber();
 
                 // Print Receipt!!!!
-                ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>());
+                ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>(), date, transactionNumber.ToString());
                 ReceiptPrinter printer = new ReceiptPrinter(generator.flowDoc);
                 printer.Print();
                 checkout.Close();
@@ -232,7 +252,29 @@ namespace Inventory_3._0
             }
             UpdateTotals();
             txtEdit.Clear();
-        }               
+        }
+
+
+        private void btnChangeQuantity_Click(object sender, RoutedEventArgs e)
+        {
+            int newValue;
+            // verify textbox value
+            if (int.TryParse(txtEdit.Text, out newValue))
+            {
+                foreach (var item in lvCart.SelectedItems)
+                {
+                    ((Item)item).quantity[0] = newValue;
+                    ((Item)item).NotifyPropertyChanged("quantity");
+                    ((Item)item).NotifyPropertyChanged("priceTotal");
+                }
+            }
+            else
+            {
+                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid number. Try again.", "Not a number. Try again, fool.", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            UpdateTotals();
+            txtEdit.Clear();
+        }
 
         private void btnSixForTen_Click(object sender, RoutedEventArgs e)
         {
@@ -257,12 +299,10 @@ namespace Inventory_3._0
 
         private void btnAddUnlistedItem_Click(object sender, RoutedEventArgs e)
         {
-            // Prompt Unlisted Item Form !!!!!!!!!!!!!
-            MessageBox.Show("Placeholder.");
             UnlistedItemPrompt prompt = new UnlistedItemPrompt();
             if (prompt.ShowDialog() == true)
             {
-                cart.Add(prompt.item);
+                cart.Insert(0, prompt.item);
                 prompt.Close();
             }
         }

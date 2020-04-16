@@ -16,7 +16,16 @@
     </Window.Resources>
     <Grid>
         <StackPanel>
-            <ListBox x:Name="lbCheckout" Height="300" Margin="5" ItemTemplate="{StaticResource listBoxTemplate}" />
+            <ListBox x:Name="lbCheckout" Height="300" Margin="5" ItemTemplate="{StaticResource listBoxTemplate}">
+                <ListBox.Resources>
+                    <ContextMenu x:Key="RightClickMenu" Name="lbContextMenu">
+                        <MenuItem Name="menuDelete" Header="Delete" Click="menuDelete_Click"/>
+                    </ContextMenu>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="ContextMenu" Value="{StaticResource RightClickMenu}"/>
+                    </Style>
+                </ListBox.Resources>
+            </ListBox>
             <StackPanel Orientation="Horizontal">
                 <Label FontSize="30" FontWeight="Bold" Content="Total:"/>
                 <Label x:Name="lblTotal" HorizontalAlignment="Right" FontSize="30"/>

@@ -31,10 +31,9 @@ namespace Inventory_3._0
         public Management()
         {
             //// For testing
-            //List<int> quant = new List<int> { 1, 1, 1 };
             //List<string> upcs = new List<string> { "1111", "1" };
-            //Item item1 = new Item("Item1", "Test", "12.99", quant, "3", "4", upcs);
-            //Item item2 = new Item("Item2", "Test", "15.99", quant, "5", "6", upcs);
+            //Item item1 = new Item("Item1", "Test", "12.99", new List<int> { 1, 2, 3 }, "3", "4", upcs);
+            //Item item2 = new Item("Item2", "Test", "15.99", new List<int> { 10, 20, 30 }, "5", "6", upcs);
             //searchResults.Add(item1);
             //searchResults.Add(item2);
 
@@ -49,17 +48,20 @@ namespace Inventory_3._0
             //Search();
         }
 
-        private void Search()
+        private async void Search()
         {
+            Mouse.OverrideCursor = Cursors.Wait;
             try
             {
-                searchResults = new ObservableCollection<Item>(DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: menuLimitSearchResults.IsChecked));                
+                searchResults = new ObservableCollection<Item>(await DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: menuLimitSearchResults.IsChecked));                
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.ToString());
             }
             lvList.ItemsSource = searchResults;
+            Mouse.OverrideCursor = Cursors.Arrow;
+
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -141,16 +143,17 @@ namespace Inventory_3._0
             return selection;
         }
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
         {              
             // Save item information
+            btnSave.Focus();
             MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {                
                 foreach (Item item in lvList.SelectedItems)
                 {
                     Item newItem = item.Clone();
-                    if (newItem.quantity.Count != 3) newItem.quantity = new List<int> { 0, 0, 0 };
+                    if (newItem.quantity.Count != 3) newItem.quantity = new ObservableCollection<int> { 0, 0, 0 };
 
                     if (txtName.IsEnabled == true && !String.IsNullOrWhiteSpace(txtName.Text))
                         newItem.name = managedItem.name;
@@ -169,10 +172,10 @@ namespace Inventory_3._0
                     if (!String.IsNullOrWhiteSpace(txtCredit.Text))
                         newItem.tradeCredit = managedItem.tradeCredit;
 
-                    DBAccess.SaveItemChanges(newItem);
+                    await DBAccess.SaveItemChanges(newItem);
 
                     // Add new UPCs
-                    DBAccess.AddUPCs(managedItem.UPCs, item.SQLid);
+                    await DBAccess.AddUPCs(managedItem.UPCs, item.SQLid);
 
                     if (UPCsToDelete.Count > 0)
                     {
@@ -213,20 +216,20 @@ namespace Inventory_3._0
             addNewItem.Show();
         }    
     
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Permanently delete selected items?", "This could be a big deal.", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
             if (result != MessageBoxResult.Yes) return;
 
             foreach (Item item in lvList.SelectedItems)
             {
-                DBAccess.DeleteItem(item.SQLid);
+                await DBAccess.DeleteItem(item.SQLid);
             }
 
             Search();
         }
 
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        private void TextBox_GotFocus(object sender, object e)
         {
             ((TextBox)sender).SelectAll();
         }
@@ -270,16 +273,9 @@ namespace Inventory_3._0
 
         private void btnAutoTradeValue_Click(object sender, RoutedEventArgs e)
         {
-            if (managedItem.price < 5 && managedItem.price > 3)
-            {
-                managedItem.tradeCash = .5m;
-                managedItem.tradeCredit = 1m;
-            }
-            if (managedItem.price > 5)
-            {
-                managedItem.tradeCash = Math.Round(managedItem.price/4);
-                managedItem.tradeCredit = Math.Round(managedItem.price / 3);
-            }
+            
+            managedItem.AutoTradeValues();
+            
         }
 
         private void menuMoveInventory_Click(object sender, RoutedEventArgs e)
@@ -287,5 +283,46 @@ namespace Inventory_3._0
             MoveInventory moveInventory = new MoveInventory();
             moveInventory.Show();
         }
+
+        private void menuGetTotalsClick(object sender, RoutedEventArgs e)
+        {
+            DateTime today = DateTime.Today;
+            DateTime tomorrow = today.AddDays(1);
+            
+            DatePicker picker = new DatePicker();
+
+            decimal sales, tradeCash, tradeCredit;
+            DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), out tradeCash, out tradeCredit, out sales);
+
+            MessageBox.Show(String.Format("Cash: ${0}\nCredit: ${1}\nSales: ${2}", tradeCash.ToString("0.00"), tradeCredit.ToString("0.00"), sales.ToString("0.00")));
+        }
+
+        private void txtUPC_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnAdd.IsDefault = true;
+            btnSave.IsDefault = false;
+        }
+
+        private void txtUPC_LostFocus(object sender, RoutedEventArgs e)
+        {
+            btnAdd.IsDefault = false;
+            btnSave.IsDefault = true;
+        }
+
+        private void txtSearch_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnSave.IsDefault = false;
+        }
+
+        private void txtSearch_LostFocus(object sender, RoutedEventArgs e)
+        {
+            btnSave.IsDefault = true;
+        }
+
+        private void menuManageTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            ManageTransactions mt = new ManageTransactions();
+            mt.Show();
+        }        
     }
 }

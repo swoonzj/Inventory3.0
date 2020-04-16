@@ -31,6 +31,7 @@ namespace Inventory_3._0
             if (trade) SetupForTrade();
             else SetupForPOS();
             this.trade = trade;
+            txtDescription.Focus();
         }
 
         private void SetupForPOS()
@@ -67,7 +68,7 @@ namespace Inventory_3._0
             {
                 if (Decimal.TryParse(txtPrice.Text, out price))
                 {
-                    item = new Item(txtDescription.Text, "Unlisted Item", price, 0, 0m, 0m, "0");
+                    item = new Item(txtDescription.Text, "Unlisted Item", price, 1, 0m, 0m, "0");
                     DialogResult = true;
                 }
                 else MessageBox.Show("The given price (" + txtPrice.Text + ") is not a valid number.", "Not a valid price.", MessageBoxButton.OK, MessageBoxImage.Stop);
@@ -76,7 +77,7 @@ namespace Inventory_3._0
             {
                 if (Decimal.TryParse(txtCash.Text, out cash) && Decimal.TryParse(txtCredit.Text, out credit))
                 {
-                    item = new Item(txtDescription.Text, "Unlisted Item", 0m, 0, cash, credit, "0");
+                    item = new Item(txtDescription.Text, "Unlisted Item", 0m, 1, cash, credit, "0");
                     DialogResult = true;
                 }
                 else MessageBox.Show("The given values (" + txtCash.Text + " or "+ txtCredit.Text +") is not a valid number.", "Not a valid price.", MessageBoxButton.OK, MessageBoxImage.Stop);

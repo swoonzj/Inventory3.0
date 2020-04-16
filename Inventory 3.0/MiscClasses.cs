@@ -16,11 +16,6 @@ using System.Windows.Media.Imaging;
 namespace Inventory_3._0
 {
     /// <summary>
-    /// Contains search terms
-    /// </summary>
-    /// 
-
-    /// <summary>
     /// Inherited from Window, but allows the sorting of ListViews (to eliminate boilerplate code)
     /// Taken and slightly modified from https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/how-to-sort-a-gridview-column-when-a-header-is-clicked
     /// </summary>
@@ -223,30 +218,42 @@ namespace Inventory_3._0
             return strarray;
         }
 
-        public static void LoadCSV(string filepath) // Add items from a Comma Separated Value file to the inventory
+        public async static void LoadCSV(string filepath) // Add items from a Comma Separated Value file to the inventory
         {
             foreach (string s in File.ReadLines(filepath))
             {
                 // Add item to collection
-                DBAccess.AddNewItem(CreateItemFromCSVLine(s));
+                await DBAccess.AddNewItem(CreateItemFromCSVLine(s));
             }
         }
 
         public static Item CreateItemFromCSVLine(string CSVline)
         {
             List<string> line = ParseCSV(CSVline);
-            List<int> quantity = new List<int>();
-            quantity.Add(Convert.ToInt32(line[3]));
-            quantity.Add(Convert.ToInt32(line[4]));
-            quantity.Add(Convert.ToInt32(line[5]));
 
-            List<string> upcs = new List<string>();
-            for (int i = 8; i < line.Count; i++) // Index of first UPC)
+            if (line.Count > 7)
             {
-                upcs.Add(line[i]);
-            }
+                List<int> quantity = new List<int>();
+                quantity.Add(Convert.ToInt32(line[3]));
+                quantity.Add(Convert.ToInt32(line[4]));
+                quantity.Add(Convert.ToInt32(line[5]));
 
-            return new Item(line[0], line[1], line[2], quantity, line[6], line[7], upcs);
+                List<string> upcs = new List<string>();
+                if (line.Count > 8)
+                {
+                    for (int i = 8; i < line.Count; i++) // Index of first UPC)
+                    {
+                        upcs.Add(line[i]);
+                    }
+                }
+
+                return new Item(line[0], line[1], line[2], quantity, line[6], line[7], upcs);
+            }
+            else if (line.Count >= 2)
+            {
+                return new Item(line[0], line[1]);
+            }
+            else return new Item();
         }
     }
 
@@ -255,11 +262,14 @@ namespace Inventory_3._0
         List<Item> cart, payment;
         public StringBuilder receipt;
         public FlowDocument flowDoc;
+        string date, transactionNumber;
 
-        public ReceiptGenerator(List<Item> cart, List<Item> payment)
+        public ReceiptGenerator(List<Item> cart, List<Item> payment, string date, string transactionNumber)
         {
             this.cart = cart;
             this.payment = payment;
+            this.date = date;
+            this.transactionNumber = transactionNumber;
 
             receipt = new StringBuilder();
             flowDoc = Generate();
@@ -287,15 +297,23 @@ namespace Inventory_3._0
 
             // Headers
             flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.RECEIPT_HEADER2 + "\n")) { TextAlignment = System.Windows.TextAlignment.Center, FontWeight = System.Windows.FontWeights.Bold });
+            // Transaction details
+            flowDoc.Blocks.Add(new Paragraph(new Run("Transaction Number: " + transactionNumber + "\n" + date + "\n")) { TextAlignment = System.Windows.TextAlignment.Left, FontWeight = System.Windows.FontWeights.DemiBold });
 
             flowDoc.FontSize = ReceiptVariables.FONTSIZE;
             flowDoc.FontFamily = new System.Windows.Media.FontFamily(ReceiptVariables.FONTNAME);
             
             foreach (Item item in cart)
             {
+                string price;
                 string name = Truncate(item.name, ReceiptVariables.name) + "\t-\t";
                 string system = Truncate(item.system, ReceiptVariables.system).PadRight(ReceiptVariables.system);
-                string price = item.price.ToString("C").PadLeft(ReceiptVariables.price);
+                if (item.quantity[0] > 1)
+                {
+                    price = item.quantity[0].ToString() + " @ " + item.price.ToString("C") + " =    " + item.priceTotal.ToString("C");
+                }
+                else price = item.price.ToString("C");
+                price.PadLeft(ReceiptVariables.price);
                 //receipt.AppendLine(ReceiptVariables.BorderLeft+name+system+price+ReceiptVariables.BorderRight);
 
                 Paragraph p = new Paragraph(new Run(name + system));
@@ -398,7 +416,6 @@ namespace Inventory_3._0
 
             IDocumentPaginatorSource idpSource = flowDoc;
             printDialog.PrintDocument(idpSource.DocumentPaginator, "Printing Receipt");
-
         }
     }    
 }

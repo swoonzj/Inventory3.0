@@ -50,12 +50,12 @@ namespace Inventory_3._0
             base.OnClosing(e);
         }
 
-        private void Search(string searchString)
+        private async void Search(string searchString)
         {
             try
             {
                 List<Item> items = new List<Item>();
-                items = DBAccess.SQLTableToList(searchtext: searchString, limitResults:menuLimitSearchResults.IsChecked);
+                items = await DBAccess.SQLTableToList(searchtext: searchString, limitResults:menuLimitSearchResults.IsChecked);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)
@@ -68,6 +68,7 @@ namespace Inventory_3._0
         {
             foreach (Item item in lvList.SelectedItems)
             {
+                item.quantity[0] = 1;
                 cart.Insert(0, item);
             }
         }
@@ -103,13 +104,13 @@ namespace Inventory_3._0
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(((ListView)sender).ItemsSource);
         }
         
-        private void DetectUPCEnterKey(object sender, KeyEventArgs e)
+        private async void DetectUPCEnterKey(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 if (txtUPCInput.Text == "") return; // Return if the input is empty. Prevents a SQL error.
 
-                List<Item> items = DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
+                List<Item> items = await DBAccess.UPCLookup(txtUPCInput.Text); // Returns NULL if UPC does not match an item                
 
                 if (items.Count != 0)
                 {
@@ -118,12 +119,14 @@ namespace Inventory_3._0
                         MultipleUPCHandler handler = new MultipleUPCHandler(items);
                         if (handler.ShowDialog() == true)
                         {
+                            handler.selectedItem.quantity[0] = 1;
                             cart.Insert(0, handler.selectedItem);
                             handler.Close();
                         }
                     }
                     else
                     {
+                        items[0].quantity[0] = 1;
                         cart.Insert(0, items[0]);
                     }
                     UpdateTotals();
@@ -162,6 +165,7 @@ namespace Inventory_3._0
         private void lvList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = ((FrameworkElement)e.OriginalSource).DataContext as Item;
+            item.quantity[0] = 1;
             if (item != null)
             {
                 cart.Insert(0, item);
@@ -197,7 +201,7 @@ namespace Inventory_3._0
             UnlistedItemPrompt prompt = new UnlistedItemPrompt(true);
             if (prompt.ShowDialog() == true)
             {
-                cart.Add(prompt.item);
+                cart.Insert(0, prompt.item);
                 prompt.Close();
             }
         }
@@ -370,6 +374,25 @@ namespace Inventory_3._0
 
 
         #endregion
+
+        private void btnAutoTrade_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Item item in lvCart.SelectedItems)
+            {
+                item.AutoTradeValues();
+            }
+            UpdateTotals();
+        }
+
+        private void txtEdit_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnChangeCash.IsDefault = true;
+        }
+
+        private void txtEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            btnChangeCash.IsDefault = false;
+        }
         
     }
 }

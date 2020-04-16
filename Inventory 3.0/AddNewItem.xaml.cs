@@ -32,14 +32,14 @@ namespace Inventory_3._0
             this.DataContext = item;
         }
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
             // Save item information
             MessageBoxResult result = MessageBox.Show("Save changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
 
-                if (DBAccess.AddNewItem(item))
+                if (await DBAccess.AddNewItem(item))
                 {
                     MessageBox.Show("Saved.");
                     this.Close();
@@ -60,6 +60,7 @@ namespace Inventory_3._0
 
             item.UPCs.Add(txtUPC.Text);
             CollectionViewSource.GetDefaultView(lvUPC.ItemsSource).Refresh();
+            txtUPC.Text = "";
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
@@ -90,6 +91,26 @@ namespace Inventory_3._0
                 item.tradeCash = Math.Round(item.price / 4);
                 item.tradeCredit = Math.Round(item.price / 3);
             }
+        }
+
+        private void textbox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
+
+        private void textbox_GotMouseCapture(object sender, MouseEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
+
+        private void txtUPC_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnAdd.IsDefault = true;
+        }
+
+        private void txtUPC_LostFocus(object sender, RoutedEventArgs e)
+        {
+            btnAdd.IsDefault = false;
         }
     }
 }

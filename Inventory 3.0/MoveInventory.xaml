@@ -32,7 +32,9 @@
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
                     <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
                     <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
-                    <!--<GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity}"/>-->
+                    <GridViewColumn Header="On Floor"  DisplayMemberBinding="{Binding Path=quantity[0]}"/>
+                    <GridViewColumn Header="Out Back"  DisplayMemberBinding="{Binding Path=quantity[1]}"/>
+                    <GridViewColumn Header="Storage"  DisplayMemberBinding="{Binding Path=quantity[2]}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -52,9 +54,9 @@
             <RadioButton Name="radioToStorage" GroupName="To" Margin="5">Storage</RadioButton>
             <RadioButton Name="radioToSalesFloor" GroupName="To" Margin="5,5,5,50">Sales Floor</RadioButton>
         </StackPanel>
+        <TextBox Name="txtUPCInput" Grid.Column="1" Grid.Row="4" Opacity="0" KeyDown="DetectUPCEnterKey"/>
         <Button Name="btnTransfer" Margin="5" Grid.Column="1" Grid.Row="2" Click="btnTransfer_Click">Transfer</Button>
-        <TextBox Grid.Column="1" Grid.Row="4" Name="txtUPCInput" Opacity="0"  KeyDown="DetectUPCEnterKey"/>
-        <ListView Margin="0,0,10,10" Name="lvMove" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" SelectionMode="Multiple" MouseDown="lvMove_MouseDown" ItemsSource="{Binding searchResults}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" IsKeyboardFocusWithinChanged="lvCart_IsKeyboardFocusWithinChanged" FocusManager.FocusedElement="{Binding ElementName=txtUPCInput}">
+        <ListView Margin="0,0,10,10" Name="lvMove" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" SelectionMode="Multiple" MouseDown="lvMove_MouseDown" IsKeyboardFocusWithinChanged="lvMove_IsKeyboardFocusWithinChanged" ItemsSource="{Binding searchResults}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" FocusManager.FocusedElement="{Binding ElementName=txtUPCInput}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>

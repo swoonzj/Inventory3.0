@@ -14,7 +14,7 @@ namespace Inventory_3._0
     public static class PrinterVariables
     {
 
-        public const string PRINTERNAME = "POS-80C";
+        public const string PRINTERNAME = "POS";
         public class UPCimage
         {
             public const int locX = 0;
@@ -113,7 +113,8 @@ namespace Inventory_3._0
             TRADE_CASH = "TradeCash",
             TRADE_CREDIT = "TradeCredit",
             UPC = "UPC",
-            DATE = "Date";
+            DATE = "Date",
+            TYPE = "Type";
     }
 
     public static class ReceiptVariables
@@ -121,7 +122,7 @@ namespace Inventory_3._0
         // Character width of receipt & components
         public const int receiptWidth = 38, 
             name = 30,
-            system = 10,
+            system = 20,
             price = 10,
             payment = 30;
 

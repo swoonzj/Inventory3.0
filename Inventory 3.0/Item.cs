@@ -49,6 +49,17 @@ namespace Inventory_3._0
             }
         }
 
+        private int CartQuantity;
+        public int cartQuantity
+        {
+            get { return CartQuantity; }
+            set
+            {
+                CartQuantity = value;
+                NotifyPropertyChanged("cartQuantity");
+            }
+        }
+
         private ObservableCollection<int> Quantity;
         public ObservableCollection<int> quantity
         {
@@ -121,7 +132,7 @@ namespace Inventory_3._0
             this.quantity = new ObservableCollection<int> { 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
-
+            this.cartQuantity = 0;
         }
 
         public Item(string name, string system)
@@ -134,7 +145,7 @@ namespace Inventory_3._0
             this.quantity = new ObservableCollection<int> { 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
-
+            this.cartQuantity = 0;
         }
 
         public Item(string name, string system, decimal price, int quantity, decimal cash, decimal credit, string upc)
@@ -148,6 +159,7 @@ namespace Inventory_3._0
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs.Add(upc);
+            this.cartQuantity = 0;
         }
 
         public Item(string name, string system, decimal price, int quantity, decimal cash, decimal credit, List<string> upcs)
@@ -161,6 +173,7 @@ namespace Inventory_3._0
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs = upcs;
+            this.cartQuantity = 0;
         }
 
         public Item(string name, string system = "", string price = "0", List<int> quantity = null, string cash = "0", string credit = "0", List<string> upcs = null, string SQLid = "0")
@@ -173,6 +186,7 @@ namespace Inventory_3._0
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
             this.upcs = upcs;
+            this.cartQuantity = 0;
         }
 
         public Item(string name, string system = "", string price = "0", int quantity = 0, string cash = "0", string credit = "0", string upc = "", string SQLid = "0")
@@ -187,6 +201,7 @@ namespace Inventory_3._0
             this.tradeCredit = Convert.ToDecimal(credit);
             this.upcs = new List<string>();
             this.upcs.Add(upc);
+            this.cartQuantity = 0;
         }
 
         public Item(string name, string system, decimal price, List<int> quantity, decimal cash, decimal credit, List<string> upcs, int SQLid = 0)
@@ -199,6 +214,7 @@ namespace Inventory_3._0
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.upcs = upcs;
+            this.cartQuantity = 0;
         }
 
         public Item(string name, string system, decimal price, ObservableCollection<int> quantity, decimal cash, decimal credit, List<string> upcs, int SQLid = 0)
@@ -211,6 +227,7 @@ namespace Inventory_3._0
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.upcs = upcs;
+            this.cartQuantity = 0;
         }
 
         public Item Clone()

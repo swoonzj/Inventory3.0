@@ -66,10 +66,14 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=quantity[0]}"/>
+                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Path=cartQuantity}"/>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
                     <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
                     <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
+
+                    <GridViewColumn Header="On Floor"  DisplayMemberBinding="{Binding Path=quantity[0]}"/>
+                    <GridViewColumn Header="Out Back"  DisplayMemberBinding="{Binding Path=quantity[1]}"/>
+                    <GridViewColumn Header="Storage"  DisplayMemberBinding="{Binding Path=quantity[2]}"/>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -76,11 +76,11 @@ namespace Inventory_3._0
             int index = movingItems.IndexOf(item);
             if (index >= 0)
             {
-                movingItems[index].quantity[0]++;
+                movingItems[index].cartQuantity++;
             }
             else
             {
-                item.quantity[0] = 1;
+                item.cartQuantity = 1;
                 movingItems.Insert(0, item);
             }
         }
@@ -125,11 +125,11 @@ namespace Inventory_3._0
             {
                 // Remove FROM inventory
                 if (radioFromOutBack.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.OUTBACK);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.OUTBACK);
                 else if (radioFromSalesFloor.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.STORE);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.STORE);
                 else if (radioFromStorage.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.quantity[0], ColumnNames.STORAGE);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.STORAGE);
                 else if (radioNewItem.IsChecked == true) { } // If New Item is checked, don't do anything.
                 else
                 {
@@ -138,11 +138,11 @@ namespace Inventory_3._0
                 }
                 // Add TO inventory
                 if (radioToOutBack.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.OUTBACK);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.OUTBACK);
                 else if (radioToSalesFloor.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORE);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.STORE);
                 else if (radioToStorage.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORAGE);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.STORAGE);
                 else
                 {
                     MessageBox.Show("Please choose a destination under the \"TO:\".", "You didn't choose an option.", MessageBoxButton.OK, MessageBoxImage.Hand);

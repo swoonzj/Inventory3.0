@@ -459,7 +459,8 @@ namespace Inventory_3._0
         /// <param name="column"></param>
         public async static Task IncrementQuantities(int ID, int amount, string column)
         {
-            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {1} + {2} WHERE id = {3}", TableNames.INVENTORY, column, amount, ID);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = CASE WHEN {1} + {2} < 0 THEN 0 ELSE "+ 
+                "{1} + {2} END WHERE id = {3}", TableNames.INVENTORY, column, amount, ID);
             SqlCommand cmd = new SqlCommand(inventoryUpdate, connect);
 
             await Task.Run(() =>

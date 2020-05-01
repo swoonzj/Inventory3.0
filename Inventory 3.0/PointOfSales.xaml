@@ -75,7 +75,7 @@
                             </ItemsPanelTemplate>
                         </Menu.ItemsPanel>
                         <MenuItem Header="_Settings">
-                            <MenuItem IsCheckable="True" Header="_Add Trade to Inventory"/>
+                            <MenuItem Name="menuDeductSalesFromInventory" IsCheckable="True" Header="_Deduct Sales from Inventory"/>
                             <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="True"/>
                         </MenuItem>
                         <MenuItem Header="_Manage">

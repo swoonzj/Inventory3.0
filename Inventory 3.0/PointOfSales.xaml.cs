@@ -202,7 +202,7 @@ namespace Inventory_3._0
             cart.Clear();
         }
         
-        private void btnCheckout_Click(object sender, RoutedEventArgs e)
+        private async void btnCheckout_Click(object sender, RoutedEventArgs e)
         {
             if (cart.Count == 0)
             {
@@ -220,6 +220,10 @@ namespace Inventory_3._0
                 foreach (Item item in cart)
                 {
                     DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
+                    if (menuDeductSalesFromInventory.IsChecked)
+                    {
+                        await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], ColumnNames.STORE);
+                    }
                 }
                 DBAccess.IncrementTransactionNumber();
 
@@ -306,9 +310,5 @@ namespace Inventory_3._0
                 prompt.Close();
             }
         }
-
-        
-
-
     }
 }

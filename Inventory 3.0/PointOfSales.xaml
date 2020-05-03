@@ -77,6 +77,7 @@
                         <MenuItem Header="_Settings">
                             <MenuItem Name="menuDeductSalesFromInventory" IsCheckable="True" Header="_Deduct Sales from Inventory"/>
                             <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="True"/>
+                            <MenuItem Name="menuPrintReceipt" IsCheckable="True" Header="_Print Receipts" IsChecked="True"/>
                         </MenuItem>
                         <MenuItem Header="_Manage">
                             <MenuItem Header="Open _Management Screen" Click="ManagementMenu_Click"/>

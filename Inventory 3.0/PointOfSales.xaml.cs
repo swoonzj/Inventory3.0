@@ -227,17 +227,19 @@ namespace Inventory_3._0
                 }
                 DBAccess.IncrementTransactionNumber();
 
-                // Print Receipt!!!!
-                ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>(), date, transactionNumber.ToString());
-                ReceiptPrinter printer = new ReceiptPrinter(generator.flowDoc);
-                printer.Print();
+                // Print Receipt
+                if (menuPrintReceipt.IsChecked)
+                {
+                    ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>(), date, transactionNumber.ToString());
+                    ReceiptPrinter printer = new ReceiptPrinter(generator.flowDoc);
+                    printer.Print();
+                }
                 checkout.Close();
                 cart.Clear();
             }
         }
 
-
-        #region EditCart Methods
+     #region EditCart Methods
 
         private void btnChangePrice_Click(object sender, RoutedEventArgs e)
         {
@@ -257,7 +259,6 @@ namespace Inventory_3._0
             UpdateTotals();
             txtEdit.Clear();
         }
-
 
         private void btnChangeQuantity_Click(object sender, RoutedEventArgs e)
         {

@@ -288,12 +288,11 @@ namespace Inventory_3._0
         {
             DateTime today = DateTime.Today;
             DateTime tomorrow = today.AddDays(1);
-            
-            DatePicker picker = new DatePicker();
 
-            decimal sales, tradeCash, tradeCredit;
-            DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), out tradeCash, out tradeCredit, out sales);
+            decimal sales, tradeCash, tradeCredit, salesMinusStoreCredit;
+            DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), out tradeCash, out tradeCredit, out sales, out salesMinusStoreCredit);
 
+            MessageBox.Show(String.Format("Total income (Sales - store credit and discounts): ${0}", salesMinusStoreCredit));
             MessageBox.Show(String.Format("Cash: ${0}\nCredit: ${1}\nSales: ${2}", tradeCash.ToString("0.00"), tradeCredit.ToString("0.00"), sales.ToString("0.00")));
         }
 

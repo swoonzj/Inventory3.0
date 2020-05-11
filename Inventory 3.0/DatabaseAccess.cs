@@ -1030,18 +1030,19 @@ namespace Inventory_3._0
         //    }
         //}
 
-        public static void GetDailyTotal(string startDate, string endDate, out decimal cash, out decimal credit, out decimal sales)
+        public static void GetDailyTotal(string startDate, string endDate, out decimal cash, out decimal credit, out decimal sales, out decimal salesMinusStoreCredit)
         {
             // SELECT SUM(Price)
             //FROM tblTransactions
             //WHERE (Date between '2019-10-14 00:00:00.000' AND '2019-10-15 00:00:00.000') AND Type = 'Trade-Cash'
 
-            sales = cash = credit = 0m;
+            sales = cash = credit = salesMinusStoreCredit = 0m;
 
             string salesCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.PRICE, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.SALE, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
             string cashCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CASH, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CASH, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
             string creditCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CREDIT, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CREDIT, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
-
+            string salesMinusStoreCreditCommand = String.Format("SELECT SUM({0}) FROM {1} WHERE ({2} = \'{3}\') OR ({2} = \'{4}\')", "AMOUNT", TableNames.PAYMENT, TransactionTypes.PAYMENT_CASH, TransactionTypes.PAYMENT_CREDITCARD);      
+            
             try
             {
                 // Sales
@@ -1052,7 +1053,6 @@ namespace Inventory_3._0
                 {
                     sales = Convert.ToDecimal(result);
                 }
-                else sales = 0M;
                 connect.Close();
 
                 // Trade-Cash
@@ -1063,7 +1063,6 @@ namespace Inventory_3._0
                 {
                     cash = Convert.ToDecimal(result);
                 }
-                else cash = 0M;
                 connect.Close();
 
                 // Trade-Credit
@@ -1074,7 +1073,16 @@ namespace Inventory_3._0
                 {
                     credit = Convert.ToDecimal(result);
                 }
-                else credit = 0M;
+                connect.Close();
+
+                // Sales, only cash or credit card (no store credits/discounts)
+                cmd = new SqlCommand(salesMinusStoreCreditCommand, connect);
+                connect.Open();
+                result = cmd.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    salesMinusStoreCredit = Convert.ToDecimal(result);
+                }
                 connect.Close();
             }
             catch (Exception ex)

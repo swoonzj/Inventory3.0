@@ -53,9 +53,11 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
-                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
-                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
-                    <GridViewColumn Header="Trade - Cash"  DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
+                    <GridViewColumn Header="System" DisplayMemberBinding="{Binding Path=system}"/>
+                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding quantity[0]}"/>
+                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
+                    <GridViewColumn Header="Total Price" DisplayMemberBinding="{Binding priceTotal, StringFormat=C}"/>
+                    <GridViewColumn Header="Trade - Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
                     <GridViewColumn Header="Trade - Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
                 </GridView>
             </ListView.View>

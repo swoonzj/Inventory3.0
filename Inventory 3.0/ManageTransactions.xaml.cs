@@ -29,7 +29,7 @@ namespace Inventory_3._0
         public ManageTransactions()
         {
             //ObservableCollection<Item> list = new ObservableCollection<Item>();
-            //list.Add(new Item("Test1", "System", 10m, 1, 2, 3, 0.ToString()));
+            //list.Add(new Item("Test1", "System", 10m, 2, 2, 3, 0.ToString()));
             //list.Add(new Item("Test2", "System", 100m, 1, 20, 30, 0.ToString()));
             //Transaction testTransaction = new Transaction(55, "Sale", DateTime.Today);
             //testTransaction.items = list;

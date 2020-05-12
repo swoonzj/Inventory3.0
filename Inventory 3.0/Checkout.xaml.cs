@@ -48,12 +48,18 @@ namespace Inventory_3._0
 
         private void FinalizeTransaction()
         {
+            //checkout[0] = Product total
+            //checkout[1...count-1] = payment
+            // if change is due:
+            //checkout[count-1] = change due
+
             if (total < 0)
             {
                 decimal change = 0 - total;
-                checkout.Add(new Item("Change Due:", "Checkout", change, 1, 0, 0, "0"));
-                MessageBox.Show("Change Due: " + change.ToString("C"));
-                
+                checkout.Add(new Item(TransactionTypes.CHANGE_DUE, "Checkout", change, 1, 0, 0, "0"));
+                MessageBox.Show(TransactionTypes.CHANGE_DUE + change.ToString("C"));
+                // Adjust final form of payment to match change due
+                checkout[checkout.Count - 2].price += checkout[checkout.Count - 1].price;
             }
             success = true;
 
@@ -61,7 +67,8 @@ namespace Inventory_3._0
             int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
             for (int i = 1; i < checkout.Count; i++)
             {
-                DBAccess.AddPayment(checkout[i], transactionNumber);
+                if (checkout[i].name != TransactionTypes.CHANGE_DUE)
+                    DBAccess.AddPayment(checkout[i], transactionNumber);
             }
             DialogResult = success;
         }

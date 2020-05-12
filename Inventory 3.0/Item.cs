@@ -371,7 +371,7 @@ namespace Inventory_3._0
                         decimal sum = 0;
                         foreach (Item item in Items)
                         {
-                            sum += item.price;
+                            sum += item.priceTotal;
                         }
                         return sum;
                     }
@@ -380,7 +380,7 @@ namespace Inventory_3._0
                         decimal sum = 0;
                         foreach (Item item in Items)
                         {
-                            sum += item.tradeCash;
+                            sum += item.cashTotal;
                         }
                         return sum;
                     }
@@ -389,7 +389,7 @@ namespace Inventory_3._0
                         decimal sum = 0;
                         foreach (Item item in Items)
                         {
-                            sum += item.tradeCredit;
+                            sum += item.creditTotal;
                         }
                         return sum;
                     }

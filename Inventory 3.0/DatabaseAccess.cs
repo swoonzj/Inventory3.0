@@ -833,12 +833,11 @@ namespace Inventory_3._0
             }
         }
 
-        public static Transaction GetPayment(int transactionNumber)
+        public static List<Transaction> GetPayments(int transactionNumber)
         {
-            Transaction transaction = null;
+            List<Transaction> payments = new List<Transaction>();
 
             SqlCommand cmd;
-            // SEARCH FOR SPECIFIC TRANSACTION NUMBER!
             cmd = new SqlCommand("SELECT * FROM " + TableNames.PAYMENT +
                 " WHERE TransactionNumber = " + transactionNumber.ToString(), connect);
 
@@ -848,7 +847,7 @@ namespace Inventory_3._0
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read() == true)
                 {
-                    transaction = new Transaction((int)reader[0], reader[1].ToString(), DateTime.Today, (decimal)reader[2]);
+                    payments.Add(new Transaction((int)reader[0], reader[1].ToString(), DateTime.Today, (decimal)reader[2]));
                 }
             }
             catch (Exception e)
@@ -860,7 +859,7 @@ namespace Inventory_3._0
                 connect.Close();
             }
 
-            return transaction;
+            return payments;
         }
 
         public static void AddTransaction(Item item, string type, int transactionNumber, string date)
@@ -1071,7 +1070,7 @@ namespace Inventory_3._0
             string salesCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.PRICE, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.SALE, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
             string cashCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CASH, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CASH, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
             string creditCommand = String.Format("SELECT SUM({0} * {7}) FROM {6} WHERE ({1} between \'{2}\' AND \'{3}\') AND {4} = \'{5}\'", SQLTableColumnNames.TRADE_CREDIT, SQLTableColumnNames.DATE, startDate, endDate, SQLTableColumnNames.TYPE, TransactionTypes.TRADE_CREDIT, TableNames.TRANSACTION, SQLTableColumnNames.QUANTITY);
-            string salesMinusStoreCreditCommand = String.Format("SELECT SUM({0}) FROM {1} WHERE ({5} between \'{6}\' AND \'{7}\') AND (({4} = \'{2}\') OR ({4} = \'{3}\'))", "AMOUNT", TableNames.PAYMENT, TransactionTypes.PAYMENT_CASH, TransactionTypes.PAYMENT_CREDITCARD, "PAYMENTTYPE", SQLTableColumnNames.DATE, startDate, endDate);      
+            //string salesMinusStoreCreditCommand = String.Format("SELECT SUM({0}) FROM {1} WHERE ({5} between \'{6}\' AND \'{7}\') AND (({4} = \'{2}\') OR ({4} = \'{3}\'))", "AMOUNT", TableNames.PAYMENT, TransactionTypes.PAYMENT_CASH, TransactionTypes.PAYMENT_CREDITCARD, "PAYMENTTYPE", SQLTableColumnNames.DATE, startDate, endDate);      
             
             try
             {
@@ -1106,14 +1105,14 @@ namespace Inventory_3._0
                 connect.Close();
 
                 // Sales, only cash or credit card (no store credits/discounts)
-                cmd = new SqlCommand(salesMinusStoreCreditCommand, connect);
-                connect.Open();
-                result = cmd.ExecuteScalar();
-                if (result != DBNull.Value)
-                {
-                    salesMinusStoreCredit = Convert.ToDecimal(result);
-                }
-                connect.Close();
+                //cmd = new SqlCommand(salesMinusStoreCreditCommand, connect);
+                //connect.Open();
+                //result = cmd.ExecuteScalar();
+                //if (result != DBNull.Value)
+                //{
+                //    salesMinusStoreCredit = Convert.ToDecimal(result);
+                //}
+                //connect.Close();
             }
             catch (Exception ex)
             {

@@ -284,17 +284,6 @@ namespace Inventory_3._0
             moveInventory.Show();
         }
 
-        private void menuGetTotalsClick(object sender, RoutedEventArgs e)
-        {
-            DateTime today = DateTime.Today;
-            DateTime tomorrow = today.AddDays(1);
-
-            decimal sales, tradeCash, tradeCredit, salesMinusStoreCredit;
-            DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), out tradeCash, out tradeCredit, out sales, out salesMinusStoreCredit);
-
-            MessageBox.Show(String.Format("Cash: ${0}\nCredit: ${1}\nSales: ${2}", tradeCash.ToString("C"), tradeCredit.ToString("C"), sales.ToString("C")));
-        }
-
         private void txtUPC_GotFocus(object sender, RoutedEventArgs e)
         {
             btnAdd.IsDefault = true;

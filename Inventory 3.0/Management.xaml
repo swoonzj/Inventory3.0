@@ -34,7 +34,6 @@
             <MenuItem Name="menuManageTransactions" Header="Manage _Transactions" Click="menuManageTransactions_Click" />
             <MenuItem Header="_Settings">
                 <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="True"/>
-                <MenuItem Name="menuGetTotals" Header="Get _Totals" Click="menuGetTotalsClick"/>
             </MenuItem>
         </Menu>
         <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">

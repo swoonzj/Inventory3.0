@@ -64,8 +64,9 @@ namespace Inventory_3._0
                         break;
                     case TransactionTypes.SALE:
                         totalSales += item.total;
-                        Transaction paymentItem = DBAccess.GetPayment(item.transactionNumber);
-                        switch (paymentItem.transactionType)
+                        List<Transaction> payments = DBAccess.GetPayments(item.transactionNumber);
+                        foreach (Transaction payment in payments)
+                        switch (payment.transactionType)
                         {
                             case TransactionTypes.PAYMENT_CASH:
                                 cashPayment += item.total;

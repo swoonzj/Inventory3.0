@@ -42,7 +42,8 @@ namespace Inventory_3._0
 
         public PointOfSales(List<Item> items) : this()
         {
-            foreach (Item item in items) cart.Add(item);
+            //foreach (Item item in items) cart.Add(item);
+            lvList.ItemsSource = items;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -73,6 +74,8 @@ namespace Inventory_3._0
             if (index >= 0)
             {
                 cart[index].quantity[0]++;
+                ((Item)cart[index]).NotifyPropertyChanged("quantity");
+                ((Item)cart[index]).NotifyPropertyChanged("priceTotal");
             }
             else
             {
@@ -87,6 +90,7 @@ namespace Inventory_3._0
             {
                 addItemToCart(item);
             }
+            UpdateTotals();
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)

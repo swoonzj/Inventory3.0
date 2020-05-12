@@ -22,7 +22,7 @@ namespace Inventory_3._0
     /// 
     public partial class ManageTransactions : SortableListViews
     {
-
+        decimal tradeCash, tradeCredit, totalSales, netSales, cashPayment, creditPayment, netIncome;
         ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
         DateTime startDate = DateTime.Today, endDate = DateTime.Today.AddDays(1);
 
@@ -45,6 +45,49 @@ namespace Inventory_3._0
             transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate));
             lvList.ItemsSource = transactions;
             Mouse.OverrideCursor = Cursors.Arrow;
+            CalculateTotals();
+            SetLabels();
+        }
+
+        private void CalculateTotals()
+        {
+            tradeCash = tradeCredit = totalSales = netSales = cashPayment = creditPayment = netIncome = 0m;
+            foreach (Transaction item in transactions)
+            {
+                switch (item.transactionType)
+                {
+                    case TransactionTypes.TRADE_CASH:
+                        tradeCash += item.total;
+                        break;
+                    case TransactionTypes.TRADE_CREDIT:
+                        tradeCredit += item.total;
+                        break;
+                    case TransactionTypes.SALE:
+                        totalSales += item.total;
+                        Transaction paymentItem = DBAccess.GetPayment(item.transactionNumber);
+                        switch (paymentItem.transactionType)
+                        {
+                            case TransactionTypes.PAYMENT_CASH:
+                                cashPayment += item.total;
+                                break;
+                            case TransactionTypes.PAYMENT_CREDITCARD:
+                                creditPayment += item.total;
+                                break;
+                        }
+                        break;                    
+                }
+            }
+            netSales = (cashPayment + creditPayment);
+            netIncome = (cashPayment + creditPayment) - (tradeCash);
+        }
+
+        private void SetLabels()
+        {
+            lblSalesTotal.Content = totalSales.ToString("C");
+            lblTradeCash.Content = tradeCash.ToString("C");
+            lblTradeCredit.Content = tradeCredit.ToString("C");
+            lblNetSales.Content = netSales.ToString("C");
+            lblNetProfit.Content = netIncome.ToString("C");
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)

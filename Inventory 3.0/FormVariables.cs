@@ -66,9 +66,7 @@ namespace Inventory_3._0
         public const string PAYMENT_CREDITCARD = "Payment - Credit Card";
         public const string PAYMENT_STORECREDIT = "Payment - Store Credit";
         public const string PAYMENT_REWARDS = "Payment - Loyalty Rewards";
-
-
-
+        public const string RETURN = "Return";
     }
 
     public static class POSTableIndex

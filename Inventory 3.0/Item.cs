@@ -337,16 +337,28 @@ namespace Inventory_3._0
             get { return CalculateQuantity(); }
         }
 
+        private decimal Total;
         public decimal total
         {
-            get { return CalculateTotal(); }
+            get 
+            {
+                if (TransactionType != TransactionTypes.PAYMENT_CASH
+                    && TransactionType != TransactionTypes.PAYMENT_CREDITCARD
+                    && TransactionType != TransactionTypes.PAYMENT_REWARDS
+                    && TransactionType != TransactionTypes.PAYMENT_STORECREDIT)
+                {
+                    return CalculateTotal();
+                }
+                else return Total;
+            }
         }
 
-        public Transaction(int transactionNumber, string transactionType, DateTime date)
+        public Transaction(int transactionNumber, string transactionType, DateTime date, decimal total = 0m)
         {
             this.transactionNumber = transactionNumber;
             this.transactionType = transactionType;
             this.date = date;
+            Total = total;
             items = new ObservableCollection<Item>();
         }
 

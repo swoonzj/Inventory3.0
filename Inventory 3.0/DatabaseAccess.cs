@@ -833,7 +833,37 @@ namespace Inventory_3._0
             }
         }
 
-        public static void AddTransaction(Item item, string type, int transactionNumber, string date) // Should only be used for Table of Payment
+        public static Transaction GetPayment(int transactionNumber)
+        {
+            Transaction transaction = null;
+
+            SqlCommand cmd;
+            // SEARCH FOR SPECIFIC TRANSACTION NUMBER!
+            cmd = new SqlCommand("SELECT * FROM " + TableNames.PAYMENT +
+                " WHERE TransactionNumber = " + transactionNumber.ToString(), connect);
+
+            try
+            {
+                connect.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read() == true)
+                {
+                    transaction = new Transaction((int)reader[0], reader[1].ToString(), DateTime.Today, (decimal)reader[2]);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN GetPayment():\n" + e.Message + e.StackTrace.ToString());
+            }
+            finally
+            {
+                connect.Close();
+            }
+
+            return transaction;
+        }
+
+        public static void AddTransaction(Item item, string type, int transactionNumber, string date)
         {
             SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.TRANSACTION + " VALUES(@TRANSACTIONNUMBER, @ID, @NAME, @SYSTEM, @PRICE, @QUANTITY, @CASH, @CREDIT, @TYPE, @DATE)", connect);
             cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;

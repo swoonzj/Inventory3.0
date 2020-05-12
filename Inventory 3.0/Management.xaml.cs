@@ -292,8 +292,7 @@ namespace Inventory_3._0
             decimal sales, tradeCash, tradeCredit, salesMinusStoreCredit;
             DBAccess.GetDailyTotal(today.ToString(), tomorrow.ToString(), out tradeCash, out tradeCredit, out sales, out salesMinusStoreCredit);
 
-            MessageBox.Show(String.Format("Total net sales [Sales - (store credit + discounts)]: ${0}", salesMinusStoreCredit));
-            MessageBox.Show(String.Format("Cash: ${0}\nCredit: ${1}\nSales: ${2}", tradeCash.ToString("0.00"), tradeCredit.ToString("0.00"), sales.ToString("0.00")));
+            MessageBox.Show(String.Format("Cash: ${0}\nCredit: ${1}\nSales: ${2}", tradeCash.ToString("C"), tradeCredit.ToString("C"), sales.ToString("C")));
         }
 
         private void txtUPC_GotFocus(object sender, RoutedEventArgs e)

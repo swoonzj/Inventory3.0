@@ -94,7 +94,9 @@ namespace Inventory_3._0
             lblTradeCash.Content = tradeCash.ToString("C");
             lblTradeCredit.Content = tradeCredit.ToString("C");
             lblNetSales.Content = netSales.ToString("C");
-            lblNetProfit.Content = netIncome.ToString("C");
+            lblNetIncome.Content = netIncome.ToString("C");
+            lblRedeemedCredit.Content = creditRedeemed.ToString("C");
+            lblRedeemedRewards.Content = rewardsRedeemed.ToString("C");
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -137,15 +139,28 @@ namespace Inventory_3._0
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Permanently delete selected items?", "This could be a big deal.", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+            MessageBoxResult result = MessageBox.Show("Permanently delete selected items? This can't be undone!", "This could be a big deal.", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
             if (result != MessageBoxResult.Yes) return;
-
-            foreach (Item item in lvList.SelectedItems)
+            
+            List<Transaction> transToRemove = new List<Transaction>();
+            foreach (Transaction transaction in lvList.SelectedItems)
             {
-                // DELETE  TRANSACTION
+                
+                try
+                {
+                    // DELETE TRANSACTION
+                    DBAccess.DeleteTransaction(transaction.transactionNumber);
+                    // DELETE PAYMENT
+                    DBAccess.DeleteTransaction(transaction.transactionNumber);
+                    transToRemove.Add(transaction);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in btnDelete_Click(): " + ex.Message);
+                }
             }
-
-            Search();
+            // Remove deleted transactions from listview
+            foreach (Transaction trans in transToRemove) lvList.Items.Remove(trans);
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)

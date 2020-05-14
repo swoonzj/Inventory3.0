@@ -862,6 +862,27 @@ namespace Inventory_3._0
             return payments;
         }
 
+        public static void DeleteAllTransactionPayments(int transactionNumber)
+        {
+            SqlCommand cmd = new SqlCommand("DELETE FROM " + TableNames.PAYMENT + " WHERE ID = " + transactionNumber.ToString(), connect); 
+
+            // execute command  & close connection
+            try
+            {
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN DeleteAllTransactionPayments:\n" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+        }
+
         public static void AddTransaction(Item item, string type, int transactionNumber, string date)
         {
             SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.TRANSACTION + " VALUES(@TRANSACTIONNUMBER, @ID, @NAME, @SYSTEM, @PRICE, @QUANTITY, @CASH, @CREDIT, @TYPE, @DATE)", connect);
@@ -951,6 +972,27 @@ namespace Inventory_3._0
             }
 
             return transactions;
+        }
+
+        public static void DeleteTransaction(int transactionNumber)
+        {
+            SqlCommand cmd = new SqlCommand("DELETE FROM " + TableNames.TRANSACTION + " WHERE ID = " + transactionNumber.ToString(), connect);
+
+            // execute command  & close connection
+            try
+            {
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN DeleteTransaction:\n" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
         }
 
         public static Item SQLReaderToTransaction(SqlDataReader reader)

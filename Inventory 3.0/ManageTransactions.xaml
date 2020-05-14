@@ -4,12 +4,12 @@
         xmlns:local="clr-namespace:Inventory_3._0"
         Title="Transactions"
         Icon="Resources\shaq.ico"
-        Height="500" Width="1000">
+        Height="580" Width="1140">
     <Window.Resources>
         <local:IntConverter x:Key="IntConverter" />
         <local:DecimalConverter x:Key="DecimalConverter"/>
     </Window.Resources>
-    <Grid>
+    <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="3*" />
@@ -77,27 +77,54 @@
         <Popup Name="calPopup" Placement="Mouse" StaysOpen="False">
             <Calendar Name="calDates" SelectionMode="SingleRange" SelectedDatesChanged="DatePicker_SelectedDateChanged" />
         </Popup>
-        <WrapPanel Orientation="Vertical" Grid.Row="7" Grid.RowSpan="2">
-            <StackPanel Orientation="Horizontal">
-                <Label>Sales Total:</Label>
-                <Label Name="lblSalesTotal" Grid.Row="7">$0</Label>
+        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.RowSpan="2">
+            <StackPanel Orientation="Vertical" Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Sales Total:</Label>
+                    <Label Name="lblSalesTotal" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <Separator/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Cash Sales:</Label>
+                    <Label Name="lblCashTotal" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label>Credit Card Sales:</Label>
+                    <Label Name="lblCreditSales" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <Separator/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Net Sales:</Label>
+                    <Label Name="lblNetSales" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label>Net Sales:</Label>
-                <Label Name="lblNetSales" Grid.Row="7">$0</Label>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Redeemed Store Credit:</Label>
+                    <Label Name="lblRedeemedCredit" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Redeemed Rewards:</Label>
+                    <Label Name="lblRedeemedRewards" Grid.Row="7">$0</Label>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label>Trade: Cash Total:</Label>
-                <Label Name="lblTradeCash" Grid.Row="7">$0</Label>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Trade: Cash Total:</Label>
+                    <Label Name="lblTradeCash" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Trade: Credit Total:</Label>
+                    <Label Name="lblTradeCredit" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <Separator/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Net Income:</Label>
+                    <Label Name="lblNetIncome" Grid.Row="7">$0</Label>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label>Trade: Credit Total:</Label>
-                <Label Name="lblTradeCredit" Grid.Row="7">$0</Label>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label>Net Income:</Label>
-                <Label Name="lblNetProfit" Grid.Row="7">$0</Label>
-            </StackPanel>         
-        </WrapPanel>
+        </StackPanel>
     </Grid>
 </local:SortableListViews>

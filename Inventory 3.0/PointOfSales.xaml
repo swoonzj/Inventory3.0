@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local ="clr-namespace:Inventory_3._0"
         Icon="Resources/shaq.ico"
-        Title="Register" Height="500" Width="1000">
+        Title="Register" Height="575" Width="1183">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
@@ -99,7 +99,7 @@
             <Button Name="btnRemove" Margin="5" Click="btnRemove_Click" Height="Auto">Remove</Button>
             <Button Name="btnClearCart" Margin="5" Click="btnClearCart_Click" Height="Auto" Width="Auto">Clear Cart</Button>
         </StackPanel>
-        <Expander Name="expanderEditCart" Margin="10,10,0,0" Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" IsExpanded="False" Header="Edit Cart">
+        <Expander Name="expanderEditCart" Margin="10,10,0,0" Grid.Column="1" Grid.Row="3" Grid.RowSpan="4" IsExpanded="False" Header="Edit Cart">
             <StackPanel>
                 <TextBox Name="txtEdit" Margin="5" TextAlignment="Right" Text="{Binding Path=txt, StringFormat=C}"/>
                 <Button Name="btnChangePrice" Margin="5" Click="btnChangePrice_Click">Change Price</Button>
@@ -107,6 +107,10 @@
                 <Separator/>
                 <Button Name="btnSixForTen" Margin="5" Click="btnSixForTen_Click">6 for $10</Button>
                 <Button Name="btnTenForTwenty" Margin="5" Click="btnTenForTwenty_Click">15 for $20</Button>
+                <Separator/>
+                <Button Name="btn10PercentOff" Margin="5" Click="btn10PercentOff_Click" ToolTip="If item in cart is checked, that item will be discounted. Otherwise, discount will apply to entire cart.">10% Off</Button>
+                <Button Name="btn20PercentOff" Margin="5" Click="btn20PercentOff_Click" ToolTip="If item in cart is checked, that item will be discounted. Otherwise, discount will apply to entire cart.">20% Off</Button>
+                <Button Name="btnPercentOff" Margin="5" Click="btnPercentOff_Click" ToolTip="If item in cart is checked, that item will be discounted. Otherwise, discount will apply to entire cart.">%</Button>
             </StackPanel>
         </Expander>
 

@@ -83,6 +83,10 @@
                 <Label Name="lblSalesTotal" Grid.Row="7">$0</Label>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
+                <Label>Net Sales:</Label>
+                <Label Name="lblNetSales" Grid.Row="7">$0</Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
                 <Label>Trade: Cash Total:</Label>
                 <Label Name="lblTradeCash" Grid.Row="7">$0</Label>
             </StackPanel>
@@ -93,11 +97,7 @@
             <StackPanel Orientation="Horizontal">
                 <Label>Net Income:</Label>
                 <Label Name="lblNetProfit" Grid.Row="7">$0</Label>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label>Net Sales:</Label>
-                <Label Name="lblNetSales" Grid.Row="7">$0</Label>
-            </StackPanel>            
+            </StackPanel>         
         </WrapPanel>
     </Grid>
 </local:SortableListViews>

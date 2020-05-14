@@ -68,9 +68,10 @@ namespace Inventory_3._0
             Mouse.OverrideCursor = Cursors.Arrow;
         }
 
-        private void addItemToCart(Item item) 
+        private void addItemToCart(Item itemToAdd) 
         {
-            int index = cart.IndexOf(item);
+            int index = cart.IndexOf(itemToAdd);
+            Item item = itemToAdd.Clone();
             if (index >= 0)
             {
                 cart[index].quantity[0]++;
@@ -303,9 +304,6 @@ namespace Inventory_3._0
             UpdateTotals();
         }
 
-
-        #endregion
-
         private void btnAddUnlistedItem_Click(object sender, RoutedEventArgs e)
         {
             UnlistedItemPrompt prompt = new UnlistedItemPrompt();
@@ -315,5 +313,83 @@ namespace Inventory_3._0
                 prompt.Close();
             }
         }
+
+        private void btn10PercentOff_Click(object sender, RoutedEventArgs e)
+        {
+            // Apply discount to specific items
+            if (lvCart.SelectedItems.Count != 0)
+            {
+                foreach (Item item in lvCart.SelectedItems)
+                {
+                    decimal newPrice = item.priceTotal * -.1m;
+                    Item newItem = new Item(RegisterStrings.TEN_PERCENT + item.name, RegisterStrings.DISCOUNT, newPrice, 1, 0m, 0m, "0");
+                    cart.Insert(lvCart.SelectedItems.IndexOf(item) + 1, newItem);
+                }
+                UpdateTotals();
+            }
+            // Apply discount to entire cart
+            else
+            {
+                decimal newPrice = total * -.1m;
+                Item newItem = new Item(RegisterStrings.TEN_PERCENT, RegisterStrings.DISCOUNT, newPrice, 1, 0m, 0m, "0");
+                cart.Add(newItem);
+            }
+        }
+
+        private void btn20PercentOff_Click(object sender, RoutedEventArgs e)
+        {
+            // Apply discount to specific items
+            if (lvCart.SelectedItems.Count != 0)
+            {
+                foreach (Item item in lvCart.SelectedItems)
+                {
+                    decimal newPrice = item.priceTotal * -.2m;
+                    Item newItem = new Item(RegisterStrings.TWENTY_PERCENT + item.name, RegisterStrings.DISCOUNT, newPrice, 1, 0m, 0m, "0");
+                    cart.Insert(lvCart.SelectedItems.IndexOf(item) + 1, newItem);
+                }
+                UpdateTotals();
+            }
+            // Apply discount to entire cart
+            else
+            {
+                decimal newPrice = total * -.2m;
+                Item newItem = new Item(RegisterStrings.TWENTY_PERCENT, RegisterStrings.DISCOUNT, newPrice, 1, 0m, 0m, "0");
+                cart.Add(newItem);
+            }
+        }
+
+        private void btnPercentOff_Click(object sender, RoutedEventArgs e)
+        {
+            // Get percentage from textbox
+            int input;
+            decimal percentage;
+            if (!int.TryParse(txtEdit.Text, out input))
+            {
+                MessageBox.Show("\"" + txtEdit.Text + "\" is not a valid percentage. Input must be a whole number (i.e. \"15\")");
+                return;
+            }
+            percentage = input / 100m;
+
+            // Apply discount to specific items
+            if (lvCart.SelectedItems.Count != 0)
+            {
+                foreach (Item item in lvCart.SelectedItems)
+                {
+                    decimal newPrice = item.priceTotal * -percentage;
+                    Item newItem = new Item(input.ToString() + "% off " + item.name, RegisterStrings.DISCOUNT, newPrice, 1, 0m, 0m, "0");
+                    cart.Insert(lvCart.SelectedItems.IndexOf(item) + 1, newItem);
+                }
+                UpdateTotals();
+            }
+            // Apply discount to entire cart
+            else
+            {
+                decimal newPrice = total * -percentage;
+                Item newItem = new Item(input.ToString() + "% off", RegisterStrings.DISCOUNT, newPrice, 1, 0m, 0m, "0");
+                cart.Add(newItem);
+            }
+        }
+
+        #endregion
     }
 }

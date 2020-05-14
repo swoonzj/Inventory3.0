@@ -22,7 +22,7 @@ namespace Inventory_3._0
     /// 
     public partial class ManageTransactions : SortableListViews
     {
-        decimal tradeCash, tradeCredit, totalSales, netSales, cashPayment, creditPayment, netIncome;
+        decimal tradeCash, tradeCredit, totalSales, netSales, cashPayment, creditPayment, netIncome, creditRedeemed, rewardsRedeemed;
         ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
         DateTime startDate = DateTime.Today, endDate = DateTime.Today.AddDays(1);
 
@@ -51,7 +51,7 @@ namespace Inventory_3._0
 
         private void CalculateTotals()
         {
-            tradeCash = tradeCredit = totalSales = netSales = cashPayment = creditPayment = netIncome = 0m;
+            tradeCash = tradeCredit = totalSales = netSales = cashPayment = creditPayment = netIncome = rewardsRedeemed = creditRedeemed = 0m;
             foreach (Transaction item in transactions)
             {
                 switch (item.transactionType)
@@ -74,12 +74,18 @@ namespace Inventory_3._0
                             case TransactionTypes.PAYMENT_CREDITCARD:
                                 creditPayment += item.total;
                                 break;
+                            case TransactionTypes.PAYMENT_REWARDS:
+                                rewardsRedeemed += item.total;
+                                break;
+                            case TransactionTypes.PAYMENT_STORECREDIT:
+                                creditRedeemed += item.total;
+                                break;
                         }
                         break;                    
                 }
             }
             netSales = (cashPayment + creditPayment);
-            netIncome = (cashPayment + creditPayment) - (tradeCash);
+            netIncome = netSales - tradeCash;
         }
 
         private void SetLabels()

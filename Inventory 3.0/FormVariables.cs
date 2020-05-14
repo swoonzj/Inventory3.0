@@ -70,6 +70,13 @@ namespace Inventory_3._0
         public const string CHANGE_DUE = "Change Due:";
     }
 
+    public static class RegisterStrings
+    {
+        public const string DISCOUNT = "Discount",
+            TEN_PERCENT = "10% Off ",
+            TWENTY_PERCENT = "20% Off ";
+    }
+
     public static class POSTableIndex
     {
         public const int NAME = 0,

@@ -141,8 +141,6 @@ namespace Inventory_3._0
             RECEIPT_FOOTER = "RETURN POLICY:\n2 Weeks for defective items, 2 Days otherwise",
             LOGO = "Resources\\Logo.bmp";
 
-
-
         public const string FONTNAME = "Courier";
         public const int FONTSIZE = 10;
     }

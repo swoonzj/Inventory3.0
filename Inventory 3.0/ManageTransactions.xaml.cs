@@ -97,6 +97,8 @@ namespace Inventory_3._0
             lblNetIncome.Content = netIncome.ToString("C");
             lblRedeemedCredit.Content = creditRedeemed.ToString("C");
             lblRedeemedRewards.Content = rewardsRedeemed.ToString("C");
+            lblCashSales.Content = cashPayment.ToString("C");
+            lblCreditSales.Content = creditPayment.ToString("C");
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)

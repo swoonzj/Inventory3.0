@@ -864,7 +864,7 @@ namespace Inventory_3._0
 
         public static void DeleteAllTransactionPayments(int transactionNumber)
         {
-            SqlCommand cmd = new SqlCommand("DELETE FROM " + TableNames.PAYMENT + " WHERE ID = " + transactionNumber.ToString(), connect); 
+            SqlCommand cmd = new SqlCommand("DELETE FROM " + TableNames.PAYMENT + " WHERE TransactionNumber = " + transactionNumber.ToString(), connect); 
 
             // execute command  & close connection
             try
@@ -976,7 +976,7 @@ namespace Inventory_3._0
 
         public static void DeleteTransaction(int transactionNumber)
         {
-            SqlCommand cmd = new SqlCommand("DELETE FROM " + TableNames.TRANSACTION + " WHERE ID = " + transactionNumber.ToString(), connect);
+            SqlCommand cmd = new SqlCommand("DELETE FROM " + TableNames.TRANSACTION + " WHERE TransactionNumber = " + transactionNumber.ToString(), connect);
 
             // execute command  & close connection
             try
@@ -1163,8 +1163,6 @@ namespace Inventory_3._0
             }
         }
 
-        #endregion
-        
-        
+        #endregion        
     }
 }

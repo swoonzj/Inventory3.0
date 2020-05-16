@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:Inventory_3._0"
         Title="Transactions"
         Icon="Resources\shaq.ico"
-        Height="580" Width="1140">
+        Height="580" Width="1324">
     <Window.Resources>
         <local:IntConverter x:Key="IntConverter" />
         <local:DecimalConverter x:Key="DecimalConverter"/>
@@ -41,15 +41,9 @@
                     <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding quantity}"/>
                     <GridViewColumn Header="Total" DisplayMemberBinding="{Binding total, StringFormat=C}"/>
                 </GridView>
-                <!--<GridView x:Key="single">
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding transactionNumber}"/>
-                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=date}"/>
-                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=transactionType}"/>
-                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=total, StringFormat=C}"/>
-                </GridView>-->
             </ListView.View>
         </ListView>
-        <ListView Name="lvDetail" Margin="5" Grid.Column="1" Grid.Row="1" Grid.RowSpan="7"  SelectionMode="Single"  GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+        <ListView Name="lvDetail" Margin="5" Grid.Column="1" Grid.Row="1" Grid.RowSpan="5"  SelectionMode="Single"  GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
@@ -59,6 +53,14 @@
                     <GridViewColumn Header="Total Price" DisplayMemberBinding="{Binding priceTotal, StringFormat=C}"/>
                     <GridViewColumn Header="Trade - Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
                     <GridViewColumn Header="Trade - Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView Name="lvPayment" Margin="5" Grid.Column="1" Grid.Row="6" Grid.RowSpan="3"  SelectionMode="Single" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Type"  DisplayMemberBinding="{Binding transactionType}"/>
+                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding total, StringFormat=C}"/>
                 </GridView>
             </ListView.View>
         </ListView>

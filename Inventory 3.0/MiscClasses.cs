@@ -409,13 +409,36 @@ namespace Inventory_3._0
 
         public void Print()
         {
-            PrintDialog printDialog = new PrintDialog();
-            LocalPrintServer printServer = new LocalPrintServer();
-            PrintQueue pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
-            printDialog.PrintQueue = pq;
+            try
+            {
+                PrintDialog printDialog = new PrintDialog();
+                LocalPrintServer printServer = new LocalPrintServer();
+                PrintQueue pq;
+                try
+                {
+                    pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
+                }
+                catch
+                {
+                    string printServerName = @"\\Coregaming";
+                    string printQueueName = "POS";
 
-            IDocumentPaginatorSource idpSource = flowDoc;
-            printDialog.PrintDocument(idpSource.DocumentPaginator, "Printing Receipt");
+                    PrintServer ps = string.IsNullOrEmpty(printServerName)
+                        // for local printers
+                        ? new PrintServer()
+                        // for shared printers
+                        : new PrintServer(printServerName);
+                    pq = ps.GetPrintQueue(printQueueName);
+                }
+                printDialog.PrintQueue = pq;
+
+                IDocumentPaginatorSource idpSource = flowDoc;
+                printDialog.PrintDocument(idpSource.DocumentPaginator, "Printing Receipt");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error in Print(): " + e.Message);
+            }
         }
     }    
 }

@@ -15,6 +15,7 @@ namespace Inventory_3._0
     {
 
         public const string PRINTERNAME = "POS";
+        public const string BACKUPPRINTERNAME = "\\\\Coregaming\\pos";
         public class UPCimage
         {
             public const int locX = 0;

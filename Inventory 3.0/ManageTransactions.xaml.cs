@@ -25,6 +25,7 @@ namespace Inventory_3._0
         decimal tradeCash, tradeCredit, totalSales, netSales, cashPayment, creditPayment, netIncome, creditRedeemed, rewardsRedeemed;
         ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
         DateTime startDate = DateTime.Today, endDate = DateTime.Today.AddDays(1);
+        List<Transaction> payments = new List<Transaction>(); 
 
         public ManageTransactions()
         {
@@ -64,24 +65,26 @@ namespace Inventory_3._0
                         break;
                     case TransactionTypes.SALE:
                         totalSales += item.total;
-                        List<Transaction> payments = DBAccess.GetPayments(item.transactionNumber);
+                        payments = DBAccess.GetPayments(item.transactionNumber);
                         foreach (Transaction payment in payments)
-                        switch (payment.transactionType)
                         {
-                            case TransactionTypes.PAYMENT_CASH:
-                                cashPayment += item.total;
-                                break;
-                            case TransactionTypes.PAYMENT_CREDITCARD:
-                                creditPayment += item.total;
-                                break;
-                            case TransactionTypes.PAYMENT_REWARDS:
-                                rewardsRedeemed += item.total;
-                                break;
-                            case TransactionTypes.PAYMENT_STORECREDIT:
-                                creditRedeemed += item.total;
-                                break;
+                            switch (payment.transactionType)
+                            {
+                                case TransactionTypes.PAYMENT_CASH:
+                                    cashPayment += payment.total;
+                                    break;
+                                case TransactionTypes.PAYMENT_CREDITCARD:
+                                    creditPayment += payment.total;
+                                    break;
+                                case TransactionTypes.PAYMENT_REWARDS:
+                                    rewardsRedeemed += payment.total;
+                                    break;
+                                case TransactionTypes.PAYMENT_STORECREDIT:
+                                    creditRedeemed += payment.total;
+                                    break;
+                            }
                         }
-                        break;                    
+                        break;                        
                 }
             }
             netSales = (cashPayment + creditPayment);
@@ -126,12 +129,9 @@ namespace Inventory_3._0
         {
             ListView selection = sender as ListView;
             if (selection.SelectedItem == null) return;
-            //foreach (Item item in (selection.SelectedItem as Transaction).items)
-            //{
-            //    contents += item.ToString() + "\n";
-            //}
-            //MessageBox.Show(contents);
             lvDetail.ItemsSource = (selection.SelectedItem as Transaction).items;
+            payments = DBAccess.GetPayments((selection.SelectedItem as Transaction).transactionNumber);
+            lvPayment.ItemsSource = payments;
         }        
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -153,7 +153,7 @@ namespace Inventory_3._0
                     // DELETE TRANSACTION
                     DBAccess.DeleteTransaction(transaction.transactionNumber);
                     // DELETE PAYMENT
-                    DBAccess.DeleteTransaction(transaction.transactionNumber);
+                    DBAccess.DeleteAllTransactionPayments(transaction.transactionNumber);
                     transToRemove.Add(transaction);
                 }
                 catch (Exception ex)
@@ -162,7 +162,8 @@ namespace Inventory_3._0
                 }
             }
             // Remove deleted transactions from listview
-            foreach (Transaction trans in transToRemove) lvList.Items.Remove(trans);
+            //foreach (Transaction trans in transToRemove) lvList.Items.Remove(trans);
+            Search();
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)

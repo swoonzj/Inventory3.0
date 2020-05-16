@@ -414,6 +414,7 @@ namespace Inventory_3._0
                 PrintDialog printDialog = new PrintDialog();
                 LocalPrintServer printServer = new LocalPrintServer();
                 PrintQueue pq;
+                IDocumentPaginatorSource idpSource = flowDoc;
                 try
                 {
                     pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
@@ -429,10 +430,10 @@ namespace Inventory_3._0
                         // for shared printers
                         : new PrintServer(printServerName);
                     pq = ps.GetPrintQueue(printQueueName);
+                    flowDoc.PageWidth = printDialog.PrintableAreaWidth;                    
                 }
+                idpSource = flowDoc;
                 printDialog.PrintQueue = pq;
-
-                IDocumentPaginatorSource idpSource = flowDoc;
                 printDialog.PrintDocument(idpSource.DocumentPaginator, "Printing Receipt");
             }
             catch (Exception e)

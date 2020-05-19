@@ -106,7 +106,7 @@
                 <Button Name="btnChangeQuantity" Margin="5" Click="btnChangeQuantity_Click">Change Quantity</Button>
                 <Separator/>
                 <Button Name="btnSixForTen" Margin="5" Click="btnSixForTen_Click">6 for $10</Button>
-                <Button Name="btnTenForTwenty" Margin="5" Click="btnTenForTwenty_Click">15 for $20</Button>
+                <Button Name="btnTenForTwenty" Margin="5" Click="btnFifteenForTwenty_Click">15 for $20</Button>
                 <Separator/>
                 <Button Name="btn10PercentOff" Margin="5" Click="btn10PercentOff_Click" ToolTip="If item in cart is checked, that item will be discounted. Otherwise, discount will apply to entire cart.">10% Off</Button>
                 <Button Name="btn20PercentOff" Margin="5" Click="btn20PercentOff_Click" ToolTip="If item in cart is checked, that item will be discounted. Otherwise, discount will apply to entire cart.">20% Off</Button>

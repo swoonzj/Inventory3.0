@@ -43,7 +43,7 @@
             <Button Name="btnRemove" Height="30" Margin="5,5,5,5" Click="btnRemove_Click">Remove</Button>
             <Button Name="btnClearSelection" Height="30" Margin="5,5,5,5" Click="btnClearSelection_Click">Clear</Button>
             <TextBox Name="txtChangeQuantity" Margin="5"/>
-            <Button Name="btnChangeQuantity" Height="30" Margin="5,5,5,50" Click="btnChangeQuantity_Click">Change Quantity</Button>
+            <Button Name="btnChangeQuantity" Height="30" Margin="5,5,5,50" Click="btnChangeQuantity_Click" Content="Change Quantity"/>
             <Label FontWeight="Bold" HorizontalAlignment="Center">FROM:</Label>
             <RadioButton Name="radioNewItem" GroupName="From" Margin="5">New Item</RadioButton>
             <RadioButton Name="radioFromOutBack" GroupName="From" Margin="5">Out Back</RadioButton>
@@ -77,7 +77,15 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Label Grid.Column="2" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40">Total Unique Items:</Label>
-        <Label Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="40" Content="{Binding Count, Mode=OneWay}"/>
+        <StackPanel Orientation="Vertical" Grid.Column="2" Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Label  HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20">Total Unique Items:</Label>
+                <Label HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" Content="{Binding Count, Mode=OneWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20">Total Items:</Label>
+                <Label Name="lblTotalItems" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </local:SortableListViews>

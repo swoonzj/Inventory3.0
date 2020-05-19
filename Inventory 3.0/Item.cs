@@ -57,6 +57,7 @@ namespace Inventory_3._0
             {
                 CartQuantity = value;
                 NotifyPropertyChanged("cartQuantity");
+                NotifyPropertyChanged("priceTotal");
             }
         }
 

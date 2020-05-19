@@ -288,20 +288,32 @@ namespace Inventory_3._0
 
         private void btnSixForTen_Click(object sender, RoutedEventArgs e)
         {
+            int count = getListQuantity(lvCart.SelectedItems);
             foreach (Item item in lvCart.SelectedItems)
             {
-                item.price = 10m / lvCart.SelectedItems.Count;
+                item.price = 10m / count;
             }
             UpdateTotals();
         }
 
-        private void btnTenForTwenty_Click(object sender, RoutedEventArgs e)
+        private void btnFifteenForTwenty_Click(object sender, RoutedEventArgs e)
         {
+            int count = getListQuantity(lvCart.SelectedItems);
             foreach (Item item in lvCart.SelectedItems)
             {
-                item.price = 20m / lvCart.SelectedItems.Count;
+                item.price = 20m / count;
             }
             UpdateTotals();
+        }
+
+        private int getListQuantity(System.Collections.IList list)
+        {
+            int count = 0;
+            foreach (Item item in list)
+            {
+                count += item.quantity[0];
+            }
+            return count;
         }
 
         private void btnAddUnlistedItem_Click(object sender, RoutedEventArgs e)

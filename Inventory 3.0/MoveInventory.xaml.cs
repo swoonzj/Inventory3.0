@@ -32,9 +32,21 @@ namespace Inventory_3._0
             //Search();
 
             lvList.ItemsSource = searchResults;
+            getTotalItemsAndSetLabel();
 
-            //searchResults.Add(new Item("Test1", "Test System", 9.99m, 5,2m,3m,"12345"));
+            //searchResults.Add(new Item("Test1", "Test System", 9.99m, 5, 2m, 3m, "12345"));
             //searchResults.Add(new Item("Test2", "Test System", 9.99m, 5, 2m, 3m, "12345"));
+        }
+
+        private void getTotalItemsAndSetLabel()
+        {
+            int count = 0;
+            foreach (Item item in movingItems)
+            {
+                count += item.cartQuantity;
+            }
+
+            lblTotalItems.Content = count.ToString();
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -83,6 +95,7 @@ namespace Inventory_3._0
                 item.cartQuantity = 1;
                 movingItems.Insert(0, item);
             }
+            getTotalItemsAndSetLabel();
         }
 
         private string CreateVerificationString()
@@ -164,11 +177,13 @@ namespace Inventory_3._0
             {
                 movingItems.Remove(item);
             }
+            getTotalItemsAndSetLabel();
         }
 
         private void btnClearSelection_Click(object sender, RoutedEventArgs e)
         {
             movingItems.Clear();
+            getTotalItemsAndSetLabel();
         }
 
         private void btnChangeQuantity_Click(object sender, RoutedEventArgs e)
@@ -177,17 +192,16 @@ namespace Inventory_3._0
             {
                 try
                 {
-                    item.quantity[0] = Convert.ToInt32(txtChangeQuantity.Text);
+                    item.cartQuantity = Convert.ToInt32(txtChangeQuantity.Text);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
-            }
-            movingItems[0].NotifyPropertyChanged("quantity");
+            } 
+            getTotalItemsAndSetLabel();
         }
-
-
+        
         #region UPC Scanner Methods
 
         private void lvMove_MouseDown(object sender, MouseButtonEventArgs e)

@@ -58,7 +58,7 @@ namespace Inventory_3._0
             try
             {
                 List<Item> items = new List<Item>();
-                items = await DBAccess.SQLTableToList(searchtext: searchString, limitResults: menuLimitSearchResults.IsChecked);
+                items = await DBAccess.SQLTableToList(searchtext: searchString, limitResults: Settings.Default.limitSearchResults);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)
@@ -225,7 +225,7 @@ namespace Inventory_3._0
                 foreach (Item item in cart)
                 {
                     DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
-                    if (menuDeductSalesFromInventory.IsChecked)
+                    if (Settings.Default.deductSalesFromInventory)
                     {
                         await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], ColumnNames.STORE);
                     }
@@ -233,7 +233,7 @@ namespace Inventory_3._0
                 DBAccess.IncrementTransactionNumber();
 
                 // Print Receipt
-                if (menuPrintReceipt.IsChecked)
+                if (Settings.Default.printReceipts)
                 {
                     ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>(), date, transactionNumber.ToString());
                     ReceiptPrinter printer = new ReceiptPrinter(generator.flowDoc);

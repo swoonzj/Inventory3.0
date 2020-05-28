@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Inventory_3._0.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -82,7 +83,7 @@ namespace Inventory_3._0
                     }
                 }
             }
-            catch(Exception ex){}
+            catch{}
         }
         private void Sort(string sortBy, ListSortDirection direction, ListView lv)
         {
@@ -95,7 +96,7 @@ namespace Inventory_3._0
                 dataView.SortDescriptions.Add(sd);
                 dataView.Refresh();
             }
-            catch (Exception ex) { }
+            catch{}
         }
     }
 
@@ -413,24 +414,27 @@ namespace Inventory_3._0
             {
                 PrintDialog printDialog = new PrintDialog();
                 LocalPrintServer printServer = new LocalPrintServer();
-                PrintQueue pq;
+                PrintQueue pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
                 IDocumentPaginatorSource idpSource = flowDoc;
                 try
                 {
-                    pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
-                }
-                catch
-                {
-                    string printServerName = @"\\Coregaming";
-                    string printQueueName = "POS";
+                    if (Settings.Default.useNetworkPrinter)
+                    {
+                        string printServerName = @"\\Coregaming";
+                        string printQueueName = "POS";
 
-                    PrintServer ps = string.IsNullOrEmpty(printServerName)
-                        // for local printers
-                        ? new PrintServer()
-                        // for shared printers
-                        : new PrintServer(printServerName);
-                    pq = ps.GetPrintQueue(printQueueName);
-                    flowDoc.PageWidth = printDialog.PrintableAreaWidth;                    
+                        PrintServer ps = string.IsNullOrEmpty(printServerName)
+                            // for local printers
+                            ? new PrintServer()
+                            // for shared printers
+                            : new PrintServer(printServerName);
+                        pq = ps.GetPrintQueue(printQueueName);
+                        flowDoc.PageWidth = printDialog.PrintableAreaWidth;
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error in Print():\n" + e.Message);              
                 }
                 idpSource = flowDoc;
                 printDialog.PrintQueue = pq;

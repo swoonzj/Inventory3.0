@@ -55,7 +55,7 @@ namespace Inventory_3._0
             try
             {
                 List<Item> items = new List<Item>();
-                items = await DBAccess.SQLTableToList(searchtext: searchString, limitResults:menuLimitSearchResults.IsChecked);
+                items = await DBAccess.SQLTableToList(searchtext: searchString, limitResults:Settings.Default.limitSearchResults);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)
@@ -393,6 +393,10 @@ namespace Inventory_3._0
         {
             btnChangeCash.IsDefault = false;
         }
-        
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Adding Trade to Inventory is not yet implemented.");
+        }        
     }
 }

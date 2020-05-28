@@ -45,5 +45,65 @@ namespace Inventory_3._0.Properties {
                 return ((string)(this["SQLServerConnectionString2"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool useNetworkPrinter {
+            get {
+                return ((bool)(this["useNetworkPrinter"]));
+            }
+            set {
+                this["useNetworkPrinter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool limitSearchResults {
+            get {
+                return ((bool)(this["limitSearchResults"]));
+            }
+            set {
+                this["limitSearchResults"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool printReceipts {
+            get {
+                return ((bool)(this["printReceipts"]));
+            }
+            set {
+                this["printReceipts"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool deductSalesFromInventory {
+            get {
+                return ((bool)(this["deductSalesFromInventory"]));
+            }
+            set {
+                this["deductSalesFromInventory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool addTradeToInventory {
+            get {
+                return ((bool)(this["addTradeToInventory"]));
+            }
+            set {
+                this["addTradeToInventory"] = value;
+            }
+        }
     }
 }

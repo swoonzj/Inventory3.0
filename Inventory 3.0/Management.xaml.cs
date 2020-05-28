@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Inventory_3._0.Properties;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -53,7 +54,7 @@ namespace Inventory_3._0
             Mouse.OverrideCursor = Cursors.Wait;
             try
             {
-                searchResults = new ObservableCollection<Item>(await DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: menuLimitSearchResults.IsChecked));                
+                searchResults = new ObservableCollection<Item>(await DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: Settings.Default.limitSearchResults));                
             }
             catch (Exception ex)
             {

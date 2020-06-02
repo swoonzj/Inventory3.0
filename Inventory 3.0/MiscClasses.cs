@@ -423,18 +423,14 @@ namespace Inventory_3._0
                         string printServerName = @"\\Coregaming";
                         string printQueueName = "POS";
 
-                        PrintServer ps = string.IsNullOrEmpty(printServerName)
-                            // for local printers
-                            ? new PrintServer()
-                            // for shared printers
-                            : new PrintServer(printServerName);
+                        PrintServer ps = new PrintServer(printServerName);
                         pq = ps.GetPrintQueue(printQueueName);
                         flowDoc.PageWidth = printDialog.PrintableAreaWidth;
                     }
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Error in Print():\n" + e.Message);              
+                    MessageBox.Show("Error in Print():\n" + e.Message + "\n" + e.Data.ToString());              
                 }
                 idpSource = flowDoc;
                 printDialog.PrintQueue = pq;

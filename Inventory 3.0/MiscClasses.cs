@@ -410,27 +410,24 @@ namespace Inventory_3._0
 
         public void Print()
         {
+            PrintDialog printDialog = new PrintDialog();
+            PrintQueue pq;
+            IDocumentPaginatorSource idpSource = flowDoc;
             try
             {
-                PrintDialog printDialog = new PrintDialog();
-                LocalPrintServer printServer = new LocalPrintServer();
-                PrintQueue pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
-                IDocumentPaginatorSource idpSource = flowDoc;
-                try
+                if (Settings.Default.useNetworkPrinter)
                 {
-                    if (Settings.Default.useNetworkPrinter)
-                    {
-                        string printServerName = @"\\Coregaming";
-                        string printQueueName = "POS";
+                    string printServerName = @"\\Coregaming";
+                    string printQueueName = "POS";
 
-                        PrintServer ps = new PrintServer(printServerName);
-                        pq = ps.GetPrintQueue(printQueueName);
-                        flowDoc.PageWidth = printDialog.PrintableAreaWidth;
-                    }
+                    PrintServer ps = new PrintServer(printServerName);
+                    pq = ps.GetPrintQueue(printQueueName);
+                    flowDoc.PageWidth = printDialog.PrintableAreaWidth;
                 }
-                catch (Exception e)
+                else
                 {
-                    MessageBox.Show("Error in Print():\n" + e.Message + "\n" + e.Data.ToString());              
+                    LocalPrintServer printServer = new LocalPrintServer();
+                    pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
                 }
                 idpSource = flowDoc;
                 printDialog.PrintQueue = pq;
@@ -438,7 +435,7 @@ namespace Inventory_3._0
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error in Print(): " + e.Message);
+                MessageBox.Show("Error in Print():\n" + e.Message + "\n" + e.Data.ToString());
             }
         }
     }    

@@ -55,7 +55,12 @@ namespace Inventory_3._0
 
 
         static SqlConnection connectOldDatabase = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
-        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2);
+
+        // For release:
+        //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2);
+
+        // For testing at home
+        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.HomeServerConnectionString);
 
         // Check a string for characters that would throw off SQL formatting
         private static string CheckForSpecialCharacters(string input)

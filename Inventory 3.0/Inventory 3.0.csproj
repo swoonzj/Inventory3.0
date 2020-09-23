@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -36,6 +36,16 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\shaq.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HomeDebug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\At Home Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -58,8 +68,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Customer.cs" />
     <Compile Include="ManageTransactions.xaml.cs">
       <DependentUpon>ManageTransactions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NewCustomerForm.xaml.cs">
+      <DependentUpon>NewCustomerForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StoreInventoryDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreInventoryDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="UnlistedItemPrompt.xaml.cs">
       <DependentUpon>UnlistedItemPrompt.xaml</DependentUpon>
@@ -77,6 +96,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MultipleUPCHandler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewCustomerForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -154,6 +177,17 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="StoreInventoryDataSet.xsc">
+      <DependentUpon>StoreInventoryDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="StoreInventoryDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StoreInventoryDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StoreInventoryDataSet.xss">
+      <DependentUpon>StoreInventoryDataSet.xsd</DependentUpon>
+    </None>
     <Resource Include="Resources\Pokemon GB.ttf" />
   </ItemGroup>
   <ItemGroup>

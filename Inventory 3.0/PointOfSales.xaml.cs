@@ -185,8 +185,8 @@ namespace Inventory_3._0
             var item = ((FrameworkElement)e.OriginalSource).DataContext as Item;
             if (item != null)
             {
-                item.quantity[0] = 1;
-                cart.Insert(0, item);
+                addItemToCart(item);
+                UpdateTotals();
             }
         }
 

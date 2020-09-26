@@ -43,6 +43,11 @@
                     <GridViewColumn Header="Total" DisplayMemberBinding="{Binding total, StringFormat=C}"/>
                 </GridView>
             </ListView.View>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Print Reciept" Click="PrintItem_Click"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
         </ListView>
         <ListView Name="lvDetail" Margin="5" Grid.Column="1" Grid.Row="1" Grid.RowSpan="5"  SelectionMode="Single"  GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
             <ListView.View>
@@ -57,7 +62,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView Name="lvPayment" Margin="5" Grid.Column="1" Grid.Row="6" Grid.RowSpan="3"  SelectionMode="Single" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+        <ListView Name="lvPayment" Margin="5" Grid.Column="1" Grid.Row="6" Grid.RowSpan="3"  SelectionMode="Single" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Type"  DisplayMemberBinding="{Binding transactionType}"/>

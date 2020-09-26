@@ -220,11 +220,11 @@ namespace Inventory_3._0
                 MessageBox.Show("Great.");
                 // Log transaction
 
-                string date = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                DateTime date = DateTime.Now;
                 int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
                 foreach (Item item in cart)
                 {
-                    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date);
+                    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
                     if (Settings.Default.deductSalesFromInventory)
                     {
                         await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], ColumnNames.STORE);
@@ -235,9 +235,9 @@ namespace Inventory_3._0
                 // Print Receipt
                 if (Settings.Default.printReceipts)
                 {
-                    ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>(), date, transactionNumber.ToString());
+                    ReceiptGenerator generator = new ReceiptGenerator(cart.ToList<Item>(), checkout.checkout.ToList<Item>(), date.ToString("MM/dd/yyyy hh:mm tt"), transactionNumber.ToString());
                     ReceiptPrinter printer = new ReceiptPrinter(generator.flowDoc);
-                    printer.Print();
+                    printer.PrintSilently();
                 }
                 checkout.Close();
                 cart.Clear();

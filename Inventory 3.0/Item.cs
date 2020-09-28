@@ -300,6 +300,17 @@ namespace Inventory_3._0
             }
         }
 
+        private ObservableCollection<Transaction> Payment;
+        public ObservableCollection<Transaction> payment
+        {
+            get { return Payment; }
+            set
+            {
+                Payment = value;
+                NotifyPropertyChanged("payment");
+            }
+        }
+
         private DateTime Date;
         public DateTime date
         {

@@ -111,9 +111,9 @@ namespace Inventory_3._0.Properties {
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=COMPY\\SQLEXPRESS01;Initial Catalog=StoreInventory;Integrated Security" +
             "=True")]
-        public string HomeServerConnectionString {
+        public string HomeInventoryConnectionString {
             get {
-                return ((string)(this["HomeServerConnectionString"]));
+                return ((string)(this["HomeInventoryConnectionString"]));
             }
         }
     }

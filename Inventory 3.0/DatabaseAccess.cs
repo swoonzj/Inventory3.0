@@ -1,12 +1,8 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -53,14 +49,10 @@ namespace Inventory_3._0
         //UPC
         //id
 
+        //static SqlConnection connectOldDatabase = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
 
-        static SqlConnection connectOldDatabase = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
-
-        // For release:
-        //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2);
-
-        // For testing at home
-        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.HomeServerConnectionString);
+        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2); // Store
+        //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.HomeInventoryConnectionString); // Home
 
         // Check a string for characters that would throw off SQL formatting
         private static string CheckForSpecialCharacters(string input)

@@ -1,18 +1,9 @@
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Inventory_3._0
 {
@@ -102,6 +93,22 @@ namespace Inventory_3._0
             lblRedeemedRewards.Content = rewardsRedeemed.ToString("C");
             lblCashSales.Content = cashPayment.ToString("C");
             lblCreditSales.Content = creditPayment.ToString("C");
+        }
+
+        private void PrintItem_Click(object sender, RoutedEventArgs e)
+        {
+            Transaction transaction = lvList.SelectedItem as Transaction;
+            transaction.payment = new ObservableCollection<Transaction>(payments);
+            MessageBox.Show(transaction.items[0].name + " " + transaction.date.ToShortDateString());
+
+            MessageBoxResult result = MessageBox.Show("Print this transaction?", "Print transaction?", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes) return;
+
+            
+
+            ReceiptGenerator receiptGen = new ReceiptGenerator(transaction);
+            ReceiptPrinter printer = new ReceiptPrinter(receiptGen.flowDoc);
+            printer.PrintSilently();
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)

@@ -260,11 +260,19 @@ namespace Inventory_3._0
 
     public class ReceiptGenerator
     {
+        Transaction transaction;
         List<Item> cart, payment;
         public StringBuilder receipt;
         public FlowDocument flowDoc;
         string date, transactionNumber;
 
+        /// <summary>
+        /// Generates a printable receipt
+        /// </summary>
+        /// <param name="cart">Items purchased</param>
+        /// <param name="payment"></param>
+        /// <param name="date"></param>
+        /// <param name="transactionNumber"></param>
         public ReceiptGenerator(List<Item> cart, List<Item> payment, string date, string transactionNumber)
         {
             this.cart = cart;
@@ -274,6 +282,14 @@ namespace Inventory_3._0
 
             receipt = new StringBuilder();
             flowDoc = Generate();
+        }
+
+        public ReceiptGenerator(Transaction transaction)
+        {
+            this.transaction = transaction;
+
+            receipt = new StringBuilder();
+            flowDoc = GenerateFromTransaction();
         }
 
         private FlowDocument Generate()
@@ -332,6 +348,89 @@ namespace Inventory_3._0
                 string name = Truncate(item.name, ReceiptVariables.name).PadRight(ReceiptVariables.name);
                 string system = String.Empty.PadRight(ReceiptVariables.system);
                 string price = item.price.ToString("C").PadLeft(ReceiptVariables.price);
+                //receipt.AppendLine(name + system + price);
+                Paragraph p = new Paragraph(new Run(name + system + price));
+                p.TextAlignment = System.Windows.TextAlignment.Right;
+
+                flowDoc.Blocks.Add(p);
+            }
+
+            // Headers
+            flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.RECEIPT_FOOTER)));
+
+            flowDoc.PageWidth = 300.0;
+            return flowDoc;
+        }
+
+        private FlowDocument GenerateFromTransaction()
+        {
+
+            FlowDocument flowDoc = new FlowDocument();
+            //receipt.AppendLine(LOGO!!!!!!!!) // ADD LOGO!!!
+            // Add Header at top
+            // Separator
+            //receipt.AppendLine(Separator());
+            // Name - System           Price
+
+
+            // Logo
+            Image img = new Image();
+            BitmapImage bimg = new BitmapImage();
+            bimg.BeginInit();
+            bimg.UriSource = new Uri(ReceiptVariables.LOGO, UriKind.Relative);
+            bimg.EndInit();
+            img.Source = bimg;
+            flowDoc.Blocks.Add(new BlockUIContainer(img));
+
+            // Headers
+            flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.RECEIPT_HEADER2 + "\n")) { TextAlignment = System.Windows.TextAlignment.Center, FontWeight = System.Windows.FontWeights.Bold });
+            // Transaction details
+            flowDoc.Blocks.Add(new Paragraph(new Run("Transaction Number: " + transaction.transactionNumber + "\n" + transaction.date + "\n")) { TextAlignment = System.Windows.TextAlignment.Left, FontWeight = System.Windows.FontWeights.DemiBold });
+
+            flowDoc.FontSize = ReceiptVariables.FONTSIZE;
+            flowDoc.FontFamily = new System.Windows.Media.FontFamily(ReceiptVariables.FONTNAME);
+
+            foreach (Item item in transaction.items)
+            {
+                string price;
+                string name = Truncate(item.name, ReceiptVariables.name) + "\t-\t";
+                string system = Truncate(item.system, ReceiptVariables.system).PadRight(ReceiptVariables.system);
+
+                switch (transaction.transactionType)
+                {
+                    case TransactionTypes.SALE:
+                        price = item.quantity[0].ToString() + " @ " + item.price.ToString("C") + " =    " + item.priceTotal.ToString("C");
+                        break;
+                    case TransactionTypes.TRADE_CASH:
+                        price = item.quantity[0].ToString() + " @ " + item.tradeCash.ToString("C") + " =    " + item.cashTotal.ToString("C");
+                        break;
+                    case TransactionTypes.TRADE_CREDIT:
+                        price = item.quantity[0].ToString() + " @ " + item.tradeCredit.ToString("C") + " =    " + item.creditTotal.ToString("C");
+                        break;
+                    default:
+                        price = "NULL";
+                        break;
+                }
+             
+                price.PadLeft(ReceiptVariables.price);
+                //receipt.AppendLine(ReceiptVariables.BorderLeft+name+system+price+ReceiptVariables.BorderRight);
+
+                Paragraph p = new Paragraph(new Run(name + system));
+                p.Margin = new System.Windows.Thickness(0);
+                p.TextAlignment = System.Windows.TextAlignment.Left;
+                flowDoc.Blocks.Add(p);
+                Paragraph p2 = new Paragraph(new Run(price));
+                p2.Margin = new System.Windows.Thickness(0);
+                p2.TextAlignment = System.Windows.TextAlignment.Right;
+                flowDoc.Blocks.Add(p2);
+            }
+            flowDoc.Blocks.Add(new Paragraph(new Run(Separator())));
+            foreach (Transaction item in transaction.payment)
+            {
+
+                string name = Truncate(item.transactionType, ReceiptVariables.name).PadRight(ReceiptVariables.name);
+                string system = String.Empty.PadRight(ReceiptVariables.system);
+                string price = item.total.ToString("C").PadLeft(ReceiptVariables.price);
                 //receipt.AppendLine(name + system + price);
                 Paragraph p = new Paragraph(new Run(name + system + price));
                 p.TextAlignment = System.Windows.TextAlignment.Right;
@@ -408,7 +507,7 @@ namespace Inventory_3._0
 
         //}
 
-        public void Print()
+        public void PrintSilently()
         {
             PrintDialog printDialog = new PrintDialog();
             PrintQueue pq;
@@ -435,7 +534,22 @@ namespace Inventory_3._0
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error in Print():\n" + e.Message + "\n" + e.Data.ToString());
+                MessageBox.Show("Error in PrintSilently():\n" + e.Message + "\n" + e.Data.ToString());
+            }
+        }
+
+        public void PrintVerbose()
+        {
+            PrintDialog printDialog = new PrintDialog();
+            PrintQueue pq;
+            IDocumentPaginatorSource idpSource = flowDoc;
+            try
+            {
+                printDialog.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error in PrintVerbose():\n" + e.Message + "\n" + e.Data.ToString());
             }
         }
     }    

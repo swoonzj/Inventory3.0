@@ -354,10 +354,18 @@ namespace Inventory_3._0
         {
             get 
             {
+                if (TransactionType == TransactionTypes.RETURN_CASH
+                    || TransactionType != TransactionTypes.RETURN_CREDIT)
+                {
+                    return -Total;
+                }
+
                 if (TransactionType != TransactionTypes.PAYMENT_CASH
                     && TransactionType != TransactionTypes.PAYMENT_CREDITCARD
                     && TransactionType != TransactionTypes.PAYMENT_REWARDS
-                    && TransactionType != TransactionTypes.PAYMENT_STORECREDIT)
+                    && TransactionType != TransactionTypes.PAYMENT_STORECREDIT
+                    && TransactionType != TransactionTypes.RETURN_CASH
+                    && TransactionType != TransactionTypes.RETURN_CREDIT)
                 {
                     return CalculateTotal();
                 }

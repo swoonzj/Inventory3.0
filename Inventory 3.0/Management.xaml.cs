@@ -311,6 +311,11 @@ namespace Inventory_3._0
         {
             ManageTransactions mt = new ManageTransactions();
             mt.Show();
-        }        
+        }
+
+        private void menuAddCustomerTable_Click(object sender, RoutedEventArgs e)
+        {
+            DBAccess.CreateCustomerTable();
+        }
     }
 }

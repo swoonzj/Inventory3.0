@@ -135,7 +135,11 @@ namespace Inventory_3._0
         private void lvList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView selection = sender as ListView;
-            if (selection.SelectedItem == null) return;
+            if (selection.SelectedItem == null)
+            {
+                lvDetail.ItemsSource = null;
+                return;
+            }
             lvDetail.ItemsSource = (selection.SelectedItem as Transaction).items;
             payments = DBAccess.GetPayments((selection.SelectedItem as Transaction).transactionNumber);
             lvPayment.ItemsSource = payments;

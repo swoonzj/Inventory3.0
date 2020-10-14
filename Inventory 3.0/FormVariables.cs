@@ -37,6 +37,7 @@ namespace Inventory_3._0
         public const string UPC = "tblUPC";
         public const string TRANSACTION = "tblTransactions";
         public const string PAYMENT = "tblPayment";
+        public const string CUSTOMERS = "tblCustomers";
 
         // Currently unused
         public const string VARIABLES = "tblVariables";
@@ -68,6 +69,8 @@ namespace Inventory_3._0
         public const string PAYMENT_STORECREDIT = "Payment - Store Credit";
         public const string PAYMENT_REWARDS = "Payment - Loyalty Rewards";
         public const string RETURN = "Return";
+        public const string RETURN_CASH = "Return - Cash";
+        public const string RETURN_CREDIT = "Return - Store Credit";
         public const string CHANGE_DUE = "Change Due:";
     }
 

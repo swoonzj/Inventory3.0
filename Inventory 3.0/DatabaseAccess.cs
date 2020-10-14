@@ -519,6 +519,45 @@ namespace Inventory_3._0
             return item;
         }
 
+        public static void CreateCustomerTable()
+        {
+            string buildTableString = @"CREATE TABLE [dbo].[tblCustomers](
+                    [id][int] NOT NULL,
+
+                   [name] [nvarchar](max) NULL,
+	                [phone]
+                        [nvarchar](50) NULL,
+	                [email]
+                        [nvarchar](max) NULL,
+	                [rewards]
+                        [nvarchar](max) NULL,
+                 CONSTRAINT[PK_tblCustomers] PRIMARY KEY CLUSTERED
+                (
+                   [id] ASC
+                )WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON[PRIMARY]
+                ) ON[PRIMARY] TEXTIMAGE_ON[PRIMARY]";
+
+            // Test if table exists
+            SqlCommand cmd = new SqlCommand("IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + TableNames.CUSTOMERS + 
+                "')) BEGIN " + buildTableString + " END", connect);
+
+            try
+            {
+                connect.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error in CreateCustomerTable()\n" + ex.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+
+            // Build if table does not exist
+        }
+
         #region UPC
 
         /// <summary>

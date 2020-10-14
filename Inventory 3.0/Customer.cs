@@ -64,7 +64,7 @@ namespace Inventory_3._0
             }
         }
 
-        class Address
+        public class Address
         {
             public string street;
             public string city;
@@ -79,6 +79,14 @@ namespace Inventory_3._0
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public bool Equals(Customer other)
+        {
+            if (this.email != other.email) return false;
+            if (this.name != other.name) return false;
+            if (this.phoneNumber != other.phoneNumber) return false;
+            return true;
         }
 
         public Customer (string name, string phoneNumber = "", string email = "", string rewardsNumber = "", string street = "", string city = "", string state = "", string zip = "", List<int> wishList = null)

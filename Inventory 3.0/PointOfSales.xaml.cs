@@ -3,17 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Inventory_3._0
 {
@@ -224,7 +217,14 @@ namespace Inventory_3._0
                 int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
                 foreach (Item item in cart)
                 {
-                    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
+                    if (checkout.isReturn)
+                    {
+                        DBAccess.AddTransaction(item, TransactionTypes.RETURN, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
+                    }
+                    else
+                    {
+                        DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
+                    }
                     if (Settings.Default.deductSalesFromInventory)
                     {
                         await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], ColumnNames.STORE);

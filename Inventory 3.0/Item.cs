@@ -354,13 +354,12 @@ namespace Inventory_3._0
         {
             get 
             {
-                if (TransactionType == TransactionTypes.RETURN_CASH
-                    || TransactionType != TransactionTypes.RETURN_CREDIT)
+                if (TransactionType == TransactionTypes.RETURN_CASH || TransactionType == TransactionTypes.RETURN_CREDIT)
                 {
-                    return -Total;
+                    return -CalculateTotal();
                 }
 
-                if (TransactionType != TransactionTypes.PAYMENT_CASH
+                else if (TransactionType != TransactionTypes.PAYMENT_CASH
                     && TransactionType != TransactionTypes.PAYMENT_CREDITCARD
                     && TransactionType != TransactionTypes.PAYMENT_REWARDS
                     && TransactionType != TransactionTypes.PAYMENT_STORECREDIT
@@ -413,6 +412,18 @@ namespace Inventory_3._0
                         }
                         return sum;
                     }
+                case TransactionTypes.RETURN:
+                    {
+                        decimal sum = 0;
+                        foreach (Item item in Items)
+                        {
+                            sum += item.priceTotal;
+                        }
+                        return -sum;
+                    }
+                case TransactionTypes.RETURN_CASH:
+                case TransactionTypes.RETURN_CREDIT:
+                    return Total;
                 default:
                     return -1;
             }

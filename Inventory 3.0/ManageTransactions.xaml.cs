@@ -13,7 +13,7 @@ namespace Inventory_3._0
     /// 
     public partial class ManageTransactions : SortableListViews
     {
-        decimal tradeCash, tradeCredit, totalSales, netSales, cashPayment, creditPayment, netIncome, creditRedeemed, rewardsRedeemed;
+        decimal tradeCash, tradeCredit, totalSales, netSales, cashPayment, creditPayment, netIncome, creditRedeemed, rewardsRedeemed, totalCashReturn, totalCreditReturn;
         ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
         DateTime startDate = DateTime.Today, endDate = DateTime.Today.AddDays(1);
         List<Transaction> payments = new List<Transaction>(); 
@@ -43,7 +43,7 @@ namespace Inventory_3._0
 
         private void CalculateTotals()
         {
-            tradeCash = tradeCredit = totalSales = netSales = cashPayment = creditPayment = netIncome = rewardsRedeemed = creditRedeemed = 0m;
+            tradeCash = tradeCredit = totalSales = netSales = cashPayment = creditPayment = netIncome = rewardsRedeemed = creditRedeemed = totalCashReturn = totalCreditReturn = 0m;
             foreach (Transaction item in transactions)
             {
                 switch (item.transactionType)
@@ -75,11 +75,26 @@ namespace Inventory_3._0
                                     break;
                             }
                         }
-                        break;                        
+                        break;
+                    case TransactionTypes.RETURN:
+                        payments = DBAccess.GetPayments(item.transactionNumber);
+                        foreach (Transaction payment in payments)
+                        {
+                            switch (payment.transactionType)
+                            {
+                                case TransactionTypes.RETURN_CASH:
+                                    totalCashReturn -= payment.total;
+                                    break;
+                                case TransactionTypes.RETURN_CREDIT:
+                                    totalCreditReturn -= payment.total;
+                                    break;
+                            }
+                        }
+                        break;              
                 }
             }
             netSales = (cashPayment + creditPayment);
-            netIncome = netSales - tradeCash;
+            netIncome = netSales - tradeCash - totalCashReturn;
         }
 
         private void SetLabels()
@@ -93,6 +108,8 @@ namespace Inventory_3._0
             lblRedeemedRewards.Content = rewardsRedeemed.ToString("C");
             lblCashSales.Content = cashPayment.ToString("C");
             lblCreditSales.Content = creditPayment.ToString("C");
+            lblReturnCash.Content = totalCashReturn.ToString("C");
+            lblReturnCredit.Content = totalCreditReturn.ToString("C");
         }
 
         private void PrintItem_Click(object sender, RoutedEventArgs e)

@@ -61,7 +61,6 @@ namespace Inventory_3._0
             {
                 if (input[i] == '\'') // check for ' (apostrophe)
                 { input = input.Insert(i, "\'"); i++; }
-
             }
             return input;
         }

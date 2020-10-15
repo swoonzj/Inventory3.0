@@ -110,6 +110,15 @@
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Returns: Cash Total:</Label>
+                    <Label Name="lblReturnCash" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Returns: Credit Total:</Label>
+                    <Label Name="lblReturnCredit" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <Separator/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Label>Redeemed Store Credit:</Label>
                     <Label Name="lblRedeemedCredit" Grid.Row="7">$0</Label>
                 </StackPanel>
@@ -118,7 +127,7 @@
                     <Label Name="lblRedeemedRewards" Grid.Row="7">$0</Label>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical">               
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Label>Trade: Cash Total:</Label>
                     <Label Name="lblTradeCash" Grid.Row="7">$0</Label>

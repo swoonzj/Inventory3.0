@@ -51,8 +51,11 @@ namespace Inventory_3._0
 
         //static SqlConnection connectOldDatabase = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
 
+#if HOMEDEBUG
+        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.HomeInventoryConnectionString); // Home
+#else
         static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2); // Store
-        //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.HomeInventoryConnectionString); // Home
+#endif
 
         // Check a string for characters that would throw off SQL formatting
         private static string CheckForSpecialCharacters(string input)
@@ -557,7 +560,7 @@ namespace Inventory_3._0
             // Build if table does not exist
         }
 
-        #region UPC
+#region UPC
 
         /// <summary>
         /// Gets List of Items that have the passed UPC parameter
@@ -811,7 +814,7 @@ namespace Inventory_3._0
         }
 #endregion
 
-        #region Transaction Methods
+#region Transaction Methods
         /// <summary>
         /// Retrieves the next unused Transaction number from the Variable database
         /// </summary>
@@ -1198,6 +1201,6 @@ namespace Inventory_3._0
             }
         }
 
-        #endregion        
+#endregion
     }
 }

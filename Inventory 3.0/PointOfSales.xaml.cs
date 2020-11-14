@@ -220,14 +220,20 @@ namespace Inventory_3._0
                     if (checkout.isReturn)
                     {
                         DBAccess.AddTransaction(item, TransactionTypes.RETURN, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
+                        MessageBoxResult result = MessageBox.Show("Add returned item(s) back to inventory?\n" + item.name, "Return to inventory?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORE);
+                        }
                     }
                     else
                     {
                         DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
-                    }
-                    if (Settings.Default.deductSalesFromInventory)
-                    {
-                        await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], ColumnNames.STORE);
+
+                        if (Settings.Default.deductSalesFromInventory)
+                        {
+                            await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], ColumnNames.STORE);
+                        }
                     }
                 }
                 DBAccess.IncrementTransactionNumber();

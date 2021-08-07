@@ -138,11 +138,11 @@ namespace Inventory_3._0
             {
                 // Remove FROM inventory
                 if (radioFromOutBack.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.OUTBACK);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryColumnNames.OUTBACK);
                 else if (radioFromSalesFloor.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.STORE);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryColumnNames.STORE);
                 else if (radioFromStorage.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.STORAGE);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryColumnNames.STORAGE);
                 else if (radioNewItem.IsChecked == true) { } // If New Item is checked, don't do anything.
                 else
                 {
@@ -151,11 +151,11 @@ namespace Inventory_3._0
                 }
                 // Add TO inventory
                 if (radioToOutBack.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.OUTBACK);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryColumnNames.OUTBACK);
                 else if (radioToSalesFloor.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.STORE);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryColumnNames.STORE);
                 else if (radioToStorage.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.STORAGE);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryColumnNames.STORAGE);
                 else
                 {
                     MessageBox.Show("Please choose a destination under the \"TO:\".", "You didn't choose an option.", MessageBoxButton.OK, MessageBoxImage.Hand);

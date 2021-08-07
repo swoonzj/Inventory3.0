@@ -316,7 +316,7 @@ namespace Inventory_3._0
         public async static Task SaveItemChanges(Item item)
         {
             string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
-            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6} WHERE id = {7}", TableNames.INVENTORY, ColumnNames.STORE, item.quantity[0], ColumnNames.OUTBACK, item.quantity[1], ColumnNames.STORAGE, item.quantity[2], item.SQLid);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6} WHERE id = {7}", TableNames.INVENTORY, InventoryColumnNames.STORE, item.quantity[0], InventoryColumnNames.OUTBACK, item.quantity[1], InventoryColumnNames.STORAGE, item.quantity[2], item.SQLid);
             string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
 
             SqlCommand cmd = new SqlCommand(itemUpdate, connect);

@@ -3,15 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Printing;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Inventory_3._0
@@ -85,18 +82,35 @@ namespace Inventory_3._0
             }
             catch{}
         }
-        private void Sort(string sortBy, ListSortDirection direction, ListView lv)
+        protected virtual void Sort(string sortBy, ListSortDirection direction, ListView lv)
         {
             try
             {
                 ICollectionView dataView = CollectionViewSource.GetDefaultView(lv.ItemsSource);
 
                 dataView.SortDescriptions.Clear();
-                SortDescription sd = new SortDescription(sortBy, direction);
-                dataView.SortDescriptions.Add(sd);
+                dataView.SortDescriptions.Add(new SortDescription(sortBy, direction));
                 dataView.Refresh();
             }
             catch{}
+        }
+    }
+
+    public class SortableListViewsWithItems : SortableListViews
+    {
+        protected override void Sort(string sortBy, ListSortDirection direction, ListView lv)
+        {
+            try
+            {
+                ICollectionView dataView = CollectionViewSource.GetDefaultView(lv.ItemsSource);
+
+                dataView.SortDescriptions.Clear();
+                dataView.SortDescriptions.Add(new SortDescription(sortBy, direction));
+                dataView.SortDescriptions.Add(new SortDescription("system", ListSortDirection.Ascending));
+                dataView.SortDescriptions.Add(new SortDescription("name", ListSortDirection.Ascending));
+                dataView.Refresh();
+            }
+            catch { }
         }
     }
 

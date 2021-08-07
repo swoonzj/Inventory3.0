@@ -53,8 +53,8 @@ namespace Inventory_3._0
             }
         }
 
-        private List<int> WishList;
-        public List<int> wishList
+        private List<Item> WishList;
+        public List<Item> wishList
         {
             get { return WishList; }
             set 
@@ -63,17 +63,7 @@ namespace Inventory_3._0
                 NotifyPropertyChanged("wishList");
             }
         }
-
-        public class Address
-        {
-            public string street;
-            public string city;
-            public string state;
-            public string zip;
-        }
-
-        public Address address;
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -89,16 +79,12 @@ namespace Inventory_3._0
             return true;
         }
 
-        public Customer (string name, string phoneNumber = "", string email = "", string rewardsNumber = "", string street = "", string city = "", string state = "", string zip = "", List<int> wishList = null)
+        public Customer (string name, string phoneNumber = "", string email = "", string rewardsNumber = "", List<Item> wishList = null)
         {
             this.name = name;
             this.phoneNumber = phoneNumber;
             this.email = email;
             this.rewardsNumber = rewardsNumber;
-            this.address.street = street;
-            this.address.city = city;
-            this.address.state = state;
-            this.address.zip = zip;
             this.wishList = wishList;
         }
     }

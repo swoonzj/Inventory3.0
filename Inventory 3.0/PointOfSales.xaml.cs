@@ -13,7 +13,7 @@ namespace Inventory_3._0
     /// <summary>
     /// Interaction logic for PointOfSales.xaml
     /// </summary>
-    public partial class PointOfSales : SortableListViews
+    public partial class PointOfSales : SortableListViewsWithItems
     {
         decimal total = 0;
 
@@ -154,7 +154,6 @@ namespace Inventory_3._0
                 txtUPCInput.Text = "";
             }
         }
-
         private void DetectEnterKey(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -223,7 +222,7 @@ namespace Inventory_3._0
                         MessageBoxResult result = MessageBox.Show("Add returned item(s) back to inventory?\n" + item.name, "Return to inventory?", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (result == MessageBoxResult.Yes)
                         {
-                            await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], ColumnNames.STORE);
+                            await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], InventoryColumnNames.STORE);
                         }
                     }
                     else
@@ -232,7 +231,7 @@ namespace Inventory_3._0
 
                         if (Settings.Default.deductSalesFromInventory)
                         {
-                            await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], ColumnNames.STORE);
+                            await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], InventoryColumnNames.STORE);
                         }
                     }
                 }

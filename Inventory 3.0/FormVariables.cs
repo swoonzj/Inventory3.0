@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Input;
-
-namespace Inventory_3._0
+﻿namespace Inventory_3._0
 {
     public static class Constants
     {
@@ -51,7 +45,7 @@ namespace Inventory_3._0
         public const int Storage = 3;
     }
 
-    public static class ColumnNames
+    public static class InventoryColumnNames
     {
         public const string STORE = "Store";
         public const string OUTBACK = "OutBack";
@@ -103,7 +97,7 @@ namespace Inventory_3._0
 
     public static class ListViewColumnNames
     {
-        public const string NAME = "Name",
+        public static string NAME = "Name",
             SYSTEM = "System",
             PRICE = "Price",
             QUANTITY = "# In Stock",

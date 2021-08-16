@@ -130,7 +130,7 @@ namespace Inventory_3._0
             this.name = "";
             this.system = "";
             this.price = 0;
-            this.quantity = new ObservableCollection<int> { 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { 0, 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
             this.cartQuantity = 0;
@@ -143,7 +143,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = 0;
-            this.quantity = new ObservableCollection<int> { 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { 0, 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
             this.cartQuantity = 0;
@@ -156,7 +156,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 };
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs.Add(upc);
@@ -170,7 +170,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0 }; 
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 }; 
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs = upcs;
@@ -196,7 +196,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 };
             this.quantity.Add(quantity);
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
@@ -245,7 +245,7 @@ namespace Inventory_3._0
 
         public override string ToString()
         {
-            return String.Format("Name: {0}\nSystem:{1}\nPrice:{2}\nInventory:\n\tSales Floor:{3}\n\tOut Back:{4}\n\tStorage:{5}\nTrade, Cash:{6}\nTrade, Store Credit:{7}\nUPCS:{8}", name, system, price, quantity[0], quantity[1], quantity[2], tradeCash, tradeCredit, String.Join(", ", UPCs));
+            return String.Format("Name: {0}\nSystem:{1}\nPrice:{2}\nInventory:\n\tSales Floor:{3}\n\tOut Back:{4}\n\tStorage:{5}\n\tWebsite:{6}\nTrade, Cash:{7}\nTrade, Store Credit:{8}\nUPCS:{9}", name, system, price, quantity[0], quantity[1], quantity[2], quantity[3], tradeCash, tradeCredit, String.Join(", ", UPCs));
         }
 
         public void AutoTradeValues()
@@ -439,7 +439,5 @@ namespace Inventory_3._0
 
             return quant;
         }
-
-        
     }
 }

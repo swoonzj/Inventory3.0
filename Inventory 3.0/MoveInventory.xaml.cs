@@ -107,6 +107,8 @@ namespace Inventory_3._0
                 origin = "Sales Floor";
             else if (radioFromStorage.IsChecked == true)
                 origin = "Storage";
+            else if (radioFromWebsite.IsChecked == true)
+                origin = "Website";
             else if (radioNewItem.IsChecked == true)
                 origin = "New Item / Trade";
             else
@@ -118,6 +120,8 @@ namespace Inventory_3._0
                 destination = "Sales Floor";
             else if (radioToStorage.IsChecked == true)
                 destination = "Storage";
+            else if (radioToWebsite.IsChecked == true)
+                destination = "Website";
             else
                 destination = "DESTINATION NOT SELECTED !!!!";
 
@@ -143,6 +147,8 @@ namespace Inventory_3._0
                     await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryColumnNames.STORE);
                 else if (radioFromStorage.IsChecked == true)
                     await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryColumnNames.STORAGE);
+                else if (radioFromWebsite.IsChecked == true)
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryColumnNames.WEBSITE);
                 else if (radioNewItem.IsChecked == true) { } // If New Item is checked, don't do anything.
                 else
                 {
@@ -156,6 +162,8 @@ namespace Inventory_3._0
                     await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryColumnNames.STORE);
                 else if (radioToStorage.IsChecked == true)
                     await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryColumnNames.STORAGE);
+                else if (radioToWebsite.IsChecked == true)
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryColumnNames.WEBSITE);
                 else
                 {
                     MessageBox.Show("Please choose a destination under the \"TO:\".", "You didn't choose an option.", MessageBoxButton.OK, MessageBoxImage.Hand);

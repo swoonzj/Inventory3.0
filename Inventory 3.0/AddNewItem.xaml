@@ -1,7 +1,11 @@
 ﻿<Window x:Class="Inventory_3._0.AddNewItem"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:Inventory_3._0"
         Title="New Item" Height="600" Width="500" Icon="Resources\shaq.ico">
+    <Window.Resources>
+        <c:App x:Key="ListViewColumnNames"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -51,6 +55,7 @@
                     <DataGridTextColumn Header="Store" Binding="{Binding quantity[0], Mode=TwoWay}" />
                     <DataGridTextColumn Header="Out Back" Binding="{Binding quantity[1], Mode=TwoWay}" />
                     <DataGridTextColumn Header="Storage" Binding="{Binding quantity[2], Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Website" Binding="{Binding quantity[3], Mode=TwoWay}" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

@@ -252,17 +252,18 @@ namespace Inventory_3._0
                 quantity.Add(Convert.ToInt32(line[3]));
                 quantity.Add(Convert.ToInt32(line[4]));
                 quantity.Add(Convert.ToInt32(line[5]));
+                quantity.Add(Convert.ToInt32(line[6]));
 
                 List<string> upcs = new List<string>();
-                if (line.Count > 8)
+                if (line.Count > 9)
                 {
-                    for (int i = 8; i < line.Count; i++) // Index of first UPC)
+                    for (int i = 9; i < line.Count; i++) // Index of first UPC)
                     {
                         upcs.Add(line[i]);
                     }
                 }
 
-                return new Item(line[0], line[1], line[2], quantity, line[6], line[7], upcs);
+                return new Item(line[0], line[1], line[2], quantity, line[7], line[8], upcs);
             }
             else if (line.Count >= 2)
             {

@@ -43,6 +43,7 @@
         public const int Store = 1;
         public const int OutBack = 2;
         public const int Storage = 3;
+        public const int Website = 4;
     }
 
     public static class InventoryColumnNames
@@ -50,6 +51,7 @@
         public const string STORE = "Store";
         public const string OUTBACK = "OutBack";
         public const string STORAGE = "Storage";
+        public const string WEBSITE = "Website";
     }
 
     public static class TransactionTypes

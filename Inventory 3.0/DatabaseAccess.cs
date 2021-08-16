@@ -26,6 +26,7 @@ namespace Inventory_3._0
         //Store
         //OutBack
         //Storage
+        //Website
 
         //tblItems:
         //id
@@ -56,6 +57,11 @@ namespace Inventory_3._0
 #else
         static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2); // Store
 #endif
+
+        public static void CloseSQLConnection()
+        {
+            connect.Close();
+        }
 
         // Check a string for characters that would throw off SQL formatting
         private static string CheckForSpecialCharacters(string input)
@@ -151,7 +157,7 @@ namespace Inventory_3._0
             {
                 newitem.UPCs = await DBAccess.GetUPCsWithID(newitem.SQLid);
                 newitem.quantity = new ObservableCollection<int>(await DBAccess.GetQuantities(newitem.SQLid));
-                if (newitem.quantity.Count != 3) newitem.quantity = new ObservableCollection<int> { 0, 0, 0 }; // Should only be necessary for items with no quantities.
+                if (newitem.quantity.Count != 4) newitem.quantity = new ObservableCollection<int> { 0, 0, 0, 0 }; // Should only be necessary for items with no quantities.
             }
 
             return collection;
@@ -178,11 +184,12 @@ namespace Inventory_3._0
             cmdPrice.Parameters.Add("@CASH", SqlDbType.Money).Value = cash;
             cmdPrice.Parameters.Add("@CREDIT", SqlDbType.Money).Value = credit;
 
-            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3)", connect);
+            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3, @QUANTITY4)", connect);
             cmdInventory.Parameters.Add("@QUANTITY1", SqlDbType.Int).Value = inventory[0];
             cmdInventory.Parameters.Add("@QUANTITY2", SqlDbType.Int).Value = inventory[1];
             cmdInventory.Parameters.Add("@QUANTITY3", SqlDbType.Int).Value = inventory[2];
-            
+            cmdInventory.Parameters.Add("@QUANTITY4", SqlDbType.Int).Value = inventory[3];
+
             // execute command  & close connection
             await Task.Run(() =>
             {
@@ -316,7 +323,7 @@ namespace Inventory_3._0
         public async static Task SaveItemChanges(Item item)
         {
             string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
-            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6} WHERE id = {7}", TableNames.INVENTORY, InventoryColumnNames.STORE, item.quantity[0], InventoryColumnNames.OUTBACK, item.quantity[1], InventoryColumnNames.STORAGE, item.quantity[2], item.SQLid);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6}, {7} = {8} WHERE id = {9}", TableNames.INVENTORY, InventoryColumnNames.STORE, item.quantity[0], InventoryColumnNames.OUTBACK, item.quantity[1], InventoryColumnNames.STORAGE, item.quantity[2], InventoryColumnNames.WEBSITE, item.quantity[3], item.SQLid);
             string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
 
             SqlCommand cmd = new SqlCommand(itemUpdate, connect);
@@ -435,6 +442,7 @@ namespace Inventory_3._0
                         quantities.Add((int)reader[QuantityColumns.Store]);
                         quantities.Add((int)reader[QuantityColumns.OutBack]);
                         quantities.Add((int)reader[QuantityColumns.Storage]);
+                        quantities.Add((int)reader[QuantityColumns.Website]);
                     }
                 }
                 catch (Exception ex)
@@ -1200,7 +1208,45 @@ namespace Inventory_3._0
                 connect.Close();
             }
         }
+        #endregion
 
-#endregion
+        #region One-Time Use Methods
+        public static bool CreateWebsiteQuantityColumn()
+        {
+            string addWebsiteCommand = string.Format("ALTER TABLE {0} ADD {1} INT NOT NULL DEFAULT '0'", TableNames.INVENTORY, InventoryColumnNames.WEBSITE);
+            try
+            {
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+                return false;
+            }
+            return true;
+        }
+
+        public static void MoveInventoryFromStorageToWebsite()
+        {
+            string addWebsiteCommand = string.Format("UPDATE TABLE {0} SET {1} = {2}", TableNames.INVENTORY, InventoryColumnNames.WEBSITE, InventoryColumnNames.STORAGE);
+            try
+            {
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+            }
+        }
+
+        #endregion
     }
 }

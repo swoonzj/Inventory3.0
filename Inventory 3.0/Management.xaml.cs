@@ -131,8 +131,9 @@ namespace Inventory_3._0
                 if (item.quantity[0] != selection.quantity[0]) selection.quantity[0] = int.MinValue;
                 if (item.quantity[1] != selection.quantity[1]) selection.quantity[1] = int.MinValue;
                 if (item.quantity[2] != selection.quantity[2]) selection.quantity[2] = int.MinValue;
+                if (item.quantity[3] != selection.quantity[3]) selection.quantity[3] = int.MinValue;
                 // UPCs
-                foreach(string upc in selection.UPCs){
+                foreach (string upc in selection.UPCs){
                     if (!item.UPCs.Contains(upc)) upcsToRemove.Add(upc);
                 }
                 foreach (string upc in upcsToRemove)
@@ -154,7 +155,7 @@ namespace Inventory_3._0
                 foreach (Item item in lvList.SelectedItems)
                 {
                     Item newItem = item.Clone();
-                    if (newItem.quantity.Count != 3) newItem.quantity = new ObservableCollection<int> { 0, 0, 0 };
+                    if (newItem.quantity.Count != 3) newItem.quantity = new ObservableCollection<int> { 0, 0, 0, 0 };
 
                     if (txtName.IsEnabled == true && !String.IsNullOrWhiteSpace(txtName.Text))
                         newItem.name = managedItem.name;
@@ -168,6 +169,8 @@ namespace Inventory_3._0
                         newItem.quantity[1] = managedItem.quantity[1];
                     if (!String.IsNullOrWhiteSpace(txtStorage.Text))
                         newItem.quantity[2] = managedItem.quantity[2];
+                    if (!String.IsNullOrWhiteSpace(txtWebsite.Text))
+                        newItem.quantity[3] = managedItem.quantity[3];
                     if (!String.IsNullOrWhiteSpace(txtCash.Text))
                         newItem.tradeCash = managedItem.tradeCash;
                     if (!String.IsNullOrWhiteSpace(txtCredit.Text))
@@ -185,6 +188,7 @@ namespace Inventory_3._0
                 }
                 UPCsToDelete.Clear();
                 MessageBox.Show("Saved.");
+                lvList.UnselectAll();
                 Search();
             }
         }
@@ -268,7 +272,7 @@ namespace Inventory_3._0
             {
                 MessageBox.Show("Error in menuImportFromCSV_Click():\n" + ex.Message);
                 MessageBox.Show("As a reminder, the proper format for a .csv file is:\n"
-                     + "Name,System,Price,Inventory Out Front, Inventory Out Back, Inventory in Storage, Trade value: Cash, Trade Value: Credit, UPC, [any additional UPCs (optional)]");
+                     + "Name,System,Price,Inventory Out Front, Inventory Out Back, Inventory in Storage, Inventory on Website, Trade value: Cash, Trade Value: Credit, UPC, [any additional UPCs (optional)]");
             }
         }
 
@@ -315,7 +319,36 @@ namespace Inventory_3._0
 
         private void menuAddCustomerTable_Click(object sender, RoutedEventArgs e)
         {
-            DBAccess.CreateCustomerTable();
+            MessageBox.Show("Soon.");
+            //DBAccess.CreateCustomerTable();
+        }
+
+        private void menuAddWebsiteColumn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Add the SQL table column for Website storage?", "Add Website column?", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                if (DBAccess.CreateWebsiteQuantityColumn())
+                {
+                    MessageBox.Show("Success.");
+                }
+            }
+        }
+
+        private void menuMoveStorageToWebsite_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Move all inventory from Storage to Website?", "Move to Website?", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                DBAccess.MoveInventoryFromStorageToWebsite();
+                MessageBox.Show("Done.");
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            DBAccess.CloseSQLConnection();
+            MessageBox.Show("SQL Connection Closed.");
         }
     }
 }

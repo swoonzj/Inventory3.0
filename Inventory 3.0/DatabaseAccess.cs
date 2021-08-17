@@ -131,8 +131,9 @@ namespace Inventory_3._0
             try
             {
                 await Task.Run(() =>
-                    {
-                        connect.Open();
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
+                    connect.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read() == true)
                         {
@@ -193,8 +194,9 @@ namespace Inventory_3._0
             // execute command  & close connection
             await Task.Run(() =>
             {
-                try
-                {
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     int ID = (int)cmdItem.ExecuteScalar(); // Get the unique, auto-incremented ID for the item.
 
@@ -255,6 +257,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read() == true)
@@ -300,6 +303,7 @@ namespace Inventory_3._0
                 {
                     try
                     {
+                        if (connect.State == ConnectionState.Open) { connect.Close(); }
                         connect.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read() == true)
@@ -332,6 +336,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmd.ExecuteNonQuery();
                     connect.Close();
@@ -376,6 +381,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmdUPC.ExecuteNonQuery();
                 }
@@ -411,6 +417,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmdUPC.ExecuteNonQuery();
                 }
@@ -434,6 +441,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -474,6 +482,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -497,6 +506,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -553,6 +563,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -589,6 +600,7 @@ namespace Inventory_3._0
             {
                 await Task.Run(() =>
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -645,6 +657,7 @@ namespace Inventory_3._0
             {
                 await Task.Run(() =>
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -683,6 +696,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -708,6 +722,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.HasRows)
@@ -744,6 +759,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 value = (double)cmd.ExecuteScalar();
             }
@@ -778,6 +794,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -805,6 +822,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 value = (int)cmd.ExecuteScalar();
             }
@@ -829,6 +847,7 @@ namespace Inventory_3._0
         /// <returns>Transaction number as int</returns>
         public static int GetNextUnusedTransactionNumber()
         {
+            if (connect.State == ConnectionState.Open) { connect.Close(); }
             SqlCommand cmd;
             int value;
 
@@ -846,6 +865,7 @@ namespace Inventory_3._0
         /// </summary>
         public static void IncrementTransactionNumber()
         {
+            if (connect.State == ConnectionState.Open) { connect.Close(); }
             SqlCommand cmd;
 
             cmd = new SqlCommand("UPDATE " + TableNames.VARIABLES + " SET TransactionNumber = TransactionNumber + 1", connect);
@@ -865,6 +885,7 @@ namespace Inventory_3._0
             // execute command  & close connection
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
                 connect.Close();
@@ -889,6 +910,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read() == true)
@@ -915,6 +937,7 @@ namespace Inventory_3._0
             // execute command  & close connection
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
                 connect.Close();
@@ -946,6 +969,7 @@ namespace Inventory_3._0
             // execute command  & close connection
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
                 connect.Close();
@@ -982,6 +1006,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read() == true)
@@ -1027,6 +1052,7 @@ namespace Inventory_3._0
             // execute command  & close connection
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
                 connect.Close();
@@ -1162,6 +1188,7 @@ namespace Inventory_3._0
             
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 // Sales
                 SqlCommand cmd = new SqlCommand(salesCommand, connect);
                 connect.Open();
@@ -1216,6 +1243,7 @@ namespace Inventory_3._0
             string addWebsiteCommand = string.Format("ALTER TABLE {0} ADD {1} INT NOT NULL DEFAULT '0'", TableNames.INVENTORY, InventoryColumnNames.WEBSITE);
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
                 connect.Open();
                 cmd.ExecuteNonQuery();
@@ -1235,6 +1263,7 @@ namespace Inventory_3._0
             string addWebsiteCommand = string.Format("UPDATE TABLE {0} SET {1} = {2}", TableNames.INVENTORY, InventoryColumnNames.WEBSITE, InventoryColumnNames.STORAGE);
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
                 connect.Open();
                 cmd.ExecuteNonQuery();

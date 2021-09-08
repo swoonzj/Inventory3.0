@@ -1260,7 +1260,7 @@ namespace Inventory_3._0
 
         public static void MoveInventoryFromStorageToWebsite()
         {
-            string addWebsiteCommand = string.Format("UPDATE TABLE {0} SET {1} = {2}", TableNames.INVENTORY, InventoryColumnNames.WEBSITE, InventoryColumnNames.STORAGE);
+            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = {2}", TableNames.INVENTORY, InventoryColumnNames.WEBSITE, InventoryColumnNames.STORAGE);
             try
             {
                 if (connect.State == ConnectionState.Open) { connect.Close(); }

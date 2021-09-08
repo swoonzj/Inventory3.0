@@ -350,5 +350,15 @@ namespace Inventory_3._0
             DBAccess.CloseSQLConnection();
             MessageBox.Show("SQL Connection Closed.");
         }
+
+        private void menuZeroOutStorage_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Set Storage inventory to zero?", "Zero out storage?", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                DBAccess.ZeroOutStorageInventory();
+                MessageBox.Show("Done.");
+            }
+        }
     }
 }

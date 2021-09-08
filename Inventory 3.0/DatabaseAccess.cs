@@ -1276,6 +1276,24 @@ namespace Inventory_3._0
             }
         }
 
+        public static void ZeroOutStorageInventory()
+        {
+            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = 0", TableNames.INVENTORY, InventoryColumnNames.STORAGE);
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+            }
+        }
+
         #endregion
     }
 }

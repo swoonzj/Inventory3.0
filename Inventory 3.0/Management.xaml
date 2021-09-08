@@ -41,6 +41,7 @@
                     <MenuItem Name="menuAddCustomerTable" IsCheckable="False" Header="Add _Customer Table" Click="menuAddCustomerTable_Click"/>
                     <MenuItem Name="menuAddWebsiteColumn" IsCheckable="False" Header="Add _Website Inventory Column" Click="menuAddWebsiteColumn_Click"/>
                     <MenuItem Name="menuMoveStorageToWebsite" IsCheckable="False" Header="Move all inventory from 'Storage' to 'Website'" Click="menuMoveStorageToWebsite_Click"/>
+                    <MenuItem Name="menuZeroOutStorage" IsCheckable="False" Header="Set 'Storage' inventory to Zero" Click="menuZeroOutStorage_Click"/>
                 </MenuItem>
             </MenuItem>
 

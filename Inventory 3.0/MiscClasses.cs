@@ -542,6 +542,7 @@ namespace Inventory_3._0
                 {
                     LocalPrintServer printServer = new LocalPrintServer();
                     pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
+                    flowDoc.PageWidth = printDialog.PrintableAreaWidth;
                 }
                 idpSource = flowDoc;
                 printDialog.PrintQueue = pq;

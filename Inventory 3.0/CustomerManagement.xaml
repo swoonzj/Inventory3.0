@@ -1,146 +1,92 @@
-﻿<local:SortableListViews x:Class="Inventory_3._0.CustomerManagement"
+﻿<local:SortableListViews
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Inventory_3._0"
     xmlns:properties="clr-namespace:Inventory_3._0.Properties"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Inventory_3._0.CustomerManagement"
     Title="Customer Management"
-    Icon="Resources\shaq.ico"
-    Height="500" Width="1000">
-    <!--<Window.Resources>
+    Icon="Resources\shaq.ico" d:DesignWidth="1185">
+    <local:SortableListViews.Resources>
         <local:IntConverter x:Key="IntConverter" />
         <local:DecimalConverter x:Key="DecimalConverter"/>
-    </Window.Resources>
+    </local:SortableListViews.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width=".5*" />
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height=".5*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1.5*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="19*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="435*"/>
+            <RowDefinition Height="50*"/>
         </Grid.RowDefinitions>
-
-        <Menu Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Center">
-            <MenuItem Name="menuAddNewItem" Header="_Add New Item" Click="menuAddNewItem_Click"/>
-            <MenuItem Name="menuImportFromCSV" Header="_Import from .CSV" Click="menuImportFromCSV_Click"/>
-            <MenuItem Name="menuMoveInventory" Header="_Move Inventory" Click="menuMoveInventory_Click"/>
-            <MenuItem Name="menuManageTransactions" Header="Manage _Transactions" Click="menuManageTransactions_Click" />
-            <MenuItem Header="_Settings">
-                <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=limitSearchResults}"/>
-                <MenuItem Header="SQL Tables (One Time Use)">
-                    <MenuItem Name="menuAddCustomerTable" IsCheckable="False" Header="Add _Customer Table" Click="menuAddCustomerTable_Click"/>
-                </MenuItem>
-            </MenuItem>
+        <Menu Grid.ColumnSpan="2" Grid.Row="0" VerticalAlignment="Center" Height="18" Margin="0,1,0,0">
+            <MenuItem x:Name="menuAddNewCustomer" Header="_Add New Customer" Click="menuAddNewCustomer_Click"/>
+            <MenuItem x:Name="menuDeleteCustomer" Header="_Delete Selected Customer(s)" Click="menuDeleteCustomer_Click"/>
         </Menu>
-        <ListView Margin="0,5,10,5" Name="lvList" Grid.Column="0" Grid.Row="2" Grid.RowSpan="7" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+        <ListView Margin="5" x:Name="lvList" Grid.Column="0" Grid.Row="2" SelectionMode="Multiple"  ItemsSource="{Binding searchResults}" SelectionChanged="lvList_SelectionChanged" ButtonBase.Click="GridViewColumnHeaderClickedHandler">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox Margin="2" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+                                <CheckBox Margin="2" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
-                    <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
-                    <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
-                    <GridViewColumn Header="Cash" DisplayMemberBinding="{Binding Path=tradeCash, StringFormat=C}"/>
-                    <GridViewColumn Header="Credit" DisplayMemberBinding="{Binding Path=tradeCredit, StringFormat=C}"/>
-                    <GridViewColumn Header="On Floor" DisplayMemberBinding="{Binding Path=quantity[0]}"/>
-                    <GridViewColumn Header="Out Back" DisplayMemberBinding="{Binding Path=quantity[1]}"/>
-                    <GridViewColumn Header="Storage" DisplayMemberBinding="{Binding Path=quantity[2]}"/>
+                    <GridViewColumn Header="Phone"  DisplayMemberBinding="{Binding phoneNumber}"/>
+                    <GridViewColumn Header="Email"  DisplayMemberBinding="{Binding email, StringFormat=C}"/>
                 </GridView>
             </ListView.View>
         </ListView>
-        Labels
-        <Label Grid.Column="1" Grid.Row ="1" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Name</Label>
-        <Label Grid.Column="1" Grid.Row ="2" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">System</Label>
-        <Label Grid.Column="1" Grid.Row ="3" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Price</Label>
-        <Label Grid.Column="1" Grid.Row ="4" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Quantity</Label>
-        <Button Name="btnAutoTradeValues" Grid.Column="1" Grid.Row ="5" Margin="5" FontStretch="Normal" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnAutoTradeValue_Click">Auto</Button>
-        <Label Grid.Column="1" Grid.Row ="5" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Trade: Cash</Label>
-        <Label Grid.Column="1" Grid.Row ="6" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">Trade: Credit</Label>
-        <Label Grid.Column="1" Grid.Row ="7" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center">UPCs</Label>
+        <!--Labels-->
+        <DockPanel Grid.Column="1" Grid.Row="2">
+            <Label Grid.Column="1" Grid.Row ="1" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Top" Content="Name"/>
+            <Label Grid.Column="1" Grid.Row ="2" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Top" Content="Phone"/>
+            <Label Grid.Column="1" Grid.Row ="3" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Top" Content="Email"/>
+            <Label Grid.Column="1" Grid.Row ="4" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Top" Content="Rewards #"/>
+            <Label Grid.Column="1" Grid.Row ="7" Margin="5" FontStretch="Normal" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Top" Content="Wish List"/>
+        </DockPanel>
+        <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <!--Search Bar-->
+            <Button  x:Name="btnClear" Margin="5" Width="20" DockPanel.Dock="Left" HorizontalAlignment="Right" Click="btnClear_Click" Content="X"/>
+            <Button x:Name="btnDelete" Margin="5" Width="150" DockPanel.Dock="Right" Click="btnDelete_Click" Content="Delete Selected Items"/>
+            <TextBox x:Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center" GotFocus="txtSearch_GotFocus" LostFocus="txtSearch_LostFocus"/>
+        </DockPanel>
 
-
-        Text Boxes
-        <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1">
-            Search Bar
-            <Button  Name="btnClear" Margin="5" Width="20" DockPanel.Dock="Left" HorizontalAlignment="Right" Click="btnClear_Click">X</Button>
-            <Button Name="btnDelete" Margin="5" Width="150" DockPanel.Dock="Right" Click="btnDelete_Click">Delete Selected Items</Button>
-            <TextBox Name="txtSearch" Margin="5" FontSize="15" HorizontalAlignment="Stretch" KeyDown="DetectEnterKey" VerticalContentAlignment="Center" GotFocus="txtSearch_GotFocus" LostFocus="txtSearch_LostFocus"/>
-        </DockPanel>
-        <DockPanel Grid.Column="2" Grid.Row="1" >
-            Name
-            <TextBox Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                    Text="{Binding name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-        </DockPanel>
-        <DockPanel Grid.Column="2" Grid.Row="2">
-            System
-            <TextBox Name="txtSystem" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                    Text="{Binding system, Mode=TwoWay}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-        </DockPanel>
-        <DockPanel Grid.Column="2" Grid.Row="3">
-            Price
-            <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                    Text="{Binding price, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-        </DockPanel>
-        <UniformGrid Grid.Column="2" Grid.Row="4" Columns="3">
-            Quantity
-            <StackPanel Margin="5">
-                <Label HorizontalAlignment="Center">Store</Label>
-                <TextBox Name="txtStore" Text="{Binding quantity[0], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-            </StackPanel>
-            <StackPanel Margin="5">
-                <Label HorizontalAlignment="Center">Back Room</Label>
-                <TextBox Name="txtOutBack" Text="{Binding quantity[1], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-            </StackPanel>
-            <StackPanel Margin="5">
-                <Label HorizontalAlignment="Center">Storage</Label>
-                <TextBox Name="txtStorage" Text="{Binding quantity[2], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-            </StackPanel>
-        </UniformGrid>
-        <DockPanel Grid.Column="2" Grid.Row="5">
-            Trade: Cash
-            <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                    Text="{Binding tradeCash, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-        </DockPanel>
-        <DockPanel Grid.Column="2" Grid.Row="6">
-            Trade: Cash
-            <TextBox Name="txtCredit" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
-                    Text="{Binding tradeCredit, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-        </DockPanel>
-        <DockPanel Grid.Column="2" Grid.Row="7">
-            <ListView Name="lvUPC" SelectionMode="Multiple" Margin="5" Width="200" ItemsSource="{Binding UPCs, Mode=TwoWay}">
+        <!--Text Boxes-->
+        <DockPanel Grid.Column="2" Grid.Row="2" >
+            <TextBox x:Name="txtName" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"
+				Text="{Binding name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
+            <TextBox x:Name="txtPhone" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"
+				Text="{Binding phoneNumber, Mode=TwoWay}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
+            <TextBox x:Name="txtEmail" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"
+				Text="{Binding price, Converter={StaticResource DecimalConverter}, Mode=TwoWay, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
+            <TextBox x:Name="txtRewardsNumber" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"
+				Text="{Binding rewardsNumber, Converter={StaticResource DecimalConverter}, Mode=TwoWay, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
+            <ListView x:Name="lvUPC" SelectionMode="Multiple" Margin="5" DockPanel.Dock="Top" ItemsSource="{Binding UPCs, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox Margin="2" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+                                    <CheckBox Margin="2" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="UPC"/>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
+                        <GridViewColumn Header="System" DisplayMemberBinding="{Binding system}"/>
+                        <GridViewColumn Header="In Stock?" DisplayMemberBinding="{Binding quantity[QuantityColumns.store]}"/>
+                        <GridViewColumn Header="Date Requested" DisplayMemberBinding="{Binding dateRequested}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <StackPanel VerticalAlignment="Center">
-                <TextBox Name="txtUPC" Margin="5" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" GotFocus="txtUPC_GotFocus" LostFocus="txtUPC_LostFocus"/>
-                <Button Name="btnAdd" Margin="5" Click="btnAdd_Click">Add</Button>
-                <Button Name="btnRemove" Margin="5" Click="btnRemove_Click">Remove</Button>
-            </StackPanel>
         </DockPanel>
-        <Button Name="btnSave" Margin="5" Grid.Column="2" Grid.Row="8" Click="btnSave_Click" IsDefault="True">Save</Button>
 
-    </Grid>-->
+        <Button x:Name="btnSave" Margin="5" Grid.Column="2" Grid.Row="3" Click="btnSave_Click" IsDefault="True" Content="Save"/>
+
+    </Grid>
 </local:SortableListViews>

@@ -13,7 +13,7 @@ namespace Inventory_3._0
     /// 
     public partial class ManageTransactions : SortableListViews
     {
-        decimal tradeCash, tradeCredit, totalSales, netSales, cashPayment, creditPayment, netIncome, creditRedeemed, rewardsRedeemed, totalCashReturn, totalCreditReturn;
+        decimal tradeCash, tradeCredit, totalSales, netSales, cashPayment, creditPayment, netIncome, creditRedeemed, websitePayment, totalCashReturn, totalCreditReturn;
         ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
         DateTime startDate = DateTime.Today, endDate = DateTime.Today.AddDays(1);
         List<Transaction> payments = new List<Transaction>(); 
@@ -35,15 +35,20 @@ namespace Inventory_3._0
         {
             Mouse.OverrideCursor = Cursors.Wait;
             transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate));
-            lvList.ItemsSource = transactions;
+            UpdateAfterSearch();
             Mouse.OverrideCursor = Cursors.Arrow;
+        }
+
+        private void UpdateAfterSearch()
+        {
+            lvList.ItemsSource = transactions;
             CalculateTotals();
             SetLabels();
         }
 
         private void CalculateTotals()
         {
-            tradeCash = tradeCredit = totalSales = netSales = cashPayment = creditPayment = netIncome = rewardsRedeemed = creditRedeemed = totalCashReturn = totalCreditReturn = 0m;
+            tradeCash = tradeCredit = totalSales = netSales = cashPayment = creditPayment = netIncome = websitePayment = creditRedeemed = totalCashReturn = totalCreditReturn = 0m;
             foreach (Transaction item in transactions)
             {
                 switch (item.transactionType)
@@ -67,11 +72,15 @@ namespace Inventory_3._0
                                 case TransactionTypes.PAYMENT_CREDITCARD:
                                     creditPayment += payment.total;
                                     break;
-                                case TransactionTypes.PAYMENT_REWARDS:
-                                    rewardsRedeemed += payment.total;
+                                case TransactionTypes.PAYMENT_WEBSITE:
+                                    websitePayment += payment.total;
                                     break;
                                 case TransactionTypes.PAYMENT_STORECREDIT:
                                     creditRedeemed += payment.total;
+                                    break;
+                                // Change due is no longer included as a transation, but it WAS. Added here for legacy transactions.
+                                case TransactionTypes.CHANGE_DUE:
+                                    cashPayment -= payment.total;
                                     break;
                             }
                         }
@@ -97,6 +106,11 @@ namespace Inventory_3._0
             netIncome = netSales - tradeCash - totalCashReturn;
         }
 
+        private void menuRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            Search();
+        }
+
         private void SetLabels()
         {
             lblSalesTotal.Content = totalSales.ToString("C");
@@ -105,7 +119,7 @@ namespace Inventory_3._0
             lblNetSales.Content = netSales.ToString("C");
             lblNetIncome.Content = netIncome.ToString("C");
             lblRedeemedCredit.Content = creditRedeemed.ToString("C");
-            lblRedeemedRewards.Content = rewardsRedeemed.ToString("C");
+            lblWebsite.Content = websitePayment.ToString("C");
             lblCashSales.Content = cashPayment.ToString("C");
             lblCreditSales.Content = creditPayment.ToString("C");
             lblReturnCash.Content = totalCashReturn.ToString("C");
@@ -141,10 +155,12 @@ namespace Inventory_3._0
                 if (int.TryParse(txtSearch.Text, out n))
                 {
                     transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate, n));
+                    UpdateAfterSearch();
                 }
                 else
                 {
-                    MessageBox.Show("\"" + txtSearch.Text + "\" is not a valid number. Try again.");
+                    transactions = new ObservableCollection<Transaction>(DBAccess.GetTransactions(startDate, endDate, 0, txtSearch.Text));
+                    UpdateAfterSearch();
                 }
             }
         }

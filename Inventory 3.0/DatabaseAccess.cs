@@ -164,6 +164,96 @@ namespace Inventory_3._0
             return collection;
         }
 
+        /// <summary>
+        /// Returns a List of all Items (matching an optional search string), with inventory information on passed Inventory column
+        /// Does NOT fetch UPC information
+        /// Selects only the top 200 results!!!
+        /// </summary>
+        /// <param name="inventoryColumn">Table name of an INVENTORY type table</param>
+        /// <param name="sortBy">Column to sort by.   (Optional)</param>
+        /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
+        /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
+        /// <returns>A List of Items</returns>
+        public static async Task<List<Customer>> SQLTableToCustomerList(string sortBy = "name", bool ascending = true, string searchtext = "", bool limitResults = true)
+        {
+            List<Customer> collection = new List<Customer>();
+            //Item item;
+            //SearchTerms searchTerms;
+
+            //// Save sorting order to string "order" (descending/ascending)
+            //string order;
+            //SqlCommand cmd;
+            //if (ascending)
+            //    order = "ASC";
+            //else
+            //    order = "DESC";
+
+            //// Limit number of results?
+            //string limit = "";
+            //if (limitResults)
+            //{
+            //    limit = " TOP 200";
+            //}
+
+            //// parameters cannot be null
+            //if (searchtext == null) searchtext = "";
+            //if (sortBy == null) sortBy = SQLTableColumnNames.NAME;
+
+            //// Check for special characters, then divide searchtext into individual terms
+            //searchtext = CheckForSpecialCharacters(searchtext);
+            //searchTerms = new SearchTerms(searchtext);
+
+            //if (sortBy != SQLTableColumnNames.NAME)
+            //{
+            //    cmd = new SqlCommand("SELECT" + limit + " Name, Phone, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+            //        " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
+            //        "WHERE " + searchTerms.GenerateSQLSearchString() +
+            //        " ORDER BY " + sortBy + " " + order + ", Name", connect);
+            //}
+            //else
+            //{
+            //    cmd = new SqlCommand("SELECT" + limit + " Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+            //        " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
+            //        "WHERE " + searchTerms.GenerateSQLSearchString() +
+            //        " ORDER BY " + sortBy + " " + order, connect);
+            //}
+
+            //try
+            //{
+            //    await Task.Run(() =>
+            //    {
+            //        if (connect.State == ConnectionState.Open) { connect.Close(); }
+            //        connect.Open();
+            //        SqlDataReader reader = cmd.ExecuteReader();
+            //        while (reader.Read() == true)
+            //        {
+            //            item = SQLReaderToItem(reader);
+            //            if (item != null)
+            //            {
+            //                collection.Add(item);
+            //            }
+            //        }
+            //    });
+            //}
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show("ERROR IN SQLTableToCollection:\n" + e.Message);
+            //}
+            //finally
+            //{
+            //    connect.Close();
+            //}
+
+            //foreach (Item newitem in collection)
+            //{
+            //    newitem.UPCs = await DBAccess.GetUPCsWithID(newitem.SQLid);
+            //    newitem.quantity = new ObservableCollection<int>(await DBAccess.GetQuantities(newitem.SQLid));
+            //    if (newitem.quantity.Count != 4) newitem.quantity = new ObservableCollection<int> { 0, 0, 0, 0 }; // Should only be necessary for items with no quantities.
+            //}
+
+            return collection;
+        }
+
         public async static Task<bool> AddNewItem(Item item)
         {
             return await AddNewItem(item.name, item.system, item.price, item.quantity, item.tradeCash, item.tradeCredit, item.UPCs);
@@ -327,7 +417,7 @@ namespace Inventory_3._0
         public async static Task SaveItemChanges(Item item)
         {
             string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
-            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6}, {7} = {8} WHERE id = {9}", TableNames.INVENTORY, InventoryColumnNames.STORE, item.quantity[0], InventoryColumnNames.OUTBACK, item.quantity[1], InventoryColumnNames.STORAGE, item.quantity[2], InventoryColumnNames.WEBSITE, item.quantity[3], item.SQLid);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6}, {7} = {8} WHERE id = {9}", TableNames.INVENTORY, InventoryLocationColumnNames.STORE, item.quantity[0], InventoryLocationColumnNames.OUTBACK, item.quantity[1], InventoryLocationColumnNames.STORAGE, item.quantity[2], InventoryLocationColumnNames.WEBSITE, item.quantity[3], item.SQLid);
             string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
 
             SqlCommand cmd = new SqlCommand(itemUpdate, connect);
@@ -984,24 +1074,37 @@ namespace Inventory_3._0
             }
         }
 
-        public static List<Transaction> GetTransactions(DateTime startRange, DateTime endRange, int number = 0)
+        public static List<Transaction> GetTransactions(DateTime startRange, DateTime endRange, int number = 0, string searchText = "")
         {
             List<Transaction> transactions = new List<Transaction>();
             Transaction transaction = null;
 
             SqlCommand cmd;
+            
+            // Search for specific transaction
             if (number != 0)
             {
-                // SEARCH FOR SPECIFIC TRANSACTION NUMBER!!!!!!!!!!!!!!
                 cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION + 
                     " WHERE TransactionNumber = " + number.ToString(), connect);
+            }
+            // Search for specific items
+            else if (searchText != "")
+            {
+                // parameters cannot be null
+                // Check for special characters, then divide searchtext into individual terms
+                searchText = CheckForSpecialCharacters(searchText);
+                SearchTerms searchTerms = new SearchTerms(searchText);
+              
+                cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION +
+                    " WHERE " + searchTerms.GenerateSQLSearchString() +
+                    " ORDER BY " + SQLTableColumnNames.TRANSACTIONNUMBER + " DESC " + ", Name", connect);
             }
 
             else
             {
                 cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION +
                     " WHERE DATE BETWEEN \'" + startRange.ToString("MM/dd/yyyy hh:mm tt") + "\' AND \'" + endRange.ToString("MM/dd/yyyy hh:mm tt") +
-                    "\' ORDER BY TransactionNumber DESC", connect);
+                    "\' ORDER BY " + SQLTableColumnNames.TRANSACTIONNUMBER + " DESC", connect);
             }
 
             try
@@ -1238,9 +1341,9 @@ namespace Inventory_3._0
         #endregion
 
         #region One-Time Use Methods
-        public static bool CreateWebsiteQuantityColumn()
+        internal static bool CreateWebsiteQuantityColumn()
         {
-            string addWebsiteCommand = string.Format("ALTER TABLE {0} ADD {1} INT NOT NULL DEFAULT '0'", TableNames.INVENTORY, InventoryColumnNames.WEBSITE);
+            string addWebsiteCommand = string.Format("ALTER TABLE {0} ADD {1} INT NOT NULL DEFAULT '0'", TableNames.INVENTORY, InventoryLocationColumnNames.WEBSITE);
             try
             {
                 if (connect.State == ConnectionState.Open) { connect.Close(); }
@@ -1258,9 +1361,9 @@ namespace Inventory_3._0
             return true;
         }
 
-        public static void MoveInventoryFromStorageToWebsite()
+        internal static void MoveInventoryFromStorageToWebsite()
         {
-            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = {2}", TableNames.INVENTORY, InventoryColumnNames.WEBSITE, InventoryColumnNames.STORAGE);
+            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = {2}", TableNames.INVENTORY, InventoryLocationColumnNames.WEBSITE, InventoryLocationColumnNames.STORAGE);
             try
             {
                 if (connect.State == ConnectionState.Open) { connect.Close(); }
@@ -1276,9 +1379,27 @@ namespace Inventory_3._0
             }
         }
 
-        public static void ZeroOutStorageInventory()
+        internal static void ZeroOutStorageInventory()
         {
-            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = 0", TableNames.INVENTORY, InventoryColumnNames.STORAGE);
+            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = 0", TableNames.INVENTORY, InventoryLocationColumnNames.STORAGE);
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+            }
+        }
+
+        internal static void ChangeRewardsToStoreCredit()
+        {
+            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = '{2}' WHERE {1} = '{3}'", TableNames.PAYMENT, SQLTableColumnNames.PAYMENTTYPE, TransactionTypes.PAYMENT_STORECREDIT, TransactionTypes.PAYMENT_WEBSITE);
             try
             {
                 if (connect.State == ConnectionState.Open) { connect.Close(); }

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Inventory_3._0
 {
     class Customer : INotifyPropertyChanged, IEquatable<Customer>
-    {
+    { 
         private string Name;
         public string name
         {
@@ -63,7 +60,12 @@ namespace Inventory_3._0
                 NotifyPropertyChanged("wishList");
             }
         }
-        
+
+        public Customer Clone()
+        {
+           return new Customer(this.name, this.phoneNumber, this.email, this.rewardsNumber, this.wishList);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -85,7 +87,19 @@ namespace Inventory_3._0
             this.phoneNumber = phoneNumber;
             this.email = email;
             this.rewardsNumber = rewardsNumber;
-            this.wishList = wishList;
+            if (wishList == null)
+            {
+                this.wishList = new List<Item>();
+            }
+            else
+            {
+                this.wishList = wishList;
+            }
+        }
+
+        public Customer()
+        {
+            new Customer("");
         }
     }
 }

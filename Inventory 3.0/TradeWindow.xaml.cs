@@ -2,19 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Inventory_3._0
 {
@@ -36,12 +27,21 @@ namespace Inventory_3._0
                 InitializeComponent();
                 //Search(String.Empty);
                 lvCart.ItemsSource = cart;
+                lvList.ContextMenu = new ListViewContextMenu(lvList);
+                lvCart.ContextMenu = new ListViewContextMenu(lvCart);
                 cart.CollectionChanged += (e, v) => UpdateTotals();
+                lvList.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
+                lvCart.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.ToString());
             }
+        }
+
+        private void LvList_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -165,9 +165,9 @@ namespace Inventory_3._0
         private void lvList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = ((FrameworkElement)e.OriginalSource).DataContext as Item;
-            item.quantity[0] = 1;
             if (item != null)
-            {
+            { 
+                item.quantity[0] = 1;
                 cart.Insert(0, item);
             }
         }        

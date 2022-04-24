@@ -32,6 +32,7 @@
             <MenuItem Header="_Settings">
                 <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=limitSearchResults}"/>
             </MenuItem>
+            <MenuItem Name="menuRefresh" Header="Refresh" Click="menuRefresh_Click"/>
         </Menu>
         <ListView Name="lvList" Margin="5" Grid.Column="0" Grid.Row="3" Grid.RowSpan="4"  SelectionMode="Single" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
             <ListView.View>
@@ -123,8 +124,8 @@
                     <Label Name="lblRedeemedCredit" Grid.Row="7">$0</Label>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Label>Redeemed Rewards:</Label>
-                    <Label Name="lblRedeemedRewards" Grid.Row="7">$0</Label>
+                    <Label>Website Transactions:</Label>
+                    <Label Name="lblWebsite" Grid.Row="7">$0</Label>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical">               

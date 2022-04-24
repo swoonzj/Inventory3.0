@@ -23,7 +23,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <ListView  Margin="5" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="6" SelectionMode="Multiple" MouseDoubleClick="lvList_MouseDoubleClick" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+        <ListView  Margin="5" Name="lvList" Grid.Column="0" Grid.Row="1" Grid.RowSpan="6" SelectionMode="Multiple" MouseDoubleClick="lvList_MouseDoubleClick" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" MaxHeight="2000">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>

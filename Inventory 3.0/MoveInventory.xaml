@@ -50,12 +50,13 @@
             <RadioButton Name="radioFromOutBack" GroupName="From" Margin="5">Out Back</RadioButton>
             <RadioButton Name="radioFromStorage" GroupName="From" Margin="5">Storage</RadioButton>
             <RadioButton Name="radioFromSalesFloor" GroupName="From" Margin="5">Sales Floor</RadioButton>
-            <RadioButton Name="radioFromWebsite" GroupName="From" Margin="5,5,5,50">Website</RadioButton>
+            <RadioButton Name="radioFromWebsite" GroupName="From" Margin="5,5,5,30">Website</RadioButton>
             <Label FontWeight="Bold" HorizontalAlignment="Center">TO:</Label>
             <RadioButton Name="radioToOutBack" GroupName="To" Margin="5">Out Back</RadioButton>
             <RadioButton Name="radioToStorage" GroupName="To" Margin="5">Storage</RadioButton>
             <RadioButton Name="radioToSalesFloor" GroupName="To" Margin="5">Sales Floor</RadioButton>
-            <RadioButton Name="radioToWebsite" GroupName="To" Margin="5,5,5,30">Website</RadioButton>
+            <RadioButton Name="radioToWebsite" GroupName="To" Margin="5">Website</RadioButton>
+            <RadioButton Name="radioRemove" GroupName="To" Margin="5,5,5,30">Remove Entirely</RadioButton>
         </StackPanel>
         <TextBox Name="txtUPCInput" Grid.Column="1" Grid.Row="4" Opacity="0" KeyDown="DetectUPCEnterKey"/>
         <Button Name="btnTransfer" Margin="5" Grid.Column="1" Grid.Row="2" Click="btnTransfer_Click">Transfer</Button>

@@ -42,6 +42,7 @@
                     <MenuItem Name="menuAddWebsiteColumn" IsCheckable="False" Header="Add _Website Inventory Column" Click="menuAddWebsiteColumn_Click"/>
                     <MenuItem Name="menuMoveStorageToWebsite" IsCheckable="False" Header="Move all inventory from 'Storage' to 'Website'" Click="menuMoveStorageToWebsite_Click"/>
                     <MenuItem Name="menuZeroOutStorage" IsCheckable="False" Header="Set 'Storage' inventory to Zero" Click="menuZeroOutStorage_Click"/>
+                    <MenuItem Name="menuChangeRewardsToStoreCredit" IsCheckable="False" Header="Change 'Rewards' payments to 'Store Credit'" Click="menuChangeRewardsToStoreCredit_Click"/>
                 </MenuItem>
             </MenuItem>
 

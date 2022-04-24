@@ -112,9 +112,9 @@ namespace Inventory_3._0
             Pay(TransactionTypes.PAYMENT_STORECREDIT);
         }
 
-        private void btnRewards_Click(object sender, RoutedEventArgs e)
+        private void btnWebsite_Click(object sender, RoutedEventArgs e)
         {
-            Pay(TransactionTypes.PAYMENT_REWARDS);
+            Pay(TransactionTypes.PAYMENT_WEBSITE);
         }
 
         private void btnReturnCredit_Click(object sender, RoutedEventArgs e)

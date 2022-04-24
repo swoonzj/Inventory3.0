@@ -46,7 +46,7 @@
         public const int Website = 4;
     }
 
-    public static class InventoryColumnNames
+    public static class InventoryLocationColumnNames
     {
         public const string STORE = "Store";
         public const string OUTBACK = "OutBack";
@@ -63,7 +63,7 @@
         public const string PAYMENT_CASH = "Payment - Cash";
         public const string PAYMENT_CREDITCARD = "Payment - Credit Card";
         public const string PAYMENT_STORECREDIT = "Payment - Store Credit";
-        public const string PAYMENT_REWARDS = "Payment - Loyalty Rewards";
+        public const string PAYMENT_WEBSITE = "Payment - Website";
         public const string RETURN = "Return";
         public const string RETURN_CASH = "Return - Cash";
         public const string RETURN_CREDIT = "Return - Store Credit";
@@ -120,7 +120,10 @@
             TRADE_CREDIT = "TradeCredit",
             UPC = "UPC",
             DATE = "Date",
-            TYPE = "Type";
+            TYPE = "Type",
+            PAYMENTTYPE = "PaymentType",
+            TRANSACTIONNUMBER = "TransactionNumber",
+            AMOUNT = "Amount";
     }
 
     public static class ReceiptVariables

@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 
 namespace Inventory_3._0
 {
+    #region SortableListViews
+
     /// <summary>
     /// Inherited from Window, but allows the sorting of ListViews (to eliminate boilerplate code)
     /// Taken and slightly modified from https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/how-to-sort-a-gridview-column-when-a-header-is-clicked
@@ -82,6 +84,7 @@ namespace Inventory_3._0
             }
             catch{}
         }
+
         protected virtual void Sort(string sortBy, ListSortDirection direction, ListView lv)
         {
             try
@@ -113,8 +116,43 @@ namespace Inventory_3._0
             catch { }
         }
     }
+    #endregion
 
+    #region ContextMenu
+    public class ListViewContextMenu : ContextMenu
+    {
+        ListView lv;
+        bool allSelected = false;
+        public ListViewContextMenu(ListView lv)
+        {
+            this.lv = lv;
+        }        
 
+        void SelectAllClick(object sender, RoutedEventArgs e)
+        {
+            if (!allSelected) lv.SelectAll();
+            else lv.UnselectAll();
+            allSelected = !allSelected;
+        }
+
+        protected override void OnOpened(RoutedEventArgs e)
+        {
+            Items.Clear();
+            MenuItem itemTotal = new MenuItem();
+            itemTotal.Header = "Total Items: " + lv.Items.Count;
+            itemTotal.FontWeight = FontWeights.Bold;
+            itemTotal.StaysOpenOnClick = true;
+            Items.Add(itemTotal);
+            MenuItem selectAll = new MenuItem();
+            selectAll.Header = "Select all";
+            selectAll.Click += SelectAllClick;
+            Items.Add(selectAll);
+            base.OnOpened(e);
+        }
+    }
+    #endregion
+
+    #region SearchTerms
     public class SearchTerms
     {
         public List<string> terms = new List<string>();
@@ -126,12 +164,40 @@ namespace Inventory_3._0
         public SearchTerms(string searchText)
         {
             // Split up input by spaces
-            foreach (string term in searchText.Split(' '))
+            List<string> splitList = new List<string>(searchText.Split(' '));
+            string term;
+            for (int i = 0; i < splitList.Count; i++)
             {
+                term = splitList[i];
+                // Check for quotes
+                if (term.StartsWith("\""))
+                {
+                    for (int j = i + 1; j < splitList.Count; j++)
+                    {
+                        // Matching end quote, add term & continue
+                        if (splitList[j].EndsWith("\""))
+                        {
+                            term += " " + splitList[j];
+                            term = term.Replace("\"", "");
+                            i = j;
+                            break;
+                        }
+                        // If no closing quote in whole list, ignore inital quote and continue
+                        else if (j == splitList.Count -1 && !splitList[j].EndsWith("\""))
+                        {
+                            term = splitList[i];
+                            break;
+                        }
+                        else
+                        {
+                            term += " " + splitList[j];
+                        }
+                    }
+                }
                 // Remove terms composed entirely of spaces
-                string temp = term.Replace(" ", "");
-                if (temp != "")
-                    terms.Add(temp);
+                //string temp = term.Replace(" ", "");
+                if (term != "")
+                    terms.Add(term);
             }
         }
 
@@ -160,6 +226,10 @@ namespace Inventory_3._0
             return output;
         }
     }
+
+    #endregion
+
+    #region Converters
 
     public class IntConverter : IValueConverter
     {
@@ -200,6 +270,9 @@ namespace Inventory_3._0
         }
     }
 
+    #endregion
+
+    #region ImportCSV
     /// <summary>
     /// Interaction logic for importing Product data from .CSV (comma separated values)
     /// </summary>
@@ -273,6 +346,10 @@ namespace Inventory_3._0
         }
     }
 
+    #endregion
+
+    #region ReceiptClasses
+
     public class ReceiptGenerator
     {
         Transaction transaction;
@@ -309,7 +386,6 @@ namespace Inventory_3._0
 
         private FlowDocument Generate()
         {
-
             FlowDocument flowDoc = new FlowDocument();
             //receipt.AppendLine(LOGO!!!!!!!!) // ADD LOGO!!!
             // Add Header at top
@@ -568,5 +644,7 @@ namespace Inventory_3._0
                 MessageBox.Show("Error in PrintVerbose():\n" + e.Message + "\n" + e.Data.ToString());
             }
         }
-    }    
+    }
+
+    #endregion
 }

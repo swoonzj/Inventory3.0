@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Transaction.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="CustomerManagement.xaml.cs">
       <DependentUpon>CustomerManagement.xaml</DependentUpon>

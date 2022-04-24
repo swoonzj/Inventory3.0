@@ -26,11 +26,20 @@ namespace Inventory_3._0
                 InitializeComponent();
                 lvCart.ItemsSource = cart;
                 cart.CollectionChanged += (e, v) => UpdateTotals();
+                lvList.ContextMenu = new ListViewContextMenu(lvList);
+                lvCart.ContextMenu = new ListViewContextMenu(lvCart);
+                lvList.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
+                lvCart.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.ToString());
             }
+        }
+
+        private void LvList_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
 
         public PointOfSales(List<Item> items) : this()
@@ -222,7 +231,7 @@ namespace Inventory_3._0
                         MessageBoxResult result = MessageBox.Show("Add returned item(s) back to inventory?\n" + item.name, "Return to inventory?", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (result == MessageBoxResult.Yes)
                         {
-                            await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], InventoryColumnNames.STORE);
+                            await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], InventoryLocationColumnNames.STORE);
                         }
                     }
                     else
@@ -231,7 +240,7 @@ namespace Inventory_3._0
 
                         if (Settings.Default.deductSalesFromInventory)
                         {
-                            await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], InventoryColumnNames.STORE);
+                            await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], InventoryLocationColumnNames.STORE);
                         }
                     }
                 }

@@ -37,7 +37,7 @@
             <Button x:Name="btnCash" Margin="5" FontSize="20" Click="btnCash_Click" Content="Cash"/>
             <Button x:Name="btnCredit" Margin="5" FontSize="20" Click="btnCredit_Click" Content="Credit Card"/>
             <Button x:Name="btnStoreCredit" Margin="5" FontSize="20" Click="btnStoreCredit_Click" Content="Store Credit"/>
-            <Button x:Name="btnRewards" Margin="5" FontSize="20" Click="btnRewards_Click" Content="Rewards Points"/>
+            <Button x:Name="btnWebsite" Margin="5" FontSize="20" Click="btnWebsite_Click" Content="Website"/>
             <DockPanel >
                 <Button x:Name="btnReturnCash" Margin="5" Padding="5" FontSize="20" Click="btnReturnCash_Click" Content="Return Cash"/>
                 <Button x:Name="btnReturnCredit" Margin="5" Padding="5" FontSize="20" Click="btnReturnCredit_Click" Content="Return Credit"/>

@@ -4,16 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Inventory_3._0
 {
@@ -45,8 +39,14 @@ namespace Inventory_3._0
 
             //lvList.ItemsSource = searchResults;
             DataContext = managedItem;
-            
+            lvList.ContextMenu = new ListViewContextMenu(lvList);
+            lvList.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
             //Search();
+        }
+
+        private void LvList_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
 
         private async void Search()
@@ -357,6 +357,16 @@ namespace Inventory_3._0
             if (result == MessageBoxResult.Yes)
             {
                 DBAccess.ZeroOutStorageInventory();
+                MessageBox.Show("Done.");
+            }
+        }
+
+        private void menuChangeRewardsToStoreCredit_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Change Rewards payments to Store Credit?", "Change the books, boss?", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                DBAccess.ChangeRewardsToStoreCredit();
                 MessageBox.Show("Done.");
             }
         }

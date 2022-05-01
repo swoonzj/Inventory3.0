@@ -234,6 +234,14 @@ namespace Inventory_3._0
                             await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], InventoryLocationColumnNames.STORE);
                         }
                     }
+                    else if (checkout.isWebsite)
+                    {
+                        DBAccess.AddTransaction(item, TransactionTypes.RETURN, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
+                        if (Settings.Default.deductSalesFromInventory)
+                        {
+                            await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], InventoryLocationColumnNames.WEBSITE);
+                        }
+                    }
                     else
                     {
                         DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));

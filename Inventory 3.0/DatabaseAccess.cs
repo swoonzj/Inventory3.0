@@ -970,7 +970,7 @@ namespace Inventory_3._0
             SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.PAYMENT + " VALUES(@TRANSACTIONNUMBER, @PAYMENTTYPE, @AMOUNT)", connect);
             cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
             cmd.Parameters.Add("@PAYMENTTYPE", SqlDbType.NVarChar).Value = item.name;
-            cmd.Parameters.Add("@AMOUNT", SqlDbType.Money).Value = item.price * -1; // Reverse Sign for logging payment                 
+            cmd.Parameters.Add("@AMOUNT", SqlDbType.Money).Value = item.price * -1; // Reverse Sign for logging payment           
 
             // execute command  & close connection
             try

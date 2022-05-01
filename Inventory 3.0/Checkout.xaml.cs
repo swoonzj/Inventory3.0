@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows;
 
 namespace Inventory_3._0
@@ -9,7 +10,8 @@ namespace Inventory_3._0
     /// </summary>
     public partial class Checkout : Window
     {
-        public bool isReturn = false;
+        public bool isReturn { get; private set; } = false;
+        public bool isWebsite { get; private set; } = false;
         public bool success = false;
         public ObservableCollection<Item> checkout = new ObservableCollection<Item>();
         private decimal total = 0;
@@ -61,6 +63,7 @@ namespace Inventory_3._0
                 if (checkout[i].name != TransactionTypes.CHANGE_DUE)
                     DBAccess.AddPayment(checkout[i], transactionNumber);
             }
+            isWebsite = checkout[1].name == TransactionTypes.PAYMENT_WEBSITE;
             DialogResult = success;
         }
 
@@ -77,6 +80,12 @@ namespace Inventory_3._0
                 amount = total; ;
             }
 
+            // If Website Payment, make sure there are no other payments.
+            if (paymentType == TransactionTypes.PAYMENT_WEBSITE && amount != total)
+            {
+                MessageBox.Show("Website Payment must be the entire value of cart.", "Website payment can't be combined.", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             payment = new Item(paymentType, TransactionTypes.PAYMENT, -amount, 0, 0, 0, "0");
             checkout.Add(payment);
             UpdateTotal();

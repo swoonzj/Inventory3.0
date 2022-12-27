@@ -3,19 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Printing;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Inventory_3._0
 {
+    #region SortableListViews
+
     /// <summary>
     /// Inherited from Window, but allows the sorting of ListViews (to eliminate boilerplate code)
     /// Taken and slightly modified from https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/how-to-sort-a-gridview-column-when-a-header-is-clicked
@@ -85,22 +84,75 @@ namespace Inventory_3._0
             }
             catch{}
         }
-        private void Sort(string sortBy, ListSortDirection direction, ListView lv)
+
+        protected virtual void Sort(string sortBy, ListSortDirection direction, ListView lv)
         {
             try
             {
                 ICollectionView dataView = CollectionViewSource.GetDefaultView(lv.ItemsSource);
 
                 dataView.SortDescriptions.Clear();
-                SortDescription sd = new SortDescription(sortBy, direction);
-                dataView.SortDescriptions.Add(sd);
+                dataView.SortDescriptions.Add(new SortDescription(sortBy, direction));
                 dataView.Refresh();
             }
             catch{}
         }
     }
 
+    public class SortableListViewsWithItems : SortableListViews
+    {
+        protected override void Sort(string sortBy, ListSortDirection direction, ListView lv)
+        {
+            try
+            {
+                ICollectionView dataView = CollectionViewSource.GetDefaultView(lv.ItemsSource);
 
+                dataView.SortDescriptions.Clear();
+                dataView.SortDescriptions.Add(new SortDescription(sortBy, direction));
+                dataView.SortDescriptions.Add(new SortDescription("system", ListSortDirection.Ascending));
+                dataView.SortDescriptions.Add(new SortDescription("name", ListSortDirection.Ascending));
+                dataView.Refresh();
+            }
+            catch { }
+        }
+    }
+    #endregion
+
+    #region ContextMenu
+    public class ListViewContextMenu : ContextMenu
+    {
+        ListView lv;
+        bool allSelected = false;
+        public ListViewContextMenu(ListView lv)
+        {
+            this.lv = lv;
+        }        
+
+        void SelectAllClick(object sender, RoutedEventArgs e)
+        {
+            if (!allSelected) lv.SelectAll();
+            else lv.UnselectAll();
+            allSelected = !allSelected;
+        }
+
+        protected override void OnOpened(RoutedEventArgs e)
+        {
+            Items.Clear();
+            MenuItem itemTotal = new MenuItem();
+            itemTotal.Header = "Total Items: " + lv.Items.Count;
+            itemTotal.FontWeight = FontWeights.Bold;
+            itemTotal.StaysOpenOnClick = true;
+            Items.Add(itemTotal);
+            MenuItem selectAll = new MenuItem();
+            selectAll.Header = "Select all";
+            selectAll.Click += SelectAllClick;
+            Items.Add(selectAll);
+            base.OnOpened(e);
+        }
+    }
+    #endregion
+
+    #region SearchTerms
     public class SearchTerms
     {
         public List<string> terms = new List<string>();
@@ -112,29 +164,82 @@ namespace Inventory_3._0
         public SearchTerms(string searchText)
         {
             // Split up input by spaces
-            foreach (string term in searchText.Split(' '))
+            List<string> splitList = new List<string>(searchText.Split(' '));
+            string term;
+            for (int i = 0; i < splitList.Count; i++)
             {
+                term = splitList[i];
+                // Check for quotes
+                if (term.StartsWith("\""))
+                {
+                    for (int j = i + 1; j < splitList.Count; j++)
+                    {
+                        // Matching end quote, add term & continue
+                        if (splitList[j].EndsWith("\""))
+                        {
+                            term += " " + splitList[j];
+                            term = term.Replace("\"", "");
+                            i = j;
+                            break;
+                        }
+                        // If no closing quote in whole list, ignore inital quote and continue
+                        else if (j == splitList.Count -1 && !splitList[j].EndsWith("\""))
+                        {
+                            term = splitList[i];
+                            break;
+                        }
+                        else
+                        {
+                            term += " " + splitList[j];
+                        }
+                    }
+                }
                 // Remove terms composed entirely of spaces
-                string temp = term.Replace(" ", "");
-                if (temp != "")
-                    terms.Add(temp);
+                //string temp = term.Replace(" ", "");
+                if (term != "")
+                    terms.Add(term);
             }
         }
 
-        public string GenerateSQLSearchString()
+        public string GenerateItemSQLSearchString()
         {
             string output = "";
 
             // Case: list of terms is empty
             if (terms.Count == 0)
             {
-                return "(Name LIKE \'%%\' OR System LIKE \'%%\') ";
+                return string.Format("({0} LIKE \'%%\' OR {1} LIKE \'%%\') ", SQLTableColumnNames.NAME, SQLTableColumnNames.SYSTEM);
             }
 
             for (int i = 0; i < terms.Count; i++)
             {
                 string term = terms[i];
-                output += "(Name LIKE \'%" + term + "%\' OR System LIKE \'%" + term + "%\') ";
+                output += string.Format("({0} LIKE \'%{2}%\' OR {1} LIKE \'%{2}%\') ", SQLTableColumnNames.NAME, SQLTableColumnNames.SYSTEM, term);
+
+                // Add an "AND" in between conditions
+                // Do not add one if it is the last search term
+                if (i != terms.Count - 1)
+                {
+                    output += "AND ";
+                }
+            }
+            return output;
+        }
+
+        public string GenerateCustomerSQLSearchString()
+        {
+            string output = "";
+
+            // Case: list of terms is empty
+            if (terms.Count == 0)
+            {
+                return string.Format("({0} LIKE \'%%\' OR {1} LIKE \'%%\' OR {2} LIKE \'%%\' OR {3} LIKE \'%%\') ", SQLTableColumnNames.NAME, SQLTableColumnNames.PHONE, SQLTableColumnNames.EMAIL, SQLTableColumnNames.REWARDS);
+            }
+
+            for (int i = 0; i < terms.Count; i++)
+            {
+                string term = terms[i];
+                output += string.Format("({0} LIKE \'%{4}%\' OR {1} LIKE \'%{4}%\' OR {2} LIKE \'%{4}%\' OR {3} LIKE \'%{4}%\') ", SQLTableColumnNames.NAME, SQLTableColumnNames.PHONE, SQLTableColumnNames.EMAIL, SQLTableColumnNames.REWARDS, term);
 
                 // Add an "AND" in between conditions
                 // Do not add one if it is the last search term
@@ -146,6 +251,10 @@ namespace Inventory_3._0
             return output;
         }
     }
+
+    #endregion
+
+    #region Converters
 
     public class IntConverter : IValueConverter
     {
@@ -186,6 +295,9 @@ namespace Inventory_3._0
         }
     }
 
+    #endregion
+
+    #region ImportCSV
     /// <summary>
     /// Interaction logic for importing Product data from .CSV (comma separated values)
     /// </summary>
@@ -238,17 +350,18 @@ namespace Inventory_3._0
                 quantity.Add(Convert.ToInt32(line[3]));
                 quantity.Add(Convert.ToInt32(line[4]));
                 quantity.Add(Convert.ToInt32(line[5]));
+                quantity.Add(Convert.ToInt32(line[6]));
 
                 List<string> upcs = new List<string>();
-                if (line.Count > 8)
+                if (line.Count > 9)
                 {
-                    for (int i = 8; i < line.Count; i++) // Index of first UPC)
+                    for (int i = 9; i < line.Count; i++) // Index of first UPC)
                     {
                         upcs.Add(line[i]);
                     }
                 }
 
-                return new Item(line[0], line[1], line[2], quantity, line[6], line[7], upcs);
+                return new Item(line[0], line[1], line[2], quantity, line[7], line[8], upcs);
             }
             else if (line.Count >= 2)
             {
@@ -257,6 +370,10 @@ namespace Inventory_3._0
             else return new Item();
         }
     }
+
+    #endregion
+
+    #region ReceiptClasses
 
     public class ReceiptGenerator
     {
@@ -294,7 +411,6 @@ namespace Inventory_3._0
 
         private FlowDocument Generate()
         {
-
             FlowDocument flowDoc = new FlowDocument();
             //receipt.AppendLine(LOGO!!!!!!!!) // ADD LOGO!!!
             // Add Header at top
@@ -527,6 +643,7 @@ namespace Inventory_3._0
                 {
                     LocalPrintServer printServer = new LocalPrintServer();
                     pq = printServer.GetPrintQueue(PrinterVariables.PRINTERNAME);
+                    flowDoc.PageWidth = printDialog.PrintableAreaWidth;
                 }
                 idpSource = flowDoc;
                 printDialog.PrintQueue = pq;
@@ -552,5 +669,7 @@ namespace Inventory_3._0
                 MessageBox.Show("Error in PrintVerbose():\n" + e.Message + "\n" + e.Data.ToString());
             }
         }
-    }    
+    }
+
+    #endregion
 }

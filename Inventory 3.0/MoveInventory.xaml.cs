@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Inventory_3._0
 {
@@ -32,10 +23,19 @@ namespace Inventory_3._0
             //Search();
 
             lvList.ItemsSource = searchResults;
+            lvList.ContextMenu = new ListViewContextMenu(lvList);
+            lvMove.ContextMenu = new ListViewContextMenu(lvMove);
+            lvList.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
+            lvMove.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
             getTotalItemsAndSetLabel();
 
             //searchResults.Add(new Item("Test1", "Test System", 9.99m, 5, 2m, 3m, "12345"));
             //searchResults.Add(new Item("Test2", "Test System", 9.99m, 5, 2m, 3m, "12345"));
+        }
+
+        private void LvList_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
 
         private void getTotalItemsAndSetLabel()
@@ -107,6 +107,8 @@ namespace Inventory_3._0
                 origin = "Sales Floor";
             else if (radioFromStorage.IsChecked == true)
                 origin = "Storage";
+            else if (radioFromWebsite.IsChecked == true)
+                origin = "Website";
             else if (radioNewItem.IsChecked == true)
                 origin = "New Item / Trade";
             else
@@ -118,6 +120,10 @@ namespace Inventory_3._0
                 destination = "Sales Floor";
             else if (radioToStorage.IsChecked == true)
                 destination = "Storage";
+            else if (radioToWebsite.IsChecked == true)
+                destination = "Website";
+            else if (radioRemove.IsChecked == true)
+                destination = "Remove entirely.";
             else
                 destination = "DESTINATION NOT SELECTED !!!!";
 
@@ -138,11 +144,13 @@ namespace Inventory_3._0
             {
                 // Remove FROM inventory
                 if (radioFromOutBack.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.OUTBACK);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryLocationColumnNames.OUTBACK);
                 else if (radioFromSalesFloor.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.STORE);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryLocationColumnNames.STORE);
                 else if (radioFromStorage.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, ColumnNames.STORAGE);
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryLocationColumnNames.STORAGE);
+                else if (radioFromWebsite.IsChecked == true)
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryLocationColumnNames.WEBSITE);
                 else if (radioNewItem.IsChecked == true) { } // If New Item is checked, don't do anything.
                 else
                 {
@@ -151,19 +159,40 @@ namespace Inventory_3._0
                 }
                 // Add TO inventory
                 if (radioToOutBack.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.OUTBACK);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryLocationColumnNames.OUTBACK);
                 else if (radioToSalesFloor.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.STORE);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryLocationColumnNames.STORE);
                 else if (radioToStorage.IsChecked == true)
-                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, ColumnNames.STORAGE);
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryLocationColumnNames.STORAGE);
+                else if (radioToWebsite.IsChecked == true)
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryLocationColumnNames.WEBSITE);
+                else if (radioRemove.IsChecked == true) { } // If Remove is checked, don't do anything
                 else
                 {
                     MessageBox.Show("Please choose a destination under the \"TO:\".", "You didn't choose an option.", MessageBoxButton.OK, MessageBoxImage.Hand);
                     return;
                 }
             }
-
-            MessageBox.Show("Success!", "Success.");
+            if (radioRemove.IsChecked == true)
+            {
+                Random rand = new Random();
+                switch (rand.Next(1, 4))
+                {
+                    case 1:
+                        MessageBox.Show("Get up on outta here!", "Eyehole Man");
+                        break;
+                    case 2:
+                        MessageBox.Show("YEET!", "Bye bye");
+                        break;
+                    case 3:
+                        MessageBox.Show("Bah-leeted!", "Homestar");
+                        break;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Success!", "Success.");
+            }
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)

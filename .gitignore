@@ -161,3 +161,5 @@ Inventory 3.0/StoreInventoryDataSet.xss
 Inventory 3.0/StoreInventoryDataSet.xsd
 Inventory 3.0/StoreInventoryDataSet.xsc
 Inventory 3.0/StoreInventoryDataSet.Designer.cs
+*.vsidx
+*.lock

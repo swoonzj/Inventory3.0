@@ -32,6 +32,7 @@
             <MenuItem Header="_Settings">
                 <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=limitSearchResults}"/>
             </MenuItem>
+            <MenuItem Name="menuRefresh" Header="Refresh" Click="menuRefresh_Click"/>
         </Menu>
         <ListView Name="lvList" Margin="5" Grid.Column="0" Grid.Row="3" Grid.RowSpan="4"  SelectionMode="Single" SelectionChanged="lvList_SelectionChanged" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
             <ListView.View>
@@ -110,15 +111,24 @@
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Returns: Cash Total:</Label>
+                    <Label Name="lblReturnCash" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label>Returns: Credit Total:</Label>
+                    <Label Name="lblReturnCredit" Grid.Row="7">$0</Label>
+                </StackPanel>
+                <Separator/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Label>Redeemed Store Credit:</Label>
                     <Label Name="lblRedeemedCredit" Grid.Row="7">$0</Label>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Label>Redeemed Rewards:</Label>
-                    <Label Name="lblRedeemedRewards" Grid.Row="7">$0</Label>
+                    <Label>Website Transactions:</Label>
+                    <Label Name="lblWebsite" Grid.Row="7">$0</Label>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical">               
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Label>Trade: Cash Total:</Label>
                     <Label Name="lblTradeCash" Grid.Row="7">$0</Label>

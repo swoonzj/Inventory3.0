@@ -26,6 +26,7 @@ namespace Inventory_3._0
         //Store
         //OutBack
         //Storage
+        //Website
 
         //tblItems:
         //id
@@ -49,11 +50,18 @@ namespace Inventory_3._0
         //UPC
         //id
 
-
         //static SqlConnection connectOldDatabase = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
 
+#if HOMEDEBUG
+        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.HomeInventoryConnectionString); // Home
+#else
         static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2); // Store
-        //static SqlConnection connect = new SqlConnection(Properties.Settings.Default.HomeInventoryConnectionString); // Home
+#endif
+
+        public static void CloseSQLConnection()
+        {
+            connect.Close();
+        }
 
         // Check a string for characters that would throw off SQL formatting
         private static string CheckForSpecialCharacters(string input)
@@ -62,7 +70,6 @@ namespace Inventory_3._0
             {
                 if (input[i] == '\'') // check for ' (apostrophe)
                 { input = input.Insert(i, "\'"); i++; }
-
             }
             return input;
         }
@@ -110,22 +117,23 @@ namespace Inventory_3._0
             {
                 cmd = new SqlCommand("SELECT"+ limit +" Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
-                    "WHERE " + searchTerms.GenerateSQLSearchString() +
+                    "WHERE " + searchTerms.GenerateItemSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order + ", Name", connect);
             }
             else
             {
                 cmd = new SqlCommand("SELECT" + limit + " Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
-                    "WHERE " + searchTerms.GenerateSQLSearchString() +
+                    "WHERE " + searchTerms.GenerateItemSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order, connect);
             }
 
             try
             {
                 await Task.Run(() =>
-                    {
-                        connect.Open();
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
+                    connect.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read() == true)
                         {
@@ -150,7 +158,88 @@ namespace Inventory_3._0
             {
                 newitem.UPCs = await DBAccess.GetUPCsWithID(newitem.SQLid);
                 newitem.quantity = new ObservableCollection<int>(await DBAccess.GetQuantities(newitem.SQLid));
-                if (newitem.quantity.Count != 3) newitem.quantity = new ObservableCollection<int> { 0, 0, 0 }; // Should only be necessary for items with no quantities.
+                if (newitem.quantity.Count != 4) newitem.quantity = new ObservableCollection<int> { 0, 0, 0, 0 }; // Should only be necessary for items with no quantities.
+            }
+
+            return collection;
+        }
+
+        /// <summary>
+        /// Returns a List of all Customers (matching an optional search string)
+        /// Does NOT fetch wish list info
+        /// Selects only the top 200 results by default.
+        /// </summary>
+        /// <param name="sortBy">Column to sort by.   (Optional)</param>
+        /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
+        /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
+        /// <returns>A List of Items</returns>
+        public static async Task<List<Customer>> SQLTableToCustomerList(string sortBy = SQLTableColumnNames.NAME, bool ascending = true, string searchtext = "", bool limitResults = true)
+        {
+            List<Customer> collection = new List<Customer>();
+            SearchTerms searchTerms;
+
+            // Save sorting order to string "order" (descending/ascending)
+            string order;
+            SqlCommand cmd;
+            if (ascending)
+                order = "ASC";
+            else
+                order = "DESC";
+
+            // Limit number of results?
+            string limit = "";
+            if (limitResults)
+            {
+                limit = " TOP 200";
+            }
+
+            // parameters cannot be null
+            if (searchtext == null) searchtext = "";
+            if (sortBy == null) sortBy = SQLTableColumnNames.NAME;
+
+            // Check for special characters, then divide searchtext into individual terms
+            searchtext = CheckForSpecialCharacters(searchtext);
+            searchTerms = new SearchTerms(searchtext);
+
+            string columnsToSelect = String.Format(" {0}, {1}, {2}, {3}, {4} ", SQLTableColumnNames.NAME, SQLTableColumnNames.PHONE, SQLTableColumnNames.EMAIL, SQLTableColumnNames.REWARDS, SQLTableColumnNames.ID);
+
+            if (sortBy != SQLTableColumnNames.NAME)
+            {
+                cmd = new SqlCommand("SELECT" + limit + columnsToSelect + " FROM " + TableNames.CUSTOMERS +
+                    " WHERE " + searchTerms.GenerateCustomerSQLSearchString() +
+                    " ORDER BY " + sortBy + " " + order + ", Name", connect);
+            }
+            else
+            {
+                cmd = new SqlCommand("SELECT" + limit + columnsToSelect + " FROM " + TableNames.CUSTOMERS +
+                    " WHERE " + searchTerms.GenerateCustomerSQLSearchString() +
+                    " ORDER BY " + sortBy + " " + order, connect);
+            }
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
+                    connect.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read() == true)
+                    {
+                        Customer customer = SQLReaderToCustomer(reader);
+                        if (customer != null)
+                        {
+                            collection.Add(customer);
+                        }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN SQLTableToCollection:\n" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
             }
 
             return collection;
@@ -177,16 +266,18 @@ namespace Inventory_3._0
             cmdPrice.Parameters.Add("@CASH", SqlDbType.Money).Value = cash;
             cmdPrice.Parameters.Add("@CREDIT", SqlDbType.Money).Value = credit;
 
-            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3)", connect);
+            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3, @QUANTITY4)", connect);
             cmdInventory.Parameters.Add("@QUANTITY1", SqlDbType.Int).Value = inventory[0];
             cmdInventory.Parameters.Add("@QUANTITY2", SqlDbType.Int).Value = inventory[1];
             cmdInventory.Parameters.Add("@QUANTITY3", SqlDbType.Int).Value = inventory[2];
-            
+            cmdInventory.Parameters.Add("@QUANTITY4", SqlDbType.Int).Value = inventory[3];
+
             // execute command  & close connection
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     int ID = (int)cmdItem.ExecuteScalar(); // Get the unique, auto-incremented ID for the item.
 
@@ -196,7 +287,44 @@ namespace Inventory_3._0
                     cmdInventory.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
                     cmdInventory.ExecuteNonQuery();
                     connect.Close();
-                    AddUPCs(upcs, ID);
+                    await AddUPCs(upcs, ID);
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("ERROR IN AddNewItemToTable:\n" + e.Message);
+                    success = false;
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
+            return success;
+        }
+
+        public async static Task<bool> AddNewCustomer(string name, string phone = "", string email = "", string rewardsNumber = "")
+        {
+            bool success = false;
+            //name = CheckForSpecialCharacters(name);
+            //system = CheckForSpecialCharacters(system);
+
+            // Add data to table
+            SqlCommand cmdCustomer = new SqlCommand("INSERT INTO " + TableNames.CUSTOMERS + " VALUES(@NAME, @PHONE, @EMAIL, @REWARDS)", connect);
+            cmdCustomer.Parameters.Add("@NAME", SqlDbType.VarChar).Value = name;
+            cmdCustomer.Parameters.Add("@PHONE", SqlDbType.VarChar).Value = phone;
+            cmdCustomer.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = email;
+            cmdCustomer.Parameters.Add("@REWARDS", SqlDbType.VarChar).Value = rewardsNumber;
+
+            // execute command  & close connection
+            await Task.Run(() =>
+            {
+                try
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
+                    connect.Open();
+                    cmdCustomer.ExecuteNonQuery();
+                    connect.Close();
                     success = true;
                 }
                 catch (Exception e)
@@ -247,6 +375,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read() == true)
@@ -292,6 +421,7 @@ namespace Inventory_3._0
                 {
                     try
                     {
+                        if (connect.State == ConnectionState.Open) { connect.Close(); }
                         connect.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read() == true)
@@ -315,7 +445,7 @@ namespace Inventory_3._0
         public async static Task SaveItemChanges(Item item)
         {
             string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
-            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6} WHERE id = {7}", TableNames.INVENTORY, ColumnNames.STORE, item.quantity[0], ColumnNames.OUTBACK, item.quantity[1], ColumnNames.STORAGE, item.quantity[2], item.SQLid);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6}, {7} = {8} WHERE id = {9}", TableNames.INVENTORY, InventoryLocationColumnNames.STORE, item.quantity[0], InventoryLocationColumnNames.OUTBACK, item.quantity[1], InventoryLocationColumnNames.STORAGE, item.quantity[2], InventoryLocationColumnNames.WEBSITE, item.quantity[3], item.SQLid);
             string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
 
             SqlCommand cmd = new SqlCommand(itemUpdate, connect);
@@ -324,6 +454,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmd.ExecuteNonQuery();
                     connect.Close();
@@ -332,6 +463,38 @@ namespace Inventory_3._0
                     cmd.ExecuteNonQuery();
                     connect.Close();
                     cmd = new SqlCommand(priceUpdate, connect);
+                    connect.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in SaveItemChanges:\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
+        }
+
+        public async static Task SaveCustomerChanges(Customer customer)
+        {
+            string itemUpdate = String.Format("UPDATE {0} SET {1} = \'{2}\', {3} = \'{4}\', {5} = \'{6}\', {7} = \'{8}\',  WHERE id = {9}", 
+                TableNames.CUSTOMERS, 
+                SQLTableColumnNames.NAME, CheckForSpecialCharacters(customer.name), 
+                SQLTableColumnNames.PHONE, CheckForSpecialCharacters(customer.phoneNumber),
+                SQLTableColumnNames.EMAIL, CheckForSpecialCharacters(customer.email),
+                SQLTableColumnNames.REWARDS, CheckForSpecialCharacters(customer.rewardsNumber), customer.sqlId);
+
+            // TODO: Add Wishlist!
+
+            SqlCommand cmd = new SqlCommand(itemUpdate, connect);
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -368,6 +531,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmdUPC.ExecuteNonQuery();
                 }
@@ -403,6 +567,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmdUPC.ExecuteNonQuery();
                 }
@@ -426,6 +591,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -434,6 +600,7 @@ namespace Inventory_3._0
                         quantities.Add((int)reader[QuantityColumns.Store]);
                         quantities.Add((int)reader[QuantityColumns.OutBack]);
                         quantities.Add((int)reader[QuantityColumns.Storage]);
+                        quantities.Add((int)reader[QuantityColumns.Website]);
                     }
                 }
                 catch (Exception ex)
@@ -465,6 +632,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -488,6 +656,7 @@ namespace Inventory_3._0
             {
                 try
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -520,7 +689,64 @@ namespace Inventory_3._0
             return item;
         }
 
-        #region UPC
+        /// <summary>
+        /// Creates an item based on data contained in an SqlDataReader
+        /// </summary>
+        /// <param name="reader">SqlDataReader containing data</param>
+        /// <returns>A new Customer</returns>
+        public static Customer SQLReaderToCustomer(SqlDataReader reader)
+        {
+            Customer customer = new Customer();
+            customer.name = reader[0].ToString(); // Name
+            customer.phoneNumber = reader[1].ToString();   // PhoneNumber
+            customer.email = reader[2].ToString();   // Email
+            customer.rewardsNumber = reader[3].ToString();   // Rewards Number
+            customer.sqlId = (int)reader[4];   // Id
+
+            return customer;
+        }
+
+        public static void CreateCustomerTable()
+        {
+            string buildTableString = @"CREATE TABLE [dbo].[tblCustomers](
+                    [id][int] NOT NULL,
+
+                   [name] [nvarchar](max) NULL,
+	                [phone]
+                        [nvarchar](50) NULL,
+	                [email]
+                        [nvarchar](max) NULL,
+	                [rewards]
+                        [nvarchar](max) NULL,
+                 CONSTRAINT[PK_tblCustomers] PRIMARY KEY CLUSTERED
+                (
+                   [id] ASC
+                )WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON[PRIMARY]
+                ) ON[PRIMARY] TEXTIMAGE_ON[PRIMARY]";
+
+            // Test if table exists
+            SqlCommand cmd = new SqlCommand("IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + TableNames.CUSTOMERS + 
+                "')) BEGIN " + buildTableString + " END", connect);
+
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                connect.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error in CreateCustomerTable()\n" + ex.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+
+            // Build if table does not exist
+        }
+
+#region UPC
 
         /// <summary>
         /// Gets List of Items that have the passed UPC parameter
@@ -541,6 +767,7 @@ namespace Inventory_3._0
             {
                 await Task.Run(() =>
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -597,6 +824,7 @@ namespace Inventory_3._0
             {
                 await Task.Run(() =>
                 {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -635,6 +863,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -660,6 +889,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.HasRows)
@@ -696,6 +926,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 value = (double)cmd.ExecuteScalar();
             }
@@ -730,6 +961,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -757,6 +989,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 value = (int)cmd.ExecuteScalar();
             }
@@ -774,13 +1007,14 @@ namespace Inventory_3._0
         }
 #endregion
 
-        #region Transaction Methods
+#region Transaction Methods
         /// <summary>
         /// Retrieves the next unused Transaction number from the Variable database
         /// </summary>
         /// <returns>Transaction number as int</returns>
         public static int GetNextUnusedTransactionNumber()
         {
+            if (connect.State == ConnectionState.Open) { connect.Close(); }
             SqlCommand cmd;
             int value;
 
@@ -798,6 +1032,7 @@ namespace Inventory_3._0
         /// </summary>
         public static void IncrementTransactionNumber()
         {
+            if (connect.State == ConnectionState.Open) { connect.Close(); }
             SqlCommand cmd;
 
             cmd = new SqlCommand("UPDATE " + TableNames.VARIABLES + " SET TransactionNumber = TransactionNumber + 1", connect);
@@ -812,11 +1047,12 @@ namespace Inventory_3._0
             SqlCommand cmd = new SqlCommand("INSERT INTO " + TableNames.PAYMENT + " VALUES(@TRANSACTIONNUMBER, @PAYMENTTYPE, @AMOUNT)", connect);
             cmd.Parameters.Add("@TRANSACTIONNUMBER", SqlDbType.Int).Value = transactionNumber;
             cmd.Parameters.Add("@PAYMENTTYPE", SqlDbType.NVarChar).Value = item.name;
-            cmd.Parameters.Add("@AMOUNT", SqlDbType.Money).Value = item.price * -1; // Reverse Sign for logging payment                 
+            cmd.Parameters.Add("@AMOUNT", SqlDbType.Money).Value = item.price * -1; // Reverse Sign for logging payment           
 
             // execute command  & close connection
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
                 connect.Close();
@@ -841,6 +1077,7 @@ namespace Inventory_3._0
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read() == true)
@@ -867,6 +1104,7 @@ namespace Inventory_3._0
             // execute command  & close connection
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
                 connect.Close();
@@ -898,6 +1136,7 @@ namespace Inventory_3._0
             // execute command  & close connection
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
                 connect.Close();
@@ -912,28 +1151,42 @@ namespace Inventory_3._0
             }
         }
 
-        public static List<Transaction> GetTransactions(DateTime startRange, DateTime endRange, int number = 0)
+        public static List<Transaction> GetTransactions(DateTime startRange, DateTime endRange, int number = 0, string searchText = "")
         {
             List<Transaction> transactions = new List<Transaction>();
             Transaction transaction = null;
 
             SqlCommand cmd;
+            
+            // Search for specific transaction
             if (number != 0)
             {
-                // SEARCH FOR SPECIFIC TRANSACTION NUMBER!!!!!!!!!!!!!!
                 cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION + 
                     " WHERE TransactionNumber = " + number.ToString(), connect);
+            }
+            // Search for specific items
+            else if (searchText != "")
+            {
+                // parameters cannot be null
+                // Check for special characters, then divide searchtext into individual terms
+                searchText = CheckForSpecialCharacters(searchText);
+                SearchTerms searchTerms = new SearchTerms(searchText);
+              
+                cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION +
+                    " WHERE " + searchTerms.GenerateItemSQLSearchString() +
+                    " ORDER BY " + SQLTableColumnNames.TRANSACTIONNUMBER + " DESC " + ", Name", connect);
             }
 
             else
             {
                 cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION +
                     " WHERE DATE BETWEEN \'" + startRange.ToString("MM/dd/yyyy hh:mm tt") + "\' AND \'" + endRange.ToString("MM/dd/yyyy hh:mm tt") +
-                    "\' ORDER BY TransactionNumber DESC", connect);
+                    "\' ORDER BY " + SQLTableColumnNames.TRANSACTIONNUMBER + " DESC", connect);
             }
 
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read() == true)
@@ -979,6 +1232,7 @@ namespace Inventory_3._0
             // execute command  & close connection
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 connect.Open();
                 cmd.ExecuteNonQuery();
                 connect.Close();
@@ -1114,6 +1368,7 @@ namespace Inventory_3._0
             
             try
             {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
                 // Sales
                 SqlCommand cmd = new SqlCommand(salesCommand, connect);
                 connect.Open();
@@ -1160,7 +1415,83 @@ namespace Inventory_3._0
                 connect.Close();
             }
         }
+        #endregion
 
-        #endregion        
+        #region One-Time Use Methods
+        internal static bool CreateWebsiteQuantityColumn()
+        {
+            string addWebsiteCommand = string.Format("ALTER TABLE {0} ADD {1} INT NOT NULL DEFAULT '0'", TableNames.INVENTORY, InventoryLocationColumnNames.WEBSITE);
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+                return false;
+            }
+            return true;
+        }
+
+        internal static void MoveInventoryFromStorageToWebsite()
+        {
+            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = {2}", TableNames.INVENTORY, InventoryLocationColumnNames.WEBSITE, InventoryLocationColumnNames.STORAGE);
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+            }
+        }
+
+        internal static void ZeroOutStorageInventory()
+        {
+            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = 0", TableNames.INVENTORY, InventoryLocationColumnNames.STORAGE);
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+            }
+        }
+
+        internal static void ChangeRewardsToStoreCredit()
+        {
+            string addWebsiteCommand = string.Format("UPDATE {0} SET {1} = '{2}' WHERE {1} = '{3}'", TableNames.PAYMENT, SQLTableColumnNames.PAYMENTTYPE, TransactionTypes.PAYMENT_STORECREDIT, TransactionTypes.PAYMENT_WEBSITE);
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+            }
+        }
+
+        #endregion
     }
 }

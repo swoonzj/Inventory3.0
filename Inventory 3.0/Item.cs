@@ -130,7 +130,7 @@ namespace Inventory_3._0
             this.name = "";
             this.system = "";
             this.price = 0;
-            this.quantity = new ObservableCollection<int> { 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { 0, 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
             this.cartQuantity = 0;
@@ -143,7 +143,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = 0;
-            this.quantity = new ObservableCollection<int> { 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { 0, 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
             this.cartQuantity = 0;
@@ -156,7 +156,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 };
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs.Add(upc);
@@ -170,7 +170,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0 }; 
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 }; 
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs = upcs;
@@ -196,7 +196,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 };
             this.quantity.Add(quantity);
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);
@@ -245,7 +245,7 @@ namespace Inventory_3._0
 
         public override string ToString()
         {
-            return String.Format("Name: {0}\nSystem:{1}\nPrice:{2}\nInventory:\n\tSales Floor:{3}\n\tOut Back:{4}\n\tStorage:{5}\nTrade, Cash:{6}\nTrade, Store Credit:{7}\nUPCS:{8}", name, system, price, quantity[0], quantity[1], quantity[2], tradeCash, tradeCredit, String.Join(", ", UPCs));
+            return String.Format("Name: {0}\nSystem:{1}\nPrice:{2}\nInventory:\n\tSales Floor:{3}\n\tOut Back:{4}\n\tStorage:{5}\n\tWebsite:{6}\nTrade, Cash:{7}\nTrade, Store Credit:{8}\nUPCS:{9}", name, system, price, quantity[0], quantity[1], quantity[2], quantity[3], tradeCash, tradeCredit, String.Join(", ", UPCs));
         }
 
         public void AutoTradeValues()
@@ -278,149 +278,5 @@ namespace Inventory_3._0
 
             return true;
         }
-    }
-    
-    public class Transaction : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private ObservableCollection<Item> Items;
-        public ObservableCollection<Item> items
-        {
-            get { return Items; }
-            set
-            {
-                Items = value;
-                NotifyPropertyChanged("items");
-            }
-        }
-
-        private ObservableCollection<Transaction> Payment;
-        public ObservableCollection<Transaction> payment
-        {
-            get { return Payment; }
-            set
-            {
-                Payment = value;
-                NotifyPropertyChanged("payment");
-            }
-        }
-
-        private DateTime Date;
-        public DateTime date
-        {
-            get { return Date; }
-            set
-            {
-                Date = value;
-                NotifyPropertyChanged("date");
-            }
-        }
-
-        private int TransactionNumber;
-        public int transactionNumber
-        {
-            get { return TransactionNumber; }
-            set 
-            {
-                TransactionNumber = value;
-                NotifyPropertyChanged("transactionNumber");
-            }
-        }
-
-        private string TransactionType;
-        public string transactionType
-        {
-            get { return TransactionType; }
-            set
-            {
-                TransactionType = value;
-                NotifyPropertyChanged("transactionType");
-            }
-        }
-
-        public int quantity
-        {
-            get { return CalculateQuantity(); }
-        }
-
-        private decimal Total;
-        public decimal total
-        {
-            get 
-            {
-                if (TransactionType != TransactionTypes.PAYMENT_CASH
-                    && TransactionType != TransactionTypes.PAYMENT_CREDITCARD
-                    && TransactionType != TransactionTypes.PAYMENT_REWARDS
-                    && TransactionType != TransactionTypes.PAYMENT_STORECREDIT)
-                {
-                    return CalculateTotal();
-                }
-                else return Total;
-            }
-        }
-
-        public Transaction(int transactionNumber, string transactionType, DateTime date, decimal total = 0m)
-        {
-            this.transactionNumber = transactionNumber;
-            this.transactionType = transactionType;
-            this.date = date;
-            Total = total;
-            items = new ObservableCollection<Item>();
-        }
-
-        private decimal CalculateTotal()
-        {
-            switch (transactionType)
-            {
-                case TransactionTypes.SALE:
-                    {
-                        decimal sum = 0;
-                        foreach (Item item in Items)
-                        {
-                            sum += item.priceTotal;
-                        }
-                        return sum;
-                    }
-                case TransactionTypes.TRADE_CASH:
-                    {
-                        decimal sum = 0;
-                        foreach (Item item in Items)
-                        {
-                            sum += item.cashTotal;
-                        }
-                        return sum;
-                    }
-                case TransactionTypes.TRADE_CREDIT:
-                    {
-                        decimal sum = 0;
-                        foreach (Item item in Items)
-                        {
-                            sum += item.creditTotal;
-                        }
-                        return sum;
-                    }
-                default:
-                    return -1;
-            }
-        }
-
-        private int CalculateQuantity()
-        {
-            int quant = 0;
-            foreach (Item item in items)
-            {
-                quant += item.quantity[0];
-            }
-
-            return quant;
-        }
-
-        
     }
 }

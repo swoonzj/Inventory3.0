@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Input;
-
-namespace Inventory_3._0
+﻿namespace Inventory_3._0
 {
     public static class Constants
     {
@@ -37,6 +31,7 @@ namespace Inventory_3._0
         public const string UPC = "tblUPC";
         public const string TRANSACTION = "tblTransactions";
         public const string PAYMENT = "tblPayment";
+        public const string CUSTOMERS = "tblCustomers";
 
         // Currently unused
         public const string VARIABLES = "tblVariables";
@@ -48,13 +43,15 @@ namespace Inventory_3._0
         public const int Store = 1;
         public const int OutBack = 2;
         public const int Storage = 3;
+        public const int Website = 4;
     }
 
-    public static class ColumnNames
+    public static class InventoryLocationColumnNames
     {
         public const string STORE = "Store";
         public const string OUTBACK = "OutBack";
         public const string STORAGE = "Storage";
+        public const string WEBSITE = "Website";
     }
 
     public static class TransactionTypes
@@ -66,8 +63,10 @@ namespace Inventory_3._0
         public const string PAYMENT_CASH = "Payment - Cash";
         public const string PAYMENT_CREDITCARD = "Payment - Credit Card";
         public const string PAYMENT_STORECREDIT = "Payment - Store Credit";
-        public const string PAYMENT_REWARDS = "Payment - Loyalty Rewards";
+        public const string PAYMENT_WEBSITE = "Payment - Website";
         public const string RETURN = "Return";
+        public const string RETURN_CASH = "Return - Cash";
+        public const string RETURN_CREDIT = "Return - Store Credit";
         public const string CHANGE_DUE = "Change Due:";
     }
 
@@ -100,7 +99,7 @@ namespace Inventory_3._0
 
     public static class ListViewColumnNames
     {
-        public const string NAME = "Name",
+        public static string NAME = "Name",
             SYSTEM = "System",
             PRICE = "Price",
             QUANTITY = "# In Stock",
@@ -121,7 +120,14 @@ namespace Inventory_3._0
             TRADE_CREDIT = "TradeCredit",
             UPC = "UPC",
             DATE = "Date",
-            TYPE = "Type";
+            TYPE = "Type",
+            PAYMENTTYPE = "PaymentType",
+            TRANSACTIONNUMBER = "TransactionNumber",
+            AMOUNT = "Amount",
+            PHONE = "phone",
+            EMAIL = "email",
+            REWARDS = "rewards",
+            ID = "id";
     }
 
     public static class ReceiptVariables

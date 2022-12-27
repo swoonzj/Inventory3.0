@@ -12,7 +12,7 @@ namespace Inventory_3._0.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -20,29 +20,6 @@ namespace Inventory_3._0.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=tcp:TRADERJOE\\SQLEXPRESS,49172;Initial Catalog=\"C:\\PROGRAM FILES (X86" +
-            ")\\INVENTORY\\STOREDATABASE.MDF\";Persist Security Info=True;User ID=inventory;Pass" +
-            "word=inventory")]
-        public string SQLServerConnectionString {
-            get {
-                return ((string)(this["SQLServerConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=tcp:TRADERJOE\\SQLEXPRESS,49172;Initial Catalog=\"StoreInventory\";Persi" +
-            "st Security Info=True;User ID=inventory;Password=inventory")]
-        public string SQLServerConnectionString2 {
-            get {
-                return ((string)(this["SQLServerConnectionString2"]));
             }
         }
         
@@ -109,8 +86,31 @@ namespace Inventory_3._0.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=COMPY\\SQLEXPRESS01;Initial Catalog=StoreInventory;Integrated Security" +
-            "=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=tcp:TRADERJOE\\SQLEXPRESS,49172;Initial Catalog=\"C:\\PROGRAM FILES (X86" +
+            ")\\INVENTORY\\STOREDATABASE.MDF\";Persist Security Info=True;User ID=inventory;Pass" +
+            "word=inventory")]
+        public string SQLServerConnectionString {
+            get {
+                return ((string)(this["SQLServerConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=tcp:TRADERJOE\\SQLEXPRESS,49172;Initial Catalog=\"StoreInventory\";Persi" +
+            "st Security Info=True;User ID=inventory;Password=inventory")]
+        public string SQLServerConnectionString2 {
+            get {
+                return ((string)(this["SQLServerConnectionString2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=COMPY\\SQLEXPRESS;Initial Catalog=StoreInventory;Integrated Security=T" +
+            "rue")]
         public string HomeInventoryConnectionString {
             get {
                 return ((string)(this["HomeInventoryConnectionString"]));

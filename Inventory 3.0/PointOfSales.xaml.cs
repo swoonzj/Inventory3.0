@@ -3,24 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Inventory_3._0
 {
     /// <summary>
     /// Interaction logic for PointOfSales.xaml
     /// </summary>
-    public partial class PointOfSales : SortableListViews
+    public partial class PointOfSales : SortableListViewsWithItems
     {
         decimal total = 0;
 
@@ -33,11 +26,20 @@ namespace Inventory_3._0
                 InitializeComponent();
                 lvCart.ItemsSource = cart;
                 cart.CollectionChanged += (e, v) => UpdateTotals();
+                lvList.ContextMenu = new ListViewContextMenu(lvList);
+                lvCart.ContextMenu = new ListViewContextMenu(lvCart);
+                lvList.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
+                lvCart.PreviewMouseRightButtonDown += LvList_PreviewMouseRightButtonDown;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.ToString());
             }
+        }
+
+        private void LvList_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
 
         public PointOfSales(List<Item> items) : this()
@@ -161,7 +163,6 @@ namespace Inventory_3._0
                 txtUPCInput.Text = "";
             }
         }
-
         private void DetectEnterKey(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -224,10 +225,31 @@ namespace Inventory_3._0
                 int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
                 foreach (Item item in cart)
                 {
-                    DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
-                    if (Settings.Default.deductSalesFromInventory)
+                    if (checkout.isReturn)
                     {
-                        await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], ColumnNames.STORE);
+                        DBAccess.AddTransaction(item, TransactionTypes.RETURN, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
+                        MessageBoxResult result = MessageBox.Show("Add returned item(s) back to inventory?\n" + item.name, "Return to inventory?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            await DBAccess.IncrementQuantities(item.SQLid, item.quantity[0], InventoryLocationColumnNames.STORE);
+                        }
+                    }
+                    else if (checkout.isWebsite)
+                    {
+                        DBAccess.AddTransaction(item, TransactionTypes.RETURN, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
+                        if (Settings.Default.deductSalesFromInventory)
+                        {
+                            await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], InventoryLocationColumnNames.WEBSITE);
+                        }
+                    }
+                    else
+                    {
+                        DBAccess.AddTransaction(item, TransactionTypes.SALE, transactionNumber, date.ToString("MM/dd/yyyy hh:mm tt"));
+
+                        if (Settings.Default.deductSalesFromInventory)
+                        {
+                            await DBAccess.IncrementQuantities(item.SQLid, 0 - item.quantity[0], InventoryLocationColumnNames.STORE);
+                        }
                     }
                 }
                 DBAccess.IncrementTransactionNumber();

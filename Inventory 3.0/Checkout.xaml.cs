@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Inventory_3._0
 {
@@ -20,6 +10,8 @@ namespace Inventory_3._0
     /// </summary>
     public partial class Checkout : Window
     {
+        public bool isReturn { get; private set; } = false;
+        public bool isWebsite { get; private set; } = false;
         public bool success = false;
         public ObservableCollection<Item> checkout = new ObservableCollection<Item>();
         private decimal total = 0;
@@ -37,9 +29,9 @@ namespace Inventory_3._0
         private void UpdateTotal()
         {
             total = 0;
-            foreach (Item item in checkout)
+            foreach (Item payment in checkout)
             {
-                total += item.price;
+                total += payment.price;
             }
 
             lblTotal.Content = total.ToString("C");
@@ -65,11 +57,13 @@ namespace Inventory_3._0
 
             //log payment
             int transactionNumber = DBAccess.GetNextUnusedTransactionNumber();
+
             for (int i = 1; i < checkout.Count; i++)
             {
                 if (checkout[i].name != TransactionTypes.CHANGE_DUE)
                     DBAccess.AddPayment(checkout[i], transactionNumber);
             }
+            isWebsite = checkout[1].name == TransactionTypes.PAYMENT_WEBSITE;
             DialogResult = success;
         }
 
@@ -86,6 +80,12 @@ namespace Inventory_3._0
                 amount = total; ;
             }
 
+            // If Website Payment, make sure there are no other payments.
+            if (paymentType == TransactionTypes.PAYMENT_WEBSITE && amount != total)
+            {
+                MessageBox.Show("Website Payment must be the entire value of cart.", "Website payment can't be combined.", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             payment = new Item(paymentType, TransactionTypes.PAYMENT, -amount, 0, 0, 0, "0");
             checkout.Add(payment);
             UpdateTotal();
@@ -121,9 +121,21 @@ namespace Inventory_3._0
             Pay(TransactionTypes.PAYMENT_STORECREDIT);
         }
 
-        private void btnRewards_Click(object sender, RoutedEventArgs e)
+        private void btnWebsite_Click(object sender, RoutedEventArgs e)
         {
-            Pay(TransactionTypes.PAYMENT_REWARDS);
+            Pay(TransactionTypes.PAYMENT_WEBSITE);
+        }
+
+        private void btnReturnCredit_Click(object sender, RoutedEventArgs e)
+        {
+            isReturn = true;
+            Pay(TransactionTypes.RETURN_CREDIT);
+        }
+
+        private void btnReturnCash_Click(object sender, RoutedEventArgs e)
+        {
+            isReturn = true;
+            Pay(TransactionTypes.RETURN_CASH);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

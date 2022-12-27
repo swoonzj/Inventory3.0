@@ -50,6 +50,17 @@ namespace Inventory_3._0
             }
         }
 
+        private int Id;
+        public int sqlId
+        {
+            get { return Id; }
+            set
+            {
+                Id = value;
+                NotifyPropertyChanged("id");
+            }
+        }
+
         private List<Item> WishList;
         public List<Item> wishList
         {

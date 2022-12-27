@@ -23,7 +23,8 @@ namespace Inventory_3._0
 
         private void menuAddNewCustomer_Click(object sender, RoutedEventArgs e)
         {
-
+            NewCustomerForm newCustomerForm = new NewCustomerForm();
+            newCustomerForm.Show();
         }
 
         private void menuDeleteCustomer_Click(object sender, RoutedEventArgs e)

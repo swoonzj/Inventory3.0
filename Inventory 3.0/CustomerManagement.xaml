@@ -64,10 +64,10 @@
             <TextBox x:Name="txtPhone" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"
 				Text="{Binding phoneNumber, Mode=TwoWay}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
             <TextBox x:Name="txtEmail" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"
-				Text="{Binding price, Converter={StaticResource DecimalConverter}, Mode=TwoWay, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
+				Text="{Binding email, Mode=TwoWay}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
             <TextBox x:Name="txtRewardsNumber" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"
-				Text="{Binding rewardsNumber, Converter={StaticResource DecimalConverter}, Mode=TwoWay, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
-            <ListView x:Name="lvUPC" SelectionMode="Multiple" Margin="5" DockPanel.Dock="Top" ItemsSource="{Binding UPCs, Mode=TwoWay}">
+				Text="{Binding rewardsNumber, Mode=TwoWay}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus" Height="26"/>
+            <ListView x:Name="lvUPC" SelectionMode="Multiple" Margin="5" DockPanel.Dock="Top" ItemsSource="{Binding wishList, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn>

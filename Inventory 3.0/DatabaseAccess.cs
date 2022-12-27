@@ -117,14 +117,14 @@ namespace Inventory_3._0
             {
                 cmd = new SqlCommand("SELECT"+ limit +" Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
-                    "WHERE " + searchTerms.GenerateSQLSearchString() +
+                    "WHERE " + searchTerms.GenerateItemSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order + ", Name", connect);
             }
             else
             {
                 cmd = new SqlCommand("SELECT" + limit + " Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
-                    "WHERE " + searchTerms.GenerateSQLSearchString() +
+                    "WHERE " + searchTerms.GenerateItemSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order, connect);
             }
 
@@ -165,91 +165,82 @@ namespace Inventory_3._0
         }
 
         /// <summary>
-        /// Returns a List of all Items (matching an optional search string), with inventory information on passed Inventory column
-        /// Does NOT fetch UPC information
-        /// Selects only the top 200 results!!!
+        /// Returns a List of all Customers (matching an optional search string)
+        /// Does NOT fetch wish list info
+        /// Selects only the top 200 results by default.
         /// </summary>
-        /// <param name="inventoryColumn">Table name of an INVENTORY type table</param>
         /// <param name="sortBy">Column to sort by.   (Optional)</param>
         /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
         /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
         /// <returns>A List of Items</returns>
-        public static async Task<List<Customer>> SQLTableToCustomerList(string sortBy = "name", bool ascending = true, string searchtext = "", bool limitResults = true)
+        public static async Task<List<Customer>> SQLTableToCustomerList(string sortBy = SQLTableColumnNames.NAME, bool ascending = true, string searchtext = "", bool limitResults = true)
         {
             List<Customer> collection = new List<Customer>();
-            //Item item;
-            //SearchTerms searchTerms;
+            SearchTerms searchTerms;
 
-            //// Save sorting order to string "order" (descending/ascending)
-            //string order;
-            //SqlCommand cmd;
-            //if (ascending)
-            //    order = "ASC";
-            //else
-            //    order = "DESC";
+            // Save sorting order to string "order" (descending/ascending)
+            string order;
+            SqlCommand cmd;
+            if (ascending)
+                order = "ASC";
+            else
+                order = "DESC";
 
-            //// Limit number of results?
-            //string limit = "";
-            //if (limitResults)
-            //{
-            //    limit = " TOP 200";
-            //}
+            // Limit number of results?
+            string limit = "";
+            if (limitResults)
+            {
+                limit = " TOP 200";
+            }
 
-            //// parameters cannot be null
-            //if (searchtext == null) searchtext = "";
-            //if (sortBy == null) sortBy = SQLTableColumnNames.NAME;
+            // parameters cannot be null
+            if (searchtext == null) searchtext = "";
+            if (sortBy == null) sortBy = SQLTableColumnNames.NAME;
 
-            //// Check for special characters, then divide searchtext into individual terms
-            //searchtext = CheckForSpecialCharacters(searchtext);
-            //searchTerms = new SearchTerms(searchtext);
+            // Check for special characters, then divide searchtext into individual terms
+            searchtext = CheckForSpecialCharacters(searchtext);
+            searchTerms = new SearchTerms(searchtext);
 
-            //if (sortBy != SQLTableColumnNames.NAME)
-            //{
-            //    cmd = new SqlCommand("SELECT" + limit + " Name, Phone, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
-            //        " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
-            //        "WHERE " + searchTerms.GenerateSQLSearchString() +
-            //        " ORDER BY " + sortBy + " " + order + ", Name", connect);
-            //}
-            //else
-            //{
-            //    cmd = new SqlCommand("SELECT" + limit + " Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
-            //        " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
-            //        "WHERE " + searchTerms.GenerateSQLSearchString() +
-            //        " ORDER BY " + sortBy + " " + order, connect);
-            //}
+            string columnsToSelect = String.Format(" {0}, {1}, {2}, {3}, {4} ", SQLTableColumnNames.NAME, SQLTableColumnNames.PHONE, SQLTableColumnNames.EMAIL, SQLTableColumnNames.REWARDS, SQLTableColumnNames.ID);
 
-            //try
-            //{
-            //    await Task.Run(() =>
-            //    {
-            //        if (connect.State == ConnectionState.Open) { connect.Close(); }
-            //        connect.Open();
-            //        SqlDataReader reader = cmd.ExecuteReader();
-            //        while (reader.Read() == true)
-            //        {
-            //            item = SQLReaderToItem(reader);
-            //            if (item != null)
-            //            {
-            //                collection.Add(item);
-            //            }
-            //        }
-            //    });
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show("ERROR IN SQLTableToCollection:\n" + e.Message);
-            //}
-            //finally
-            //{
-            //    connect.Close();
-            //}
+            if (sortBy != SQLTableColumnNames.NAME)
+            {
+                cmd = new SqlCommand("SELECT" + limit + columnsToSelect + " FROM " + TableNames.CUSTOMERS +
+                    " WHERE " + searchTerms.GenerateCustomerSQLSearchString() +
+                    " ORDER BY " + sortBy + " " + order + ", Name", connect);
+            }
+            else
+            {
+                cmd = new SqlCommand("SELECT" + limit + columnsToSelect + " FROM " + TableNames.CUSTOMERS +
+                    " WHERE " + searchTerms.GenerateCustomerSQLSearchString() +
+                    " ORDER BY " + sortBy + " " + order, connect);
+            }
 
-            //foreach (Item newitem in collection)
-            //{
-            //    newitem.UPCs = await DBAccess.GetUPCsWithID(newitem.SQLid);
-            //    newitem.quantity = new ObservableCollection<int>(await DBAccess.GetQuantities(newitem.SQLid));
-            //    if (newitem.quantity.Count != 4) newitem.quantity = new ObservableCollection<int> { 0, 0, 0, 0 }; // Should only be necessary for items with no quantities.
-            //}
+            try
+            {
+                await Task.Run(() =>
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
+                    connect.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read() == true)
+                    {
+                        Customer customer = SQLReaderToCustomer(reader);
+                        if (customer != null)
+                        {
+                            collection.Add(customer);
+                        }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR IN SQLTableToCollection:\n" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
 
             return collection;
         }
@@ -282,11 +273,11 @@ namespace Inventory_3._0
             cmdInventory.Parameters.Add("@QUANTITY4", SqlDbType.Int).Value = inventory[3];
 
             // execute command  & close connection
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-            try
-            {
-                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                try
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     int ID = (int)cmdItem.ExecuteScalar(); // Get the unique, auto-incremented ID for the item.
 
@@ -296,7 +287,44 @@ namespace Inventory_3._0
                     cmdInventory.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
                     cmdInventory.ExecuteNonQuery();
                     connect.Close();
-                    AddUPCs(upcs, ID);
+                    await AddUPCs(upcs, ID);
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("ERROR IN AddNewItemToTable:\n" + e.Message);
+                    success = false;
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
+            return success;
+        }
+
+        public async static Task<bool> AddNewCustomer(string name, string phone = "", string email = "", string rewardsNumber = "")
+        {
+            bool success = false;
+            //name = CheckForSpecialCharacters(name);
+            //system = CheckForSpecialCharacters(system);
+
+            // Add data to table
+            SqlCommand cmdCustomer = new SqlCommand("INSERT INTO " + TableNames.CUSTOMERS + " VALUES(@NAME, @PHONE, @EMAIL, @REWARDS)", connect);
+            cmdCustomer.Parameters.Add("@NAME", SqlDbType.VarChar).Value = name;
+            cmdCustomer.Parameters.Add("@PHONE", SqlDbType.VarChar).Value = phone;
+            cmdCustomer.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = email;
+            cmdCustomer.Parameters.Add("@REWARDS", SqlDbType.VarChar).Value = rewardsNumber;
+
+            // execute command  & close connection
+            await Task.Run(() =>
+            {
+                try
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
+                    connect.Open();
+                    cmdCustomer.ExecuteNonQuery();
+                    connect.Close();
                     success = true;
                 }
                 catch (Exception e)
@@ -435,6 +463,38 @@ namespace Inventory_3._0
                     cmd.ExecuteNonQuery();
                     connect.Close();
                     cmd = new SqlCommand(priceUpdate, connect);
+                    connect.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error in SaveItemChanges:\n" + ex.Message);
+                }
+                finally
+                {
+                    connect.Close();
+                }
+            });
+        }
+
+        public async static Task SaveCustomerChanges(Customer customer)
+        {
+            string itemUpdate = String.Format("UPDATE {0} SET {1} = \'{2}\', {3} = \'{4}\', {5} = \'{6}\', {7} = \'{8}\',  WHERE id = {9}", 
+                TableNames.CUSTOMERS, 
+                SQLTableColumnNames.NAME, CheckForSpecialCharacters(customer.name), 
+                SQLTableColumnNames.PHONE, CheckForSpecialCharacters(customer.phoneNumber),
+                SQLTableColumnNames.EMAIL, CheckForSpecialCharacters(customer.email),
+                SQLTableColumnNames.REWARDS, CheckForSpecialCharacters(customer.rewardsNumber), customer.sqlId);
+
+            // TODO: Add Wishlist!
+
+            SqlCommand cmd = new SqlCommand(itemUpdate, connect);
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    if (connect.State == ConnectionState.Open) { connect.Close(); }
                     connect.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -627,6 +687,23 @@ namespace Inventory_3._0
             item.SQLid = (int)reader[5];   // SQL ID
                      
             return item;
+        }
+
+        /// <summary>
+        /// Creates an item based on data contained in an SqlDataReader
+        /// </summary>
+        /// <param name="reader">SqlDataReader containing data</param>
+        /// <returns>A new Customer</returns>
+        public static Customer SQLReaderToCustomer(SqlDataReader reader)
+        {
+            Customer customer = new Customer();
+            customer.name = reader[0].ToString(); // Name
+            customer.phoneNumber = reader[1].ToString();   // PhoneNumber
+            customer.email = reader[2].ToString();   // Email
+            customer.rewardsNumber = reader[3].ToString();   // Rewards Number
+            customer.sqlId = (int)reader[4];   // Id
+
+            return customer;
         }
 
         public static void CreateCustomerTable()
@@ -1096,7 +1173,7 @@ namespace Inventory_3._0
                 SearchTerms searchTerms = new SearchTerms(searchText);
               
                 cmd = new SqlCommand("SELECT * FROM " + TableNames.TRANSACTION +
-                    " WHERE " + searchTerms.GenerateSQLSearchString() +
+                    " WHERE " + searchTerms.GenerateItemSQLSearchString() +
                     " ORDER BY " + SQLTableColumnNames.TRANSACTIONNUMBER + " DESC " + ", Name", connect);
             }
 

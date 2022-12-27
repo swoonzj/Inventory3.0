@@ -16,6 +16,10 @@ namespace Inventory_3._0
                 //list.Add(new Item("Test1", "System", 10m, 1, 0, 0, 0.ToString()));
                 //list.Add(new Item("Test2", "System", 100m, 3, 0, 0, 0.ToString()));
 
+                //Checkout checkout = new Checkout(100m);
+                //checkout.ShowDialog();
+                //MessageBox.Show(checkout.checkout[1].ToString());
+                //checkout.Close();
 
                 //MultipleUPCHandler handler = new MultipleUPCHandler(list);
                 //if (handler.ShowDialog() == true)
@@ -30,19 +34,18 @@ namespace Inventory_3._0
                 //TradeWindow trade = new TradeWindow();
                 //trade.Show();
 
-                //ManageTransactions manage = new ManageTransactions();
-                //manage.Show();
+                ManageTransactions manage = new ManageTransactions();
+                manage.Show();
 
                 //Management manage = new Management();
                 //manage.Show();
 
+                //CustomerManagement customerManagement = new CustomerManagement();
+                //customerManagement.Show();
+
                 PointOfSales sales = new PointOfSales();
                 sales.Show();
 
-                //Checkout checkout = new Checkout(100m);
-                //checkout.ShowDialog();
-                //MessageBox.Show(checkout.checkout[1].ToString());
-                //checkout.Close();
             }
             catch (Exception ex)
             {

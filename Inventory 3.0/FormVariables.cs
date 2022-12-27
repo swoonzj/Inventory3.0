@@ -123,7 +123,11 @@
             TYPE = "Type",
             PAYMENTTYPE = "PaymentType",
             TRANSACTIONNUMBER = "TransactionNumber",
-            AMOUNT = "Amount";
+            AMOUNT = "Amount",
+            PHONE = "phone",
+            EMAIL = "email",
+            REWARDS = "rewards",
+            ID = "id";
     }
 
     public static class ReceiptVariables

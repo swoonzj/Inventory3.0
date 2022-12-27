@@ -2,20 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Inventory_3._0.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SQLServerConnectionString" Type="(Connection string)" Scope="Application">
-      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="C:\PROGRAM FILES (X86)\INVENTORY\STOREDATABASE.MDF";Persist Security Info=True;User ID=inventory;Password=inventory&lt;/ConnectionString&gt;
-&lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="C:\PROGRAM FILES (X86)\INVENTORY\STOREDATABASE.MDF";Persist Security Info=True;User ID=inventory;Password=inventory</Value>
-    </Setting>
-    <Setting Name="SQLServerConnectionString2" Type="(Connection string)" Scope="Application">
-      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="StoreInventory";Persist Security Info=True;User ID=inventory;Password=inventory&lt;/ConnectionString&gt;
-&lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="StoreInventory";Persist Security Info=True;User ID=inventory;Password=inventory</Value>
-    </Setting>
     <Setting Name="useNetworkPrinter" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -31,13 +17,27 @@
     <Setting Name="addTradeToInventory" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="SQLServerConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;ConnectionString&gt;Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="C:\PROGRAM FILES (X86)\INVENTORY\STOREDATABASE.MDF";Persist Security Info=True;User ID=inventory;Password=inventory&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="C:\PROGRAM FILES (X86)\INVENTORY\STOREDATABASE.MDF";Persist Security Info=True;User ID=inventory;Password=inventory</Value>
+    </Setting>
+    <Setting Name="SQLServerConnectionString2" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;ConnectionString&gt;Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="StoreInventory";Persist Security Info=True;User ID=inventory;Password=inventory&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=tcp:TRADERJOE\SQLEXPRESS,49172;Initial Catalog="StoreInventory";Persist Security Info=True;User ID=inventory;Password=inventory</Value>
+    </Setting>
     <Setting Name="HomeInventoryConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=COMPY\SQLEXPRESS01;Initial Catalog=StoreInventory;Integrated Security=True&lt;/ConnectionString&gt;
+&lt;SerializableConnectionString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;ConnectionString&gt;Data Source=COMPY\SQLEXPRESS;Initial Catalog=StoreInventory;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=COMPY\SQLEXPRESS01;Initial Catalog=StoreInventory;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=COMPY\SQLEXPRESS;Initial Catalog=StoreInventory;Integrated Security=True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

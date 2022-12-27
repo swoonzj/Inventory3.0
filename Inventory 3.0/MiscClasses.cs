@@ -201,20 +201,45 @@ namespace Inventory_3._0
             }
         }
 
-        public string GenerateSQLSearchString()
+        public string GenerateItemSQLSearchString()
         {
             string output = "";
 
             // Case: list of terms is empty
             if (terms.Count == 0)
             {
-                return "(Name LIKE \'%%\' OR System LIKE \'%%\') ";
+                return string.Format("({0} LIKE \'%%\' OR {1} LIKE \'%%\') ", SQLTableColumnNames.NAME, SQLTableColumnNames.SYSTEM);
             }
 
             for (int i = 0; i < terms.Count; i++)
             {
                 string term = terms[i];
-                output += "(Name LIKE \'%" + term + "%\' OR System LIKE \'%" + term + "%\') ";
+                output += string.Format("({0} LIKE \'%{2}%\' OR {1} LIKE \'%{2}%\') ", SQLTableColumnNames.NAME, SQLTableColumnNames.SYSTEM, term);
+
+                // Add an "AND" in between conditions
+                // Do not add one if it is the last search term
+                if (i != terms.Count - 1)
+                {
+                    output += "AND ";
+                }
+            }
+            return output;
+        }
+
+        public string GenerateCustomerSQLSearchString()
+        {
+            string output = "";
+
+            // Case: list of terms is empty
+            if (terms.Count == 0)
+            {
+                return string.Format("({0} LIKE \'%%\' OR {1} LIKE \'%%\' OR {2} LIKE \'%%\' OR {3} LIKE \'%%\') ", SQLTableColumnNames.NAME, SQLTableColumnNames.PHONE, SQLTableColumnNames.EMAIL, SQLTableColumnNames.REWARDS);
+            }
+
+            for (int i = 0; i < terms.Count; i++)
+            {
+                string term = terms[i];
+                output += string.Format("({0} LIKE \'%{4}%\' OR {1} LIKE \'%{4}%\' OR {2} LIKE \'%{4}%\' OR {3} LIKE \'%{4}%\') ", SQLTableColumnNames.NAME, SQLTableColumnNames.PHONE, SQLTableColumnNames.EMAIL, SQLTableColumnNames.REWARDS, term);
 
                 // Add an "AND" in between conditions
                 // Do not add one if it is the last search term

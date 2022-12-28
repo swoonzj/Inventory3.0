@@ -84,7 +84,7 @@ namespace Inventory_3._0
         /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
         /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
         /// <returns>A List of Items</returns>
-        public static async Task<List<Item>> SQLTableToList(string sortBy = "System", bool ascending = true, string searchtext = "", bool limitResults=true)
+        public static async Task<List<Item>> GetItemsAsList(string sortBy = "System", bool ascending = true, string searchtext = "", bool limitResults = true)
         {
             List<Item> collection = new List<Item>();
             Item item;
@@ -158,7 +158,7 @@ namespace Inventory_3._0
             {
                 newitem.UPCs = await DBAccess.GetUPCsWithID(newitem.SQLid);
                 newitem.quantity = new ObservableCollection<int>(await DBAccess.GetQuantities(newitem.SQLid));
-                if (newitem.quantity.Count != 4) newitem.quantity = new ObservableCollection<int> { 0, 0, 0, 0 }; // Should only be necessary for items with no quantities.
+                if (newitem.quantity.Count != 5) newitem.quantity = new ObservableCollection<int> { 0, 0, 0, 0, 0 }; // Should only be necessary for items with no quantities.
             }
 
             return collection;
@@ -173,7 +173,7 @@ namespace Inventory_3._0
         /// <param name="ascending">True: Results are sorted (A->Z), False: (Z->A).  (Optional)</param>
         /// <param name="searchtext">Text to narrow results to items containing this text.  (Optional)</param>
         /// <returns>A List of Items</returns>
-        public static async Task<List<Customer>> SQLTableToCustomerList(string sortBy = SQLTableColumnNames.NAME, bool ascending = true, string searchtext = "", bool limitResults = true)
+        public static async Task<List<Customer>> GetCustomerList(string sortBy = SQLTableColumnNames.NAME, bool ascending = true, string searchtext = "", bool limitResults = true)
         {
             List<Customer> collection = new List<Customer>();
             SearchTerms searchTerms;
@@ -445,7 +445,7 @@ namespace Inventory_3._0
         public async static Task SaveItemChanges(Item item)
         {
             string itemUpdate = String.Format("UPDATE {0} SET Name = \'{1}\', System = \'{2}\' WHERE id = {3}" , TableNames.ITEMS, CheckForSpecialCharacters(item.name), CheckForSpecialCharacters(item.system), item.SQLid);
-            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6}, {7} = {8} WHERE id = {9}", TableNames.INVENTORY, InventoryLocationColumnNames.STORE, item.quantity[0], InventoryLocationColumnNames.OUTBACK, item.quantity[1], InventoryLocationColumnNames.STORAGE, item.quantity[2], InventoryLocationColumnNames.WEBSITE, item.quantity[3], item.SQLid);
+            string inventoryUpdate = String.Format("UPDATE {0} SET {1} = {2}, {3} = {4}, {5} = {6}, {7} = {8}, {9} = {10} WHERE id = {11}", TableNames.INVENTORY, InventoryLocationColumnNames.STORE, item.quantity[0], InventoryLocationColumnNames.OUTBACK, item.quantity[1], InventoryLocationColumnNames.STORAGE, item.quantity[2], InventoryLocationColumnNames.WEBSITE, item.quantity[3], InventoryLocationColumnNames.OTHER, item.quantity[4], item.SQLid);
             string priceUpdate = String.Format("UPDATE {0} SET Price = {1}, Cash = {2}, Credit = {3} WHERE id = {4}", TableNames.PRICES, item.price, item.tradeCash, item.tradeCredit, item.SQLid);
 
             SqlCommand cmd = new SqlCommand(itemUpdate, connect);
@@ -601,6 +601,7 @@ namespace Inventory_3._0
                         quantities.Add((int)reader[QuantityColumns.OutBack]);
                         quantities.Add((int)reader[QuantityColumns.Storage]);
                         quantities.Add((int)reader[QuantityColumns.Website]);
+                        quantities.Add((int)reader[QuantityColumns.Other]);
                     }
                 }
                 catch (Exception ex)
@@ -1421,6 +1422,26 @@ namespace Inventory_3._0
         internal static bool CreateWebsiteQuantityColumn()
         {
             string addWebsiteCommand = string.Format("ALTER TABLE {0} ADD {1} INT NOT NULL DEFAULT '0'", TableNames.INVENTORY, InventoryLocationColumnNames.WEBSITE);
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                SqlCommand cmd = new SqlCommand(addWebsiteCommand, connect);
+                connect.Open();
+                cmd.ExecuteNonQuery();
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+                return false;
+            }
+            return true;
+        }
+
+        internal static bool CreateOtherQuantityColumn()
+        {
+            string addWebsiteCommand = string.Format("ALTER TABLE {0} ADD {1} INT NOT NULL DEFAULT '0'", TableNames.INVENTORY, InventoryLocationColumnNames.OTHER);
             try
             {
                 if (connect.State == ConnectionState.Open) { connect.Close(); }

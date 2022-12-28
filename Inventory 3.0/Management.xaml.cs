@@ -54,7 +54,7 @@ namespace Inventory_3._0
             Mouse.OverrideCursor = Cursors.Wait;
             try
             {
-                searchResults = new ObservableCollection<Item>(await DBAccess.SQLTableToList(searchtext: txtSearch.Text, limitResults: Settings.Default.limitSearchResults));                
+                searchResults = new ObservableCollection<Item>(await DBAccess.GetItemsAsList(searchtext: txtSearch.Text, limitResults: Settings.Default.limitSearchResults));                
             }
             catch (Exception ex)
             {
@@ -132,6 +132,7 @@ namespace Inventory_3._0
                 if (item.quantity[1] != selection.quantity[1]) selection.quantity[1] = int.MinValue;
                 if (item.quantity[2] != selection.quantity[2]) selection.quantity[2] = int.MinValue;
                 if (item.quantity[3] != selection.quantity[3]) selection.quantity[3] = int.MinValue;
+                if (item.quantity[4] != selection.quantity[4]) selection.quantity[4] = int.MinValue;
                 // UPCs
                 foreach (string upc in selection.UPCs){
                     if (!item.UPCs.Contains(upc)) upcsToRemove.Add(upc);
@@ -155,7 +156,7 @@ namespace Inventory_3._0
                 foreach (Item item in lvList.SelectedItems)
                 {
                     Item newItem = item.Clone();
-                    if (newItem.quantity.Count != 3) newItem.quantity = new ObservableCollection<int> { 0, 0, 0, 0 };
+                    if (newItem.quantity.Count != 5) newItem.quantity = new ObservableCollection<int> { 0, 0, 0, 0, 0 };
 
                     if (txtName.IsEnabled == true && !String.IsNullOrWhiteSpace(txtName.Text))
                         newItem.name = managedItem.name;
@@ -171,6 +172,8 @@ namespace Inventory_3._0
                         newItem.quantity[2] = managedItem.quantity[2];
                     if (!String.IsNullOrWhiteSpace(txtWebsite.Text))
                         newItem.quantity[3] = managedItem.quantity[3];
+                    if (!String.IsNullOrWhiteSpace(txtOther.Text))
+                        newItem.quantity[4] = managedItem.quantity[4];
                     if (!String.IsNullOrWhiteSpace(txtCash.Text))
                         newItem.tradeCash = managedItem.tradeCash;
                     if (!String.IsNullOrWhiteSpace(txtCredit.Text))
@@ -329,6 +332,18 @@ namespace Inventory_3._0
             if (result == MessageBoxResult.Yes)
             {
                 if (DBAccess.CreateWebsiteQuantityColumn())
+                {
+                    MessageBox.Show("Success.");
+                }
+            }
+        }
+
+        private void menuAddOtherColumn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Add the SQL table column for \"Other\" storage?", "Add new inventory column?", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                if (DBAccess.CreateOtherQuantityColumn())
                 {
                     MessageBox.Show("Success.");
                 }

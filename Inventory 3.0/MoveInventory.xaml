@@ -36,27 +36,34 @@
                     <GridViewColumn Header="Out Back"  DisplayMemberBinding="{Binding Path=quantity[1]}"/>
                     <GridViewColumn Header="Storage"  DisplayMemberBinding="{Binding Path=quantity[2]}"/>
                     <GridViewColumn Header="Website"  DisplayMemberBinding="{Binding Path=quantity[3]}"/>
+                    <GridViewColumn Header="Other"  DisplayMemberBinding="{Binding Path=quantity[4]}"/>
                 </GridView>
             </ListView.View>
         </ListView>
         <StackPanel Grid.Column="1" Grid.Row="1">
-            <Button Name="btnAdd" Height="30" Margin="5,5,5,50" Click="btnAdd_Click">Add --></Button>
-            <Button Name="btnRemove" Height="30" Margin="5,5,5,5" Click="btnRemove_Click">Remove</Button>
-            <Button Name="btnClearSelection" Height="30" Margin="5,5,5,5" Click="btnClearSelection_Click">Clear</Button>
+            <Button Name="btnAdd" Height="30" Margin="5" Click="btnAdd_Click">Add --></Button>
+            <Button Name="btnRemove" Height="30" Margin="5" Click="btnRemove_Click">Remove</Button>
+            <Button Name="btnClearSelection" Height="30" Margin="5" Click="btnClearSelection_Click">Clear</Button>
             <TextBox Name="txtChangeQuantity" Margin="5"/>
-            <Button Name="btnChangeQuantity" Height="30" Margin="5,5,5,50" Click="btnChangeQuantity_Click" Content="Change Quantity"/>
+            <Button Name="btnChangeQuantity" Height="30" Margin="5,5,5,30" Click="btnChangeQuantity_Click" Content="Change Quantity"/>
             <Label FontWeight="Bold" HorizontalAlignment="Center">FROM:</Label>
-            <RadioButton Name="radioNewItem" GroupName="From" Margin="5">New Item</RadioButton>
-            <RadioButton Name="radioFromOutBack" GroupName="From" Margin="5">Out Back</RadioButton>
-            <RadioButton Name="radioFromStorage" GroupName="From" Margin="5">Storage</RadioButton>
-            <RadioButton Name="radioFromSalesFloor" GroupName="From" Margin="5">Sales Floor</RadioButton>
-            <RadioButton Name="radioFromWebsite" GroupName="From" Margin="5,5,5,30">Website</RadioButton>
+            <StackPanel>
+                <RadioButton Name="radioNewItem" GroupName="From" Margin="5">New Item</RadioButton>
+                <RadioButton Name="radioFromOutBack" GroupName="From" Margin="5">Out Back</RadioButton>
+                <RadioButton Name="radioFromStorage" GroupName="From" Margin="5">Storage</RadioButton>
+                <RadioButton Name="radioFromSalesFloor" GroupName="From" Margin="5">Sales Floor</RadioButton>
+                <RadioButton Name="radioFromWebsite" GroupName="From" Margin="5">Website</RadioButton>
+                <RadioButton Name="radioFromOther" GroupName="From" Margin="5">Other</RadioButton>
+            </StackPanel>
             <Label FontWeight="Bold" HorizontalAlignment="Center">TO:</Label>
-            <RadioButton Name="radioToOutBack" GroupName="To" Margin="5">Out Back</RadioButton>
-            <RadioButton Name="radioToStorage" GroupName="To" Margin="5">Storage</RadioButton>
-            <RadioButton Name="radioToSalesFloor" GroupName="To" Margin="5">Sales Floor</RadioButton>
-            <RadioButton Name="radioToWebsite" GroupName="To" Margin="5">Website</RadioButton>
-            <RadioButton Name="radioRemove" GroupName="To" Margin="5,5,5,30">Remove Entirely</RadioButton>
+            <StackPanel>
+                <RadioButton Name="radioToOutBack" GroupName="To" Margin="5">Out Back</RadioButton>
+                <RadioButton Name="radioToStorage" GroupName="To" Margin="5">Storage</RadioButton>
+                <RadioButton Name="radioToSalesFloor" GroupName="To" Margin="5">Sales Floor</RadioButton>
+                <RadioButton Name="radioToWebsite" GroupName="To" Margin="5">Website</RadioButton>
+                <RadioButton Name="radioToOther" GroupName="To" Margin="5">Other</RadioButton>
+                <RadioButton Name="radioRemove" GroupName="To" Margin="5">Remove Entirely</RadioButton>
+            </StackPanel>
         </StackPanel>
         <TextBox Name="txtUPCInput" Grid.Column="1" Grid.Row="4" Opacity="0" KeyDown="DetectUPCEnterKey"/>
         <Button Name="btnTransfer" Margin="5" Grid.Column="1" Grid.Row="2" Click="btnTransfer_Click">Transfer</Button>
@@ -74,11 +81,11 @@
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}"/>
                     <GridViewColumn Header="System"  DisplayMemberBinding="{Binding Path=system}"/>
                     <GridViewColumn Header="Price"  DisplayMemberBinding="{Binding Path=price, StringFormat=C}"/>
-
                     <GridViewColumn Header="On Floor"  DisplayMemberBinding="{Binding Path=quantity[0]}"/>
                     <GridViewColumn Header="Out Back"  DisplayMemberBinding="{Binding Path=quantity[1]}"/>
                     <GridViewColumn Header="Storage"  DisplayMemberBinding="{Binding Path=quantity[2]}"/>
                     <GridViewColumn Header="Website"  DisplayMemberBinding="{Binding Path=quantity[3]}"/>
+                    <GridViewColumn Header="Other"  DisplayMemberBinding="{Binding Path=quantity[4]}"/>
                 </GridView>
             </ListView.View>
         </ListView>

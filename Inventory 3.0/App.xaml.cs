@@ -34,8 +34,8 @@ namespace Inventory_3._0
                 //TradeWindow trade = new TradeWindow();
                 //trade.Show();
 
-                ManageTransactions manage = new ManageTransactions();
-                manage.Show();
+                //ManageTransactions manage = new ManageTransactions();
+                //manage.Show();
 
                 //Management manage = new Management();
                 //manage.Show();

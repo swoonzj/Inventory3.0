@@ -50,15 +50,30 @@ namespace Inventory_3._0
         //UPC
         //id
 
-        //static SqlConnection connectOldDatabase = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString);
-
+        static SqlConnection homeConnection = new SqlConnection(Properties.Settings.Default.HomeInventoryConnectionString); // Homenew SqlConnection(Properties.Settings.Default.CgSimpConnectionString); // SIMP
+        static SqlConnection simpConnection = new SqlConnection(Properties.Settings.Default.CgSimpConnectionString); // Home
+        static SqlConnection traderJoeConnection = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2); // Home
+        static SqlConnection connect 
+        { 
+            get
+            {
 #if HOMEDEBUG
-        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.HomeInventoryConnectionString); // Home
+                return homeConnection
 #else
-        static SqlConnection connect = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2); // Store
-#endif
+                if (Properties.Settings.Default.useSimpInventory)
+                {
+                    return simpConnection; // SIMP
+                } 
+                else 
+                {
+                    return traderJoeConnection; // Store
+                }
+            #endif
+            }
+        }
 
-        public static void CloseSQLConnection()
+
+    public static void CloseSQLConnection()
         {
             connect.Close();
         }

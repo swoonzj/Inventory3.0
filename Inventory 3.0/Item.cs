@@ -130,7 +130,7 @@ namespace Inventory_3._0
             this.name = "";
             this.system = "";
             this.price = 0;
-            this.quantity = new ObservableCollection<int> { 0, 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { 0, 0, 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
             this.cartQuantity = 0;
@@ -143,7 +143,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = 0;
-            this.quantity = new ObservableCollection<int> { 0, 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { 0, 0, 0, 0, 0 };
             this.tradeCash = 0;
             this.tradeCredit = 0;
             this.cartQuantity = 0;
@@ -156,7 +156,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0, 0 };
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs.Add(upc);
@@ -170,7 +170,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = price;
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 }; 
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0, 0 }; 
             this.tradeCash = cash;
             this.tradeCredit = credit;
             this.UPCs = upcs;
@@ -196,7 +196,7 @@ namespace Inventory_3._0
             this.name = name;
             this.system = system;
             this.price = Convert.ToDecimal(price);
-            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0 };
+            this.quantity = new ObservableCollection<int> { quantity, 0, 0, 0, 0 };
             this.quantity.Add(quantity);
             this.tradeCash = Convert.ToDecimal(cash);
             this.tradeCredit = Convert.ToDecimal(credit);

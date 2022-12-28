@@ -56,6 +56,7 @@
                     <DataGridTextColumn Header="Out Back" Binding="{Binding quantity[1], Mode=TwoWay}" />
                     <DataGridTextColumn Header="Storage" Binding="{Binding quantity[2], Mode=TwoWay}" />
                     <DataGridTextColumn Header="Website" Binding="{Binding quantity[3], Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Other" Binding="{Binding quantity[4], Mode=TwoWay}" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

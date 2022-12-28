@@ -281,11 +281,12 @@ namespace Inventory_3._0
             cmdPrice.Parameters.Add("@CASH", SqlDbType.Money).Value = cash;
             cmdPrice.Parameters.Add("@CREDIT", SqlDbType.Money).Value = credit;
 
-            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3, @QUANTITY4)", connect);
+            SqlCommand cmdInventory = new SqlCommand("INSERT INTO " + TableNames.INVENTORY + " VALUES(@ID, @QUANTITY1, @QUANTITY2, @QUANTITY3, @QUANTITY4, @QUANTITY5)", connect);
             cmdInventory.Parameters.Add("@QUANTITY1", SqlDbType.Int).Value = inventory[0];
             cmdInventory.Parameters.Add("@QUANTITY2", SqlDbType.Int).Value = inventory[1];
             cmdInventory.Parameters.Add("@QUANTITY3", SqlDbType.Int).Value = inventory[2];
             cmdInventory.Parameters.Add("@QUANTITY4", SqlDbType.Int).Value = inventory[3];
+            cmdInventory.Parameters.Add("@QUANTITY5", SqlDbType.Int).Value = inventory[4];
 
             // execute command  & close connection
             await Task.Run(async () =>

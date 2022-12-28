@@ -91,7 +91,7 @@ namespace Inventory_3._0
             Mouse.OverrideCursor = Cursors.Wait;
             try
             {
-                searchResults = new ObservableCollection<Customer>(await DBAccess.SQLTableToCustomerList(searchtext: txtSearch.Text, limitResults: Settings.Default.limitSearchResults));
+                searchResults = new ObservableCollection<Customer>(await DBAccess.GetCustomerList(searchtext: txtSearch.Text, limitResults: Settings.Default.limitSearchResults));
             }
             catch (Exception ex)
             {

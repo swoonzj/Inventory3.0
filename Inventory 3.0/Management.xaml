@@ -40,6 +40,7 @@
                 <MenuItem Header="One Time Use">
                     <MenuItem Name="menuAddCustomerTable" IsCheckable="False" Header="Add _Customer Table" Click="menuAddCustomerTable_Click"/>
                     <MenuItem Name="menuAddWebsiteColumn" IsCheckable="False" Header="Add _Website Inventory Column" Click="menuAddWebsiteColumn_Click"/>
+                    <MenuItem Name="menuAddOtherColumn" IsCheckable="False" Header="Add Other Inventory Column" Click="menuAddOtherColumn_Click"/>
                     <MenuItem Name="menuMoveStorageToWebsite" IsCheckable="False" Header="Move all inventory from 'Storage' to 'Website'" Click="menuMoveStorageToWebsite_Click"/>
                     <MenuItem Name="menuZeroOutStorage" IsCheckable="False" Header="Set 'Storage' inventory to Zero" Click="menuZeroOutStorage_Click"/>
                     <MenuItem Name="menuChangeRewardsToStoreCredit" IsCheckable="False" Header="Change 'Rewards' payments to 'Store Credit'" Click="menuChangeRewardsToStoreCredit_Click"/>
@@ -98,24 +99,30 @@
             <TextBox Name="txtPrice" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                      Text="{Binding price, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
         </DockPanel>
-        <UniformGrid Grid.Column="2" Grid.Row="4" Columns="4"> <!--Quantity-->
-            <StackPanel Margin="5">
-                <Label HorizontalAlignment="Center">Store</Label>
-                <TextBox Name="txtStore" Text="{Binding quantity[0], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-            </StackPanel>
-            <StackPanel Margin="5">
-                <Label HorizontalAlignment="Center">Back Room</Label>
-                <TextBox Name="txtOutBack" Text="{Binding quantity[1], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-            </StackPanel>
-            <StackPanel Margin="5">
-                <Label HorizontalAlignment="Center">Storage</Label>
-                <TextBox Name="txtStorage" Text="{Binding quantity[2], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-            </StackPanel>
-            <StackPanel Margin="5">
-                <Label HorizontalAlignment="Center">Website</Label>
-                <TextBox Name="txtWebsite" Text="{Binding quantity[3], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
-            </StackPanel>
-        </UniformGrid>
+        <ScrollViewer Grid.Column="2" Grid.Row="4"> <!--Quantity-->
+            <UniformGrid Grid.Column="2" Grid.Row="4" Columns="4" Width="auto">
+                <StackPanel Margin="5">
+                    <Label HorizontalAlignment="Center">Store</Label>
+                    <TextBox Name="txtStore" Text="{Binding quantity[0], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label HorizontalAlignment="Center">Back Room</Label>
+                    <TextBox Name="txtOutBack" Text="{Binding quantity[1], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label HorizontalAlignment="Center">Storage</Label>
+                    <TextBox Name="txtStorage" Text="{Binding quantity[2], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label HorizontalAlignment="Center">Website</Label>
+                    <TextBox Name="txtWebsite" Text="{Binding quantity[3], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label HorizontalAlignment="Center">Other</Label>
+                    <TextBox Name="txtOther" Text="{Binding quantity[4], Mode=TwoWay, Converter={StaticResource IntConverter}}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>
+                </StackPanel>
+            </UniformGrid>
+        </ScrollViewer>
         <DockPanel Grid.Column="2" Grid.Row="5"> <!--Trade: Cash-->
             <TextBox Name="txtCash" Margin="5" FontSize="15" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                      Text="{Binding tradeCash, Mode=TwoWay, Converter={StaticResource DecimalConverter}, StringFormat=C}" GotKeyboardFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotFocus"/>

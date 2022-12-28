@@ -60,7 +60,7 @@ namespace Inventory_3._0
             try
             {
                 List<Item> items = new List<Item>();
-                items = await DBAccess.SQLTableToList(searchtext: searchString, limitResults: Settings.Default.limitSearchResults);
+                items = await DBAccess.GetItemsAsList(searchtext: searchString, limitResults: Settings.Default.limitSearchResults);
                 lvList.ItemsSource = items;
             }
             catch (Exception ex)

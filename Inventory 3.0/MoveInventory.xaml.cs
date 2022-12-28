@@ -66,7 +66,7 @@ namespace Inventory_3._0
         {
             try
             {
-                searchResults = new ObservableCollection<Item>(await DBAccess.SQLTableToList(searchtext: txtSearch.Text));
+                searchResults = new ObservableCollection<Item>(await DBAccess.GetItemsAsList(searchtext: txtSearch.Text));
             }
             catch (Exception ex)
             {
@@ -109,6 +109,8 @@ namespace Inventory_3._0
                 origin = "Storage";
             else if (radioFromWebsite.IsChecked == true)
                 origin = "Website";
+            else if (radioFromOther.IsChecked == true)
+                origin = "Other";
             else if (radioNewItem.IsChecked == true)
                 origin = "New Item / Trade";
             else
@@ -122,6 +124,8 @@ namespace Inventory_3._0
                 destination = "Storage";
             else if (radioToWebsite.IsChecked == true)
                 destination = "Website";
+            else if (radioToOther.IsChecked == true)
+                destination = "Other";
             else if (radioRemove.IsChecked == true)
                 destination = "Remove entirely.";
             else
@@ -151,6 +155,8 @@ namespace Inventory_3._0
                     await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryLocationColumnNames.STORAGE);
                 else if (radioFromWebsite.IsChecked == true)
                     await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryLocationColumnNames.WEBSITE);
+                else if (radioFromOther.IsChecked == true)
+                    await DBAccess.IncrementQuantities(item.SQLid, -item.cartQuantity, InventoryLocationColumnNames.OTHER);
                 else if (radioNewItem.IsChecked == true) { } // If New Item is checked, don't do anything.
                 else
                 {
@@ -166,6 +172,8 @@ namespace Inventory_3._0
                     await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryLocationColumnNames.STORAGE);
                 else if (radioToWebsite.IsChecked == true)
                     await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryLocationColumnNames.WEBSITE);
+                else if (radioToOther.IsChecked == true)
+                    await DBAccess.IncrementQuantities(item.SQLid, item.cartQuantity, InventoryLocationColumnNames.OTHER);
                 else if (radioRemove.IsChecked == true) { } // If Remove is checked, don't do anything
                 else
                 {

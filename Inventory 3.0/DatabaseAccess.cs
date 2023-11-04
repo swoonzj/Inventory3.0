@@ -52,6 +52,7 @@ namespace Inventory_3._0
 
         static SqlConnection homeConnection = new SqlConnection(Properties.Settings.Default.HomeInventoryConnectionString); // Home
         static SqlConnection simpConnection = new SqlConnection(Properties.Settings.Default.CgSimpConnectionString); // Simp
+        static SqlConnection nashuaConnection = new SqlConnection(Properties.Settings.Default.NashuaConnectionString); // Nashua
         static SqlConnection traderJoeConnection = new SqlConnection(Properties.Settings.Default.SQLServerConnectionString2); // Default
         static SqlConnection connect 
         { 
@@ -63,7 +64,11 @@ namespace Inventory_3._0
                 if (Properties.Settings.Default.useSimpInventory)
                 {
                     return simpConnection; // SIMP
-                } 
+                }
+                else if (Properties.Settings.Default.useNashuaConnectionString)
+                {
+                    return nashuaConnection; // SIMP
+                }
                 else 
                 {
                     return traderJoeConnection; // Store

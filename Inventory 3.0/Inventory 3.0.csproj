@@ -79,6 +79,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StoreInventoryDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="StoreInventoryDataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreInventoryDataSet1.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Transaction.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="CustomerManagement.xaml.cs">
@@ -202,6 +207,17 @@
     </None>
     <None Include="StoreInventoryDataSet.xss">
       <DependentUpon>StoreInventoryDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="StoreInventoryDataSet1.xsc">
+      <DependentUpon>StoreInventoryDataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="StoreInventoryDataSet1.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StoreInventoryDataSet1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StoreInventoryDataSet1.xss">
+      <DependentUpon>StoreInventoryDataSet1.xsd</DependentUpon>
     </None>
     <Resource Include="Resources\Pokemon GB.ttf" />
   </ItemGroup>

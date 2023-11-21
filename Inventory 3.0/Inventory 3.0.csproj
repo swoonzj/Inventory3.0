@@ -74,11 +74,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="StoreInventoryDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StoreInventoryDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Transaction.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="CustomerManagement.xaml.cs">
@@ -192,17 +187,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="StoreInventoryDataSet.xsc">
-      <DependentUpon>StoreInventoryDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="StoreInventoryDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>StoreInventoryDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="StoreInventoryDataSet.xss">
-      <DependentUpon>StoreInventoryDataSet.xsd</DependentUpon>
-    </None>
     <Resource Include="Resources\Pokemon GB.ttf" />
   </ItemGroup>
   <ItemGroup>

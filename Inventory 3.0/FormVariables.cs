@@ -135,7 +135,7 @@
     public static class ReceiptVariables
     {
         // Character width of receipt & components
-        public const int receiptWidth = 38, 
+        public const int receiptWidth = 38,
             name = 30,
             system = 20,
             price = 10,
@@ -147,6 +147,7 @@
             BorderCorner = "+",
             RECEIPT_HEADER = "Thank you for visiting!",
             RECEIPT_HEADER2 = "221 N. Broadway, Salem, NH \t(603)244-3393",
+            NASHUA_RECEIPT_HEADER = "345 Amherst St #6, Nashua, NH,\t(603)699-7032",
             RECEIPT_FOOTER = "RETURN POLICY:\n2 Weeks for defective items, 2 Days otherwise",
             LOGO = "Resources\\Logo.bmp";
 

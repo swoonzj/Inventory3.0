@@ -67,7 +67,7 @@ namespace Inventory_3._0
                 }
                 else if (Properties.Settings.Default.useNashuaConnectionString)
                 {
-                    return nashuaConnection; // SIMP
+                    return nashuaConnection; // NASHUA
                 }
                 else 
                 {

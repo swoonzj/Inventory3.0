@@ -499,7 +499,13 @@ namespace Inventory_3._0
             flowDoc.Blocks.Add(new BlockUIContainer(img));
 
             // Headers
-            flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.RECEIPT_HEADER2 + "\n")) { TextAlignment = System.Windows.TextAlignment.Center, FontWeight = System.Windows.FontWeights.Bold });
+            if (Settings.Default.useNashuaConnectionString)
+            {
+                flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.NASHUA_RECEIPT_HEADER + "\n")) { TextAlignment = System.Windows.TextAlignment.Center, FontWeight = System.Windows.FontWeights.Bold });
+            } else
+            {
+                flowDoc.Blocks.Add(new Paragraph(new Run(ReceiptVariables.RECEIPT_HEADER2 + "\n")) { TextAlignment = System.Windows.TextAlignment.Center, FontWeight = System.Windows.FontWeights.Bold });
+            }
             // Transaction details
             flowDoc.Blocks.Add(new Paragraph(new Run("Transaction Number: " + transaction.transactionNumber + "\n" + transaction.date + "\n")) { TextAlignment = System.Windows.TextAlignment.Left, FontWeight = System.Windows.FontWeights.DemiBold });
 

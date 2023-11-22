@@ -135,7 +135,7 @@ namespace Inventory_3._0
 
             if (sortBy != "Name")
             {
-                cmd = new SqlCommand("SELECT"+ limit +" Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
+                cmd = new SqlCommand("SELECT" + limit + " Name, System, Price, Cash, Credit, " + TableNames.ITEMS + ".id FROM " + TableNames.ITEMS +
                     " JOIN " + TableNames.PRICES + " ON " + TableNames.ITEMS + ".id =  " + TableNames.PRICES + ".id " +
                     "WHERE " + searchTerms.GenerateItemSQLSearchString() +
                     " ORDER BY " + sortBy + " " + order + ", Name", connect);
@@ -1437,6 +1437,45 @@ namespace Inventory_3._0
                 connect.Close();
             }
         }
+        #endregion
+        #region Accounting & Insurance methods
+        public static decimal GetValueOfEntireInventory()
+        {
+            //SELECT tblItems.id, Name, System, SUM((tblInventory.Store + tblInventory.OutBack + tblInventory.Storage + tblInventory.Website + tblInventory.Other) * tblPrices.Price) AS Total
+            //FROM tblItems
+            //JOIN tblPrices ON tblPrices.id = tblItems.id
+            //JOIN tblInventory ON tblInventory.id = tblItems.id
+            //GROUP BY tblItems.id, Name, System
+            //ORDER BY Total, Name, System asc
+
+            string command = "SELECT SUM((Store + OutBack + Storage + Website + Other) * tblPrices.Price) AS Total" +
+            " FROM tblItems" +
+            " JOIN tblPrices ON tblPrices.id = tblItems.id" +
+            " JOIN tblInventory ON tblInventory.id = tblItems.id";
+
+            decimal value = 0;
+            try
+            {
+                if (connect.State == ConnectionState.Open) { connect.Close(); }
+                // Sales
+                SqlCommand cmd = new SqlCommand(command, connect);
+                connect.Open();
+                var result = cmd.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    value = Convert.ToDecimal(result);
+                }
+                connect.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connect.Close();
+            }
+
+            return value;
+        }
+
         #endregion
 
         #region One-Time Use Methods

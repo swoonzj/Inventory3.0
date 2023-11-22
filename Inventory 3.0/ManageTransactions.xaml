@@ -31,6 +31,7 @@
             <MenuItem Name="menuManagement" Header="_Management"/>
             <MenuItem Header="_Settings">
                 <MenuItem Name="menuLimitSearchResults" IsCheckable="True" Header="_Limit Search Results" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=limitSearchResults}"/>
+                <MenuItem Name="menuGetStoreValue" Header="Get Inventory Value" Click="menuInventoryValue_Click"/>
             </MenuItem>
             <MenuItem Name="menuRefresh" Header="Refresh" Click="menuRefresh_Click"/>
         </Menu>

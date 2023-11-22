@@ -111,6 +111,12 @@ namespace Inventory_3._0
             Search();
         }
 
+        private void menuInventoryValue_Click(object sender, RoutedEventArgs e)
+        {
+            decimal value = DBAccess.GetValueOfEntireInventory();
+            MessageBox.Show("Total value is:\n$" + value);
+        }
+
         private void SetLabels()
         {
             lblSalesTotal.Content = totalSales.ToString("C");
